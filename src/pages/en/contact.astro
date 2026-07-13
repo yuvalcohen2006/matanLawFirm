@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import OfficeMap from '../../components/OfficeMap.astro';
+import site from '../../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'Hello, I would like to hear more about legal representation for a real estate transaction.',
+    )}`
+  : null;
+---
+
+<Base
+  title="Contact Us - Adv. Matan Abir Lev"
+  description="Contact the law offices of Matan Abir Lev - phone, WhatsApp, email, office location and an enquiry form for real estate, property and real estate taxation matters."
+  lang="en"
+  altHref="/contact"
+>
+  <section class="section">
+    <div class="container contact-page">
+      <div class="contact-details">
+        <h1>Contact Us</h1>
+        <p class="sub">
+          For any question on real estate, property or real estate taxation - leave your details
+          and we'll come back to you shortly, or reach the office directly by phone or WhatsApp.
+        </p>
+        <ul class="details-list">
+          {
+            phoneDigits && (
+              <li>
+                Phone: <a href={`tel:${phoneDigits}`}><bdi dir="ltr">{site.phone}</bdi></a>
+              </li>
+            )
+          }
+          {
+            waHref && (
+              <li>
+                <a href={waHref} target="_blank" rel="noopener noreferrer">
+                  Message us on WhatsApp
+                </a>
+              </li>
+            )
+          }
+          {
+            filled(site.email) && (
+              <li>
+                Email: <a href={`mailto:${site.email}`}><bdi dir="ltr">{site.email}</bdi></a>
+              </li>
+            )
+          }
+          {filled(site.officeAddress) && <li lang="he">{site.officeAddress}</li>}
+          <li>Office hours: Sun-Thu, by appointment</li>
+        </ul>
+      </div>
+      <ContactForm idPrefix="en-contact" lang="en" />
+    </div>
+  </section>
+
+  <!-- §5 - office location: interactive map, pin, and a directions button -->
+  <section class="section map-section" aria-labelledby="map-title">
+    <div class="container map-inner">
+      <div class="section-head" data-reveal>
+        <h2 id="map-title">Finding us</h2>
+      </div>
+      <div data-reveal>
+        <OfficeMap lang="en" variant="panel" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-page {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.35fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .contact-details h1 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .contact-details .sub {
+    max-width: 34rem;
+    margin-block-end: var(--sp-6);
+  }
+
+  .details-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    padding-inline-start: var(--sp-5);
+    border-inline-start: 2px solid var(--c-teal-40);
+  }
+
+  .map-section {
+    padding-block-start: 0;
+  }
+
+  .map-inner {
+    max-width: 58rem;
+  }
+
+  @media (max-width: 52rem) {
+    .contact-page {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+  }
+</style>

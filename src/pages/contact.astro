@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import OfficeMap from '../components/OfficeMap.astro';
+import site from '../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(site.whatsappGreeting)}`
+  : null;
+---
+
+<Base
+  title="יצירת קשר - עו״ד מתן אביר לב"
+  description="יצירת קשר עם משרד עו״ד מתן אביר לב - טלפון, וואטסאפ, דוא״ל, מיקום המשרד וטופס פנייה בענייני נדל״ן, מקרקעין ומיסוי מקרקעין."
+  lang="he"
+  altHref="/en/contact"
+>
+  <section class="section">
+    <div class="container contact-page">
+      <div class="contact-details">
+        <h1>יצירת קשר</h1>
+        <p class="sub">
+          לכל שאלה בענייני נדל״ן, מקרקעין ומיסוי מקרקעין - השאירו פרטים בטופס ונחזור אליכם
+          בהקדם, או פנו למשרדנו ישירות בטלפון ובוואטסאפ.
+        </p>
+        <ul class="details-list">
+          {
+            phoneDigits && (
+              <li>
+                טלפון: <a href={`tel:${phoneDigits}`}><bdi dir="ltr">{site.phone}</bdi></a>
+              </li>
+            )
+          }
+          {
+            waHref && (
+              <li>
+                <a href={waHref} target="_blank" rel="noopener noreferrer">
+                  שיחה בוואטסאפ
+                </a>
+              </li>
+            )
+          }
+          {
+            filled(site.email) && (
+              <li>
+                דוא״ל: <a href={`mailto:${site.email}`}><bdi dir="ltr">{site.email}</bdi></a>
+              </li>
+            )
+          }
+          {filled(site.officeAddress) && <li>כתובת: {site.officeAddress}</li>}
+          {filled(site.officeHours) && <li>שעות פעילות: {site.officeHours}</li>}
+        </ul>
+      </div>
+      <ContactForm idPrefix="contact-page" lang="he" />
+    </div>
+  </section>
+
+  <!-- §5 - מיקום המשרד: מפה אינטראקטיבית, סימון מיקום וכפתור ניווט -->
+  <section class="section map-section" aria-labelledby="map-title">
+    <div class="container map-inner">
+      <div class="section-head" data-reveal>
+        <h2 id="map-title">איך מגיעים אלינו</h2>
+      </div>
+      <div data-reveal>
+        <OfficeMap lang="he" variant="panel" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-page {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.35fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .contact-details h1 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .contact-details .sub {
+    max-width: 34rem;
+    margin-block-end: var(--sp-6);
+  }
+
+  .details-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    padding-inline-start: var(--sp-5);
+    border-inline-start: 2px solid var(--c-teal-40);
+  }
+
+  .map-section {
+    padding-block-start: 0;
+  }
+
+  .map-inner {
+    max-width: 58rem;
+  }
+
+  @media (max-width: 52rem) {
+    .contact-page {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+  }
+</style>

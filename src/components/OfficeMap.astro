@@ -1,0 +1,139 @@
+---
+/**
+ * §5 - office location: address, interactive map, pin, and a navigate button.
+ *
+ * The embed deliberately uses Google's keyless `output=embed` endpoint rather
+ * than the Maps Embed API, so the site needs no Google API key, no billing
+ * account and no key rotation. It renders the standard interactive map with a
+ * marker on the searched address, and the button hands off to Google Maps
+ * directions - which on a phone opens the Google Maps app.
+ */
+import site from '../data/site-details.json';
+import { t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+  /** 'panel' = the framed block used on the contact page; 'compact' = the footer strip. */
+  variant?: 'panel' | 'compact';
+}
+
+const { lang = 'he', variant = 'panel' } = Astro.props;
+const s = t(lang);
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+
+const address = filled(site.officeAddress) ? site.officeAddress : null;
+const query = address ? encodeURIComponent(address) : null;
+
+const embedSrc = query
+  ? `https://maps.google.com/maps?q=${query}&hl=${lang}&z=16&output=embed`
+  : null;
+const directionsHref = query
+  ? `https://www.google.com/maps/dir/?api=1&destination=${query}`
+  : null;
+---
+
+{
+  address && embedSrc && directionsHref && (
+    <div class:list={['office-map', `office-map--${variant}`]}>
+      <div class="office-map-frame">
+        <iframe
+          src={embedSrc}
+          title={s.mapTitle}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        />
+      </div>
+      <div class="office-map-meta">
+        <p class="office-map-address">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M12 21s6-5.7 6-10a6 6 0 1 0-12 0c0 4.3 6 10 6 10Zm0-8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>{address}</span>
+        </p>
+        <a
+          class="btn btn--secondary btn--small"
+          href={directionsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {s.navigateHere}
+        </a>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .office-map {
+    display: grid;
+    gap: var(--sp-4);
+  }
+
+  .office-map-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--c-navy-08);
+    box-shadow: var(--shadow-soft);
+    /* aspect-ratio keeps the map responsive without a JS resize handler */
+    aspect-ratio: 16 / 10;
+  }
+
+  .office-map iframe {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .office-map-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+
+  .office-map-address {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-weight: var(--fw-bold);
+    color: var(--c-navy);
+  }
+
+  .office-map-address svg {
+    flex-shrink: 0;
+    color: var(--c-teal-text);
+  }
+
+  /* ---- footer strip: darker chrome, tighter frame ---- */
+  .office-map--compact .office-map-frame {
+    aspect-ratio: 16 / 9;
+    border-color: rgba(251, 252, 253, 0.18);
+    box-shadow: none;
+  }
+
+  .office-map--compact .office-map-address {
+    color: rgba(251, 252, 253, 0.8) !important;
+    font-size: var(--fs-small);
+  }
+
+  .office-map--compact .office-map-address svg {
+    color: var(--c-teal-bright);
+  }
+
+  .office-map--compact .btn {
+    font-size: var(--fs-small);
+  }
+</style>

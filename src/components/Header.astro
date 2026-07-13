@@ -1,0 +1,664 @@
+---
+import site from '../data/site-details.json';
+import { practiceAreas } from '../data/practice-areas';
+import { t, EN_HOME, HE_HOME, INVESTORS_PAGE, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+  /** where the language switch points from THIS page (each page decides) */
+  altHref?: string;
+}
+
+const { lang = 'he', altHref } = Astro.props;
+const s = t(lang);
+const he = lang === 'he';
+
+const homeHref = he ? HE_HOME : EN_HOME;
+const aboutHref = he ? '/about' : '/en/about';
+const contactHref = he ? '/contact' : '/en/contact';
+const areasHref = he ? '/#areas' : '/en/#areas';
+const switchHref = altHref ?? (he ? EN_HOME : HE_HOME);
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => current === href.replace(/\/$/, '');
+
+// §7 - the FOREIGN INVESTORS tab sits beside ראשי / אודות / תחומי פעילות and leads
+// to the standalone English page. Spelling is load-bearing: FOREIGN, not FORIGN.
+const investorsHref = INVESTORS_PAGE;
+
+// The logo carries the firm's name inside the artwork, so it stands alone.
+const label = (a: (typeof practiceAreas)[number]) => (he ? a.label : a.labelEn);
+const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href={homeHref} class="brand" aria-label={s.homeAria}>
+      <img src={site.logoPath} alt={s.logoAlt} width="1041" height="512" />
+    </a>
+
+    <nav class="nav" aria-label={s.navMain}>
+      <ul class="nav-list">
+        <li>
+          <a class="nav-link" href={homeHref} aria-current={isActive(homeHref) ? 'page' : undefined}>
+            {s.navHome}
+          </a>
+        </li>
+        <li>
+          <a class="nav-link" href={aboutHref} aria-current={isActive(aboutHref) ? 'page' : undefined}>
+            {s.navAbout}
+          </a>
+        </li>
+
+        <li class="nav-has-panel">
+          <button type="button" class="nav-link nav-trigger" aria-expanded="false" aria-controls="panel-areas">
+            {s.navAreas}
+            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="nav-panel" id="panel-areas">
+            <ul>
+              {
+                practiceAreas.map((area) => (
+                  <li>
+                    <a href={areasHref}>
+                      <span class="panel-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d={area.icon}
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span>
+                        <span class="panel-title">{label(area)}</span>
+                        <span class="panel-blurb">{blurb(area)}</span>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <a
+            class="nav-link nav-link--investors"
+            href={investorsHref}
+            aria-current={isActive(investorsHref) ? 'page' : undefined}
+          >
+            {s.navInvestors}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <!-- §6 - language switch -->
+      <a class="lang-switch" href={switchHref} aria-label={s.switchLabel} lang={he ? 'en' : 'he'}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm-9-9h18M12 3c-2.5 2.6-4 5.6-4 9s1.5 6.4 4 9c2.5-2.6 4-5.6 4-9s-1.5-6.4-4-9Z"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linejoin="round"
+          />
+        </svg>
+        {s.otherLangName}
+      </a>
+
+      {
+        he && (
+          <a class="btn btn--secondary btn--small" href="/calculator">
+            {s.navCalculator}
+          </a>
+        )
+      }
+      <a class="btn btn--primary btn--small" href={contactHref}>{s.navContact}</a>
+    </div>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="mobile-sheet"
+      aria-label={s.openMenu}
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- mobile drawer -->
+<div class="sheet-overlay" hidden></div>
+<aside class="sheet" id="mobile-sheet" aria-label={s.navMain} hidden>
+  <div class="sheet-head">
+    <img class="sheet-logo" src={site.logoPath} alt={s.logoAlt} width="1041" height="512" />
+    <button type="button" class="sheet-close" aria-label={s.closeMenu}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="sheet-nav" aria-label={s.navMain}>
+    <a href={homeHref}>{s.navHome}</a>
+    <a href={aboutHref}>{s.navAbout}</a>
+
+    <details class="sheet-accordion">
+      <summary>
+        {s.navAreas}
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div class="sheet-accordion-body">
+        {
+          practiceAreas.map((area) => (
+            <a href={areasHref}>
+              <span class="panel-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d={area.icon}
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="panel-title">{label(area)}</span>
+            </a>
+          ))
+        }
+      </div>
+    </details>
+
+    <a href={investorsHref}>{s.navInvestors}</a>
+    {he && <a href="/calculator">{s.navCalculator}</a>}
+    <a class="sheet-lang" href={switchHref} lang={he ? 'en' : 'he'}>{s.otherLangName}</a>
+  </nav>
+
+  <div class="sheet-actions">
+    <a class="btn btn--primary" href={contactHref}>{s.navContact}</a>
+  </div>
+</aside>
+
+<script is:inline>
+  (() => {
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+
+    /* ---- desktop dropdown ---------------------------------------------
+       Hover opens it (CSS does that on its own); this only keeps
+       aria-expanded honest and gives touch/keyboard users a click target. */
+    const trigger = header.querySelector('.nav-trigger');
+    const panelHost = header.querySelector('.nav-has-panel');
+
+    if (trigger && panelHost) {
+      const setOpen = (open) => {
+        panelHost.classList.toggle('is-open', open);
+        trigger.setAttribute('aria-expanded', String(open));
+      };
+
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        setOpen(!panelHost.classList.contains('is-open'));
+      });
+      panelHost.addEventListener('mouseenter', () => setOpen(true));
+      panelHost.addEventListener('mouseleave', () => setOpen(false));
+      panelHost.addEventListener('focusout', (e) => {
+        if (!panelHost.contains(e.relatedTarget)) setOpen(false);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      });
+      document.addEventListener('click', (e) => {
+        if (!panelHost.contains(e.target)) setOpen(false);
+      });
+    }
+
+    /* ---- mobile drawer ------------------------------------------------ */
+    const toggle = header.querySelector('.nav-toggle');
+    const sheet = document.getElementById('mobile-sheet');
+    const overlay = document.querySelector('.sheet-overlay');
+    const closeBtn = sheet?.querySelector('.sheet-close');
+
+    if (toggle && sheet && overlay) {
+      const openSheet = (open) => {
+        // toggle [hidden] first so the element is laid out before it animates in
+        if (open) {
+          sheet.hidden = false;
+          overlay.hidden = false;
+          requestAnimationFrame(() => {
+            sheet.classList.add('is-open');
+            overlay.classList.add('is-open');
+          });
+        } else {
+          sheet.classList.remove('is-open');
+          overlay.classList.remove('is-open');
+          window.setTimeout(() => {
+            sheet.hidden = true;
+            overlay.hidden = true;
+          }, 300);
+        }
+        toggle.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+
+      toggle.addEventListener('click', () => openSheet(sheet.hidden));
+      overlay.addEventListener('click', () => openSheet(false));
+      closeBtn?.addEventListener('click', () => openSheet(false));
+      sheet.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => openSheet(false)));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !sheet.hidden) openSheet(false);
+      });
+    }
+  })();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: rgba(251, 252, 253, 0.85);
+    backdrop-filter: blur(14px) saturate(1.4);
+    border-block-end: 1px solid transparent;
+    transition: border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out);
+  }
+
+  /* condenses once you scroll away from the top */
+  .site-header.is-stuck {
+    background: rgba(251, 252, 253, 0.95);
+    border-block-end-color: var(--c-navy-08);
+    box-shadow: 0 6px 24px rgba(10, 37, 54, 0.07);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+    padding-block: var(--sp-4);
+    transition: padding-block var(--dur-base) var(--ease-out);
+  }
+
+  .site-header.is-stuck .header-inner {
+    padding-block: var(--sp-3);
+  }
+
+  .brand {
+    flex-shrink: 0;
+    display: block;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .brand:hover {
+    transform: translateY(-1px);
+  }
+
+  .brand img {
+    block-size: 3.5rem; /* 56px - the logo already contains the firm's name */
+    inline-size: auto;
+  }
+
+  /* ===== desktop nav ===== */
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    list-style: none;
+    padding: 0;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-block-size: 2.75rem;
+    padding-inline: var(--sp-4);
+    padding-block: var(--sp-2);
+    border: 0;
+    background: transparent;
+    border-radius: var(--radius-m);
+    font-family: var(--ff-body);
+    font-size: var(--fs-ui); /* 18px */
+    font-weight: var(--fw-body);
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--c-steel);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav-link:hover,
+  .nav-trigger[aria-expanded='true'] {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .nav-link[aria-current='page'] {
+    color: var(--c-teal-text);
+    font-weight: var(--fw-bold);
+  }
+
+  /* the English tab reads as a proper label, not as shouting */
+  .nav-link--investors {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.06em;
+  }
+
+  .chevron {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .nav-trigger[aria-expanded='true'] .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ===== dropdown panel ===== */
+  .nav-has-panel {
+    position: relative;
+  }
+
+  .nav-panel {
+    position: absolute;
+    inset-block-start: calc(100% + 0.5rem);
+    inset-inline-start: 0;
+    inline-size: 25rem;
+    padding: var(--sp-3);
+    background: var(--c-surface);
+    border: 1px solid var(--c-navy-08);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out),
+      visibility var(--dur-base);
+  }
+
+  .nav-has-panel:hover .nav-panel,
+  .nav-has-panel:focus-within .nav-panel,
+  .nav-has-panel.is-open .nav-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-panel ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .nav-panel a {
+    display: flex;
+    gap: var(--sp-4);
+    align-items: flex-start;
+    padding: var(--sp-3);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    color: var(--c-navy);
+    transition: background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav-panel a:hover {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .panel-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: var(--radius-s);
+    background: var(--c-teal-tint);
+    color: var(--c-teal-text);
+  }
+
+  .panel-title {
+    display: block;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    line-height: 1.4;
+  }
+
+  .panel-blurb {
+    display: block;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-body);
+    line-height: 1.5;
+    color: var(--c-steel);
+  }
+
+  /* ===== header end: language switch + buttons ===== */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-inline-start: auto;
+  }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-block-size: 2.875rem;
+    padding-inline: var(--sp-4);
+    border: 1px solid var(--c-navy-12);
+    border-radius: var(--radius-m);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--c-navy);
+    transition: background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .lang-switch:hover {
+    background: var(--c-grey-soft);
+    border-color: var(--c-teal-60);
+    color: var(--c-teal-text);
+  }
+
+  /* ===== mobile ===== */
+  .nav-toggle {
+    display: none;
+    margin-inline-start: auto;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--c-navy-12);
+    border-radius: var(--radius-m);
+    background: var(--c-surface);
+    color: var(--c-navy);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav-toggle:hover {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .sheet-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: rgba(6, 25, 34, 0.5);
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+
+  .sheet-overlay.is-open {
+    opacity: 1;
+  }
+
+  /* the drawer enters from the same edge the hamburger sits on, in both directions */
+  .sheet {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-end: 0;
+    z-index: 90;
+    inline-size: min(86vw, 22rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    padding: var(--sp-5);
+    overflow-y: auto;
+    background: var(--c-surface);
+    box-shadow: var(--shadow-lift);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  :dir(rtl) .sheet {
+    transform: translateX(-100%);
+  }
+
+  :dir(ltr) .sheet {
+    transform: translateX(100%);
+  }
+
+  .sheet.is-open {
+    transform: translateX(0);
+  }
+
+  .sheet[hidden],
+  .sheet-overlay[hidden] {
+    display: none;
+  }
+
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+
+  .sheet-logo {
+    block-size: 2.5rem;
+    inline-size: auto;
+  }
+
+  .sheet-close {
+    display: grid;
+    place-items: center;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border: 0;
+    border-radius: var(--radius-s);
+    background: transparent;
+    color: var(--c-navy);
+    cursor: pointer;
+  }
+
+  .sheet-close:hover {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .sheet-nav {
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .sheet-nav > a,
+  .sheet-accordion summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: 3rem;
+    padding-inline: var(--sp-3);
+    border-radius: var(--radius-m);
+    font-size: var(--fs-ui);
+    font-weight: var(--fw-bold);
+    color: var(--c-navy);
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+    transition: background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .sheet-accordion summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sheet-nav > a:hover,
+  .sheet-accordion summary:hover {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .sheet-lang {
+    margin-block-start: var(--sp-3);
+    border: 1px solid var(--c-navy-12);
+    justify-content: center !important;
+  }
+
+  .sheet-accordion[open] summary .chevron {
+    transform: rotate(180deg);
+  }
+
+  .sheet-accordion-body {
+    display: grid;
+    gap: 2px;
+    padding-block-start: var(--sp-2);
+  }
+
+  .sheet-accordion-body a {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    color: var(--c-steel);
+  }
+
+  .sheet-accordion-body a:hover {
+    background: var(--c-grey-soft);
+    color: var(--c-teal-text);
+  }
+
+  .sheet-actions {
+    display: grid;
+    gap: var(--sp-3);
+    margin-block-start: auto;
+    padding-block-start: var(--sp-5);
+    border-block-start: 1px solid var(--c-navy-08);
+  }
+
+  /* the bar carries a logo, four links, a language switch and two buttons -
+     it needs the room, so it collapses to the drawer earlier than most */
+  @media (max-width: 78rem) {
+    .nav,
+    .header-actions {
+      display: none;
+    }
+
+    .nav-toggle {
+      display: grid;
+    }
+  }
+</style>

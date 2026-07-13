@@ -1,0 +1,613 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import site from '../data/site-details.json';
+import { practiceAreas } from '../data/practice-areas';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(site.whatsappGreeting)}`
+  : null;
+
+const approach = [
+  {
+    title: 'טיפול אישי וישיר',
+    body: 'כל תיק מלווה באופן אישי וישיר על ידי עו״ד מתן אביר לב, מתוך היכרות מלאה עם פרטי העסקה, צרכי הלקוח ומטרותיו.',
+  },
+  {
+    // §3 - הכרטיס הזה החליף את "בדיקה יסודית ומוקדמת", בניסוח של הלקוח כלשונו
+    title: 'יוזמה והגדלת ראש',
+    body: 'משרדנו פועל מתוך יוזמה, חשיבה קדימה והסתכלות רחבה על העסקה. אנו עושים את המאמצים הנדרשים כדי לראות את הנולד, למנוע טעויות, לזהות הזדמנויות וסיכונים שעשויים להשפיע על העסקה - ולסייע בהובלתה לביצוע מוצלח.',
+  },
+  {
+    title: 'זמינות לאורך העסקה',
+    body: 'משרדנו מקפיד על זמינות, מענה שוטף וליווי רציף לאורך שלבי העסקה, בהתאם לצורך ולמורכבות התיק.',
+  },
+  {
+    title: 'שקיפות מלאה',
+    body: 'הלקוחות מקבלים תמונת מצב ברורה לאורך כל הדרך - מה נבדק, אילו סוגיות עלו ומהם הצעדים הבאים.',
+  },
+];
+---
+
+<Base
+  title="עו״ד מתן אביר לב - נדל״ן, מקרקעין ומיסוי מקרקעין"
+  description="משרד עו״ד מתן אביר לב - ליווי משפטי מדויק, אסטרטגי ואישי בעסקאות נדל״ן ומקרקעין: רכישה ומכירה, רכישה מקבלן, עסקאות קרקע, מיסוי מקרקעין, רשות מקרקעי ישראל, התחדשות עירונית, ליווי יזמים וייצוג משקיעי חוץ."
+  preloadImage="/images/hero-building.webp"
+  lang="he"
+  altHref="/en/"
+>
+  <!-- ===== Hero - full-bleed architectural photograph ===== -->
+  <section class="hero on-dark">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <h1>ליווי משפטי מדויק בעסקאות נדל״ן</h1>
+      <p class="hero-sub">
+        עסקת מקרקעין היא לרוב אחת העסקאות המשמעותיות בחייו של אדם. כל תיק במשרדנו מטופל באופן
+        אישי, תוך ירידה לפרטים, ניהול סיכונים וראייה משפטית, מיסויית ועסקית - משלב הבדיקה
+        הראשונית ועד להשלמת העסקה.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary" href="#contact">יצירת קשר</a>
+        {
+          waHref && (
+            <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+              שלחו לנו WhatsApp
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== תחומי פעילות ===== -->
+  <section class="section areas" id="areas" aria-labelledby="areas-title">
+    <div class="container">
+      <div class="section-head areas-head" data-reveal>
+        <h2 id="areas-title">ליווי משפטי מקיף בעסקאות נדל״ן ומקרקעין</h2>
+      </div>
+      <ul class="areas-grid">
+        {
+          practiceAreas.map((area, i) => (
+            <li
+              class:list={['area', area.size === 'wide' && 'area--wide']}
+              style={`--area-image:url('${area.image}'); --reveal-delay:${Math.min(i, 5) * 70}ms`}
+              data-reveal
+            >
+              <span class="area-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d={area.icon}
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="area-label">{area.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== היכרות ===== -->
+  <section class="section intro" aria-labelledby="intro-title">
+    <div class="container intro-inner">
+      <div class="intro-photo" data-reveal>
+        <img
+          src={site.portraitPath}
+          alt="עו״ד מתן אביר לב"
+          width="560"
+          height="700"
+          loading="lazy"
+        />
+      </div>
+      <div class="intro-copy" data-reveal style="--reveal-delay:120ms">
+        <h2 id="intro-title">עו״ד מתן אביר לב</h2>
+        <p class="sub">
+          עורך דין המתמחה במקרקעין על כל גווניו, בוגר התמחות באחת מפירמות עורכי הדין המובילות
+          בישראל בתחום הנדל״ן. מלווה רוכשים, מוכרים, משקיעים ותושבי חוץ בעסקאות מקרקעין
+          ובפרויקטים - בטיפול אישי, בזמינות מלאה ובשקיפות לאורך כל הדרך.
+        </p>
+        <a class="btn btn--secondary" href="/about">להיכרות עם עו״ד מתן אביר לב</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== הגישה המקצועית של משרדנו ===== -->
+  <section class="section approach" aria-labelledby="approach-title">
+    <div class="container approach-inner">
+      <figure class="approach-figure" data-reveal>
+        <img
+          src="/images/desk-briefcase.webp"
+          alt="תיק עור, תוכניות בנייה, מסמכי עסקה ומפתחות על שולחן עבודה"
+          width="1600"
+          height="900"
+          loading="lazy"
+        />
+      </figure>
+      <div class="approach-copy">
+        <div class="section-head" data-reveal>
+          <h2 id="approach-title">מה מקבלים כשבוחרים במשרדנו</h2>
+        </div>
+        <ul class="approach-list">
+          {
+            approach.map((item, i) => (
+              <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
+                <span class="approach-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <p class="approach-title">{item.title}</p>
+                  <p class="approach-body">{item.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== מחשבון - כרטיס משלים בלבד, לא מוצר מרכזי בדף הבית ===== -->
+  <section class="section calc-teaser-section" aria-labelledby="calc-teaser-title">
+    <div class="container">
+      <div class="calc-teaser on-dark" data-reveal>
+        <div class="calc-teaser-copy">
+          <h2 id="calc-teaser-title">מחשבון החזר מס רכישה לזוכים במכרזי רמ״י</h2>
+          <p>בדיקה ראשונית קצרה, ללא עלות, לזוכים בארבעת המכרזים שבפיילוט.</p>
+        </div>
+        <a class="btn btn--primary" href="/calculator">לבדיקה לחצו כאן</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== יצירת קשר ===== -->
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="container contact-inner">
+      <div class="contact-copy" data-reveal>
+        <h2 id="contact-title">נשמח לשמוע מכם</h2>
+        <p class="sub">
+          מוזמנים להשאיר פרטים ונחזור אליכם בהקדם, או לפנות למשרדנו ישירות בטלפון ובוואטסאפ.
+        </p>
+        <ul class="contact-direct">
+          {
+            phoneDigits && (
+              <li>
+                <a class="btn btn--secondary" href={`tel:${phoneDigits}`}>
+                  חיוג למשרד <bdi dir="ltr">{site.phone}</bdi>
+                </a>
+              </li>
+            )
+          }
+          {
+            waHref && (
+              <li>
+                <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+                  שלחו לנו WhatsApp
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+      <ContactForm idPrefix="home" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    min-block-size: clamp(34rem, 84vh, 50rem);
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+    padding-block: var(--sp-9);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* the copy is centred now, so the scrim is a symmetric vignette rather than
+       a one-sided wash */
+    background-image:
+      radial-gradient(
+        ellipse 90% 70% at 50% 50%,
+        rgba(6, 25, 34, 0.82) 0%,
+        rgba(6, 25, 34, 0.9) 55%,
+        rgba(6, 25, 34, 0.96) 100%
+      ),
+      url('/images/hero-building.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+    /* slow, subtle drift - reads as premium, never distracting */
+    animation: hero-drift 26s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-drift {
+    from {
+      transform: scale(1.06) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.13) translate3d(1.2%, -1.4%, 0);
+    }
+  }
+
+  /* fade the photo into the page background so the seam disappears */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 7rem;
+    z-index: -1;
+    background: linear-gradient(to bottom, transparent, var(--c-paper));
+  }
+
+  @media (max-width: 48rem) {
+    .hero-bg {
+      background-image:
+        radial-gradient(
+          ellipse 120% 60% at 50% 50%,
+          rgba(6, 25, 34, 0.85) 0%,
+          rgba(6, 25, 34, 0.94) 100%
+        ),
+        url('/images/hero-building-sm.webp');
+    }
+  }
+
+  .hero-inner {
+    max-width: 52rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-5);
+  }
+
+  /* big, but thin - the weight comes off, the size stays up */
+  .hero-sub {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    line-height: 1.7;
+    color: rgba(251, 252, 253, 0.88);
+    margin-inline: auto;
+    margin-block-end: var(--sp-7);
+    max-width: 44rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    justify-content: center;
+  }
+
+  /* ===== practice areas - a 3-column layout grid of glass tiles =====
+     Four wide tiles (2 columns each) and four squares (1 column) tile into four
+     clean rows. The order lives in src/data/practice-areas.ts and is load-bearing. */
+  .areas-head {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .areas-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+
+  .area--wide {
+    grid-column: span 2;
+  }
+
+  .area {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    min-block-size: 16rem;
+    padding: var(--sp-6);
+    text-align: center;
+    color: #fff;
+    background: var(--c-navy-deep);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+    /* these tiles are not links - nothing to hover */
+  }
+
+  /* the photograph */
+  .area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: var(--area-image);
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* the glass: a blurred, teal-to-navy wash with a gloss highlight along the top.
+     Kept light enough that the photograph still reads through it - the label sits
+     in the middle of the frame, where every image was composed to be empty. */
+  .area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(2px) saturate(1.2);
+    background-image:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.14), transparent 40%),
+      linear-gradient(
+        155deg,
+        rgba(37, 150, 190, 0.3) 0%,
+        rgba(10, 37, 54, 0.5) 45%,
+        rgba(6, 25, 34, 0.76) 100%
+      );
+  }
+
+  .area-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: var(--radius-m);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(4px);
+  }
+
+  .area-label {
+    font-family: var(--ff-body);
+    font-size: var(--fs-ui); /* 18px */
+    font-weight: var(--fw-bold);
+    line-height: 1.5;
+    max-width: 22rem;
+    text-shadow: 0 1px 12px rgba(6, 25, 34, 0.6);
+  }
+
+  @media (max-width: 64rem) {
+    .areas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .area--wide {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .areas-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .area--wide {
+      grid-column: span 1;
+    }
+
+    .area {
+      min-block-size: 13rem;
+    }
+  }
+
+  /* ===== intro ===== */
+  .intro-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 22rem) 1fr;
+    gap: var(--sp-8);
+    align-items: center;
+  }
+
+  /* teal frame offset behind the portrait */
+  .intro-photo {
+    position: relative;
+  }
+
+  .intro-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(-14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+    z-index: 0;
+  }
+
+  .intro-photo img {
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .intro-copy {
+    max-width: var(--text-max);
+  }
+
+  .intro-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .intro-copy .sub {
+    margin-block-end: var(--sp-6);
+  }
+
+  /* ===== approach (image + principles) ===== */
+  .approach-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: var(--sp-8);
+    align-items: center;
+  }
+
+  .approach-figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .approach-figure img {
+    inline-size: 100%;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .approach-figure:hover img {
+    transform: scale(1.05);
+  }
+
+  .approach-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-6);
+  }
+
+  .approach-list li {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: flex-start;
+    padding-block-end: var(--sp-6);
+    border-block-end: 1px solid var(--c-navy-08);
+  }
+
+  .approach-list li:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+
+  .approach-num {
+    font-family: var(--ff-title);
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--c-teal);
+    flex-shrink: 0;
+  }
+
+  .approach-title {
+    font-family: var(--ff-title);
+    font-size: var(--fs-h3);
+    line-height: 1.3;
+    margin-block-end: var(--sp-2);
+  }
+
+  .approach-body {
+    color: var(--c-steel);
+    line-height: 1.75;
+  }
+
+  /* ===== calculator teaser - a dark inset panel, not a full-bleed band ===== */
+  .calc-teaser-section {
+    padding-block-start: 0;
+  }
+
+  .calc-teaser {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    padding: var(--sp-7);
+    border-radius: var(--radius-l);
+    background: var(--c-navy);
+    color: var(--c-paper);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* a soft teal glow bleeding in from the leading edge */
+  .calc-teaser::before {
+    content: '';
+    position: absolute;
+    inset-block: -60%;
+    inset-inline-end: -10%;
+    inline-size: 45%;
+    z-index: -1;
+    background: radial-gradient(circle, rgba(111, 201, 232, 0.24), transparent 62%);
+  }
+
+  .calc-teaser-copy {
+    max-width: 40rem;
+  }
+
+  .calc-teaser h2 {
+    margin-block-end: var(--sp-3);
+  }
+
+  .calc-teaser p {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    color: rgba(251, 252, 253, 0.85);
+  }
+
+  /* ===== contact ===== */
+  .contact-inner {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.35fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .contact-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .contact-copy .sub {
+    margin-block-end: var(--sp-6);
+    max-width: 34rem;
+  }
+
+  .contact-direct {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    justify-items: start;
+  }
+
+  @media (max-width: 62rem) {
+    .approach-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+  }
+
+  @media (max-width: 52rem) {
+    .intro-inner,
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .intro-photo {
+      max-width: 20rem;
+    }
+
+    .calc-teaser {
+      padding: var(--sp-6);
+    }
+  }
+</style>

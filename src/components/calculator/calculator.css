@@ -1,0 +1,343 @@
+/* עיצוב מחשבון החזר מס הרכישה - נטען עם ה-island בלבד */
+.calc-root {
+  max-width: 50rem;
+  margin-inline: auto;
+  /* keep headings clear of the sticky header when the wizard scrolls/focuses */
+  scroll-margin-block-start: 7rem;
+}
+
+.calc-root h1 {
+  scroll-margin-block-start: 7rem;
+}
+
+.calc-card {
+  margin-block-start: var(--sp-6);
+  padding: var(--sp-7);
+}
+
+@media (max-width: 40rem) {
+  .calc-card {
+    padding: var(--sp-5);
+  }
+}
+
+/* intro gets a teal top edge so the tool reads as its own object */
+.calc-intro {
+  border-block-start: 4px solid var(--c-teal);
+}
+
+/* result cards signal their state with a top accent bar (color, not just text) */
+.calc-result {
+  border-block-start: 5px solid var(--c-steel);
+}
+
+.calc-result[data-kind='overpayment'] {
+  border-block-start-color: var(--c-teal);
+}
+
+.calc-result[data-kind='ok'] {
+  border-block-start-color: var(--c-steel);
+}
+
+.calc-result[data-kind='manual'] {
+  border-block-start-color: var(--c-navy);
+}
+
+/* The wizard's headings are full sentences, not hero lines - the h1 display size
+   would run to four lines here. Step them down to the h2 scale. */
+.calc-card h1 {
+  font-size: var(--fs-h2);
+  margin-block-end: var(--sp-5);
+}
+
+.calc-card h1:focus {
+  outline: none;
+}
+
+.calc-intro .sub {
+  color: var(--c-steel);
+  margin-block-end: var(--sp-5);
+}
+
+/* ---------- stepper ---------- */
+.calc-stepper {
+  list-style: none;
+  padding: 0;
+  margin-block-start: var(--sp-5);
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.calc-stepper li {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  position: relative;
+}
+
+.calc-stepper li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 1.15rem;
+  inset-inline-start: calc(50% + 1.5rem);
+  inline-size: calc(100% - 3rem);
+  border-block-start: 2px solid var(--c-navy-12);
+}
+
+.calc-stepper li.done:not(:last-child)::after {
+  border-block-start-color: var(--c-teal);
+}
+
+.step-dot {
+  display: grid;
+  place-items: center;
+  inline-size: 2.3rem;
+  block-size: 2.3rem;
+  border-radius: 50%;
+  background: var(--c-surface);
+  border: 2px solid var(--c-navy-12);
+  color: var(--c-steel);
+  font-weight: 700;
+  transition: background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.calc-stepper li.current .step-dot {
+  background: var(--c-navy);
+  border-color: var(--c-navy);
+  color: var(--c-paper);
+  transform: scale(1.1);
+}
+
+.calc-stepper li.done .step-dot {
+  background: var(--c-teal);
+  border-color: var(--c-teal);
+  color: var(--c-navy);
+}
+
+.step-label {
+  font-size: var(--fs-small);
+  color: var(--c-steel);
+  text-align: center;
+}
+
+.calc-stepper li.current .step-label {
+  color: var(--c-navy);
+  font-weight: 700;
+}
+
+@media (max-width: 40rem) {
+  .step-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .calc-stepper li[aria-current='step'] .step-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+}
+
+/* ---------- navigation ---------- */
+.calc-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-block-start: var(--sp-7);
+  padding-block-start: var(--sp-6);
+  border-block-start: 1px solid var(--c-navy-08);
+}
+
+/* ---------- static values ---------- */
+.calc-static-label {
+  display: block;
+  font-weight: 700;
+  margin-block-end: var(--sp-2);
+}
+
+.calc-static-value {
+  background: var(--c-teal-tint);
+  border-radius: var(--radius-s);
+  padding: var(--sp-3) var(--sp-4);
+  display: inline-block;
+}
+
+/* ---------- pilot notice (§11.2) ---------- */
+.calc-pilot {
+  display: flex;
+  gap: var(--sp-3);
+  background: var(--c-teal-tint);
+  border-inline-start: 4px solid var(--c-teal);
+  border-radius: var(--radius-s);
+  padding: var(--sp-4) var(--sp-5);
+  color: var(--c-navy);
+  margin-block-end: var(--sp-6) !important;
+}
+
+/* ---------- consent gate (§11.1) ---------- */
+.calc-gate {
+  border-block-start: 1px solid var(--c-navy-08);
+  padding-block-start: var(--sp-6);
+}
+
+.calc-gate legend {
+  line-height: var(--lh-body);
+  margin-block-end: var(--sp-5);
+}
+
+.calc-gate-blocked {
+  margin-block-start: var(--sp-5);
+  border-inline-start: 4px solid #b3261e;
+  background: rgba(179, 38, 30, 0.06);
+  border-radius: var(--radius-s);
+  padding: var(--sp-4) var(--sp-5);
+  color: var(--c-navy);
+  margin-block-end: 0 !important;
+}
+
+/* ---------- plot read-back (§11.3) ---------- */
+.calc-plot-facts {
+  background: var(--c-teal-tint);
+  border-radius: var(--radius-m);
+  padding: var(--sp-5);
+  margin-block-end: var(--sp-6);
+}
+
+.calc-plot-facts dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-7);
+  margin: var(--sp-3) 0 var(--sp-3);
+}
+
+.calc-plot-facts dl > div {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.calc-plot-facts dt {
+  color: var(--c-steel);
+}
+
+.calc-plot-facts dd {
+  margin: 0;
+  font-family: var(--ff-title);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--c-navy);
+}
+
+.calc-plot-facts .helper-text {
+  margin: 0;
+}
+
+/* ---------- loading screen (§11.7) ---------- */
+.calc-loading {
+  text-align: center;
+}
+
+.calc-progress {
+  block-size: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--c-navy-08);
+  overflow: hidden;
+  margin-block: var(--sp-6) var(--sp-5);
+}
+
+.calc-progress-bar {
+  display: block;
+  block-size: 100%;
+  background: linear-gradient(90deg, var(--c-teal), var(--c-teal-bright));
+  border-radius: var(--radius-pill);
+  transition: inline-size 0.45s var(--ease-out);
+}
+
+.calc-loading-msg {
+  color: var(--c-steel);
+  margin: 0;
+}
+
+/* ---------- result ---------- */
+.calc-result h1 {
+  margin-block-end: var(--sp-4);
+}
+
+.calc-result .sub {
+  color: var(--c-teal-text);
+  margin-block-end: var(--sp-5);
+}
+
+.calc-result p {
+  margin-block-end: var(--sp-5);
+  color: var(--c-steel);
+}
+
+.calc-result .btn {
+  inline-size: 100%;
+  white-space: normal;
+  line-height: 1.5;
+  padding-block: var(--sp-4);
+}
+
+.calc-confirm {
+  background: var(--c-teal-tint);
+  border-inline-start: 4px solid var(--c-teal);
+  border-radius: var(--radius-s);
+  padding: var(--sp-4) var(--sp-5);
+  font-weight: 700;
+  color: var(--c-navy) !important;
+}
+
+/* ---------- disclaimers ---------- */
+.calc-disclaimers {
+  margin-block: var(--sp-7);
+  color: var(--c-steel);
+}
+
+.calc-disclaimers ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+  border-block-start: 1px solid var(--c-navy-08);
+  padding-block-start: var(--sp-5);
+}
+
+/* legal small print still sits at the 16px floor - never smaller */
+.calc-disclaimers li {
+  font-size: var(--fs-small);
+  line-height: 1.7;
+}
+
+/* §1.1 - הקובץ שנבחר להעלאה */
+.calc-file-picked {
+  margin-block-start: var(--sp-2);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  color: var(--c-teal-text);
+}
+
+/* §1.2 - כרטיס המשוב, בחלונית האחרונה בלבד (אחרי התוצאה) */
+.calc-feedback {
+  margin-block-start: var(--sp-5);
+}
+
+.calc-feedback h2 {
+  margin-block-end: var(--sp-3);
+}
+
+.calc-feedback > p {
+  color: var(--c-steel);
+  margin-block-end: var(--sp-5);
+}

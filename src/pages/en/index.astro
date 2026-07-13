@@ -1,0 +1,606 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import site from '../../data/site-details.json';
+import { practiceAreas } from '../../data/practice-areas';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'Hello, I would like to hear more about legal representation for a real estate transaction.',
+    )}`
+  : null;
+
+const approach = [
+  {
+    title: 'Personal, direct representation',
+    body: 'Every file is handled personally and directly by Adv. Matan Abir Lev, with full command of the transaction, the client’s needs and their objectives.',
+  },
+  {
+    title: 'Initiative and thinking ahead',
+    body: 'We work with initiative, foresight and a wide view of the transaction. We make the effort to anticipate what is coming, prevent mistakes, and identify the opportunities and risks that may affect the deal - and to help carry it through to a successful completion.',
+  },
+  {
+    title: 'Availability throughout',
+    body: 'We stay reachable and responsive, with continuous representation across every stage of the transaction, as its complexity requires.',
+  },
+  {
+    title: 'Full transparency',
+    body: 'Clients get a clear picture at every point - what has been reviewed, what issues came up and what the next steps are.',
+  },
+];
+---
+
+<Base
+  title="Adv. Matan Abir Lev - Real Estate, Property and Real Estate Taxation"
+  description="The law offices of Matan Abir Lev provide precise, strategic and personal legal representation in Israeli real estate transactions: purchase and sale, buying from developers, land deals, real estate taxation, Israel Land Authority matters, urban renewal and foreign investors."
+  preloadImage="/images/hero-building.webp"
+  lang="en"
+  altHref="/"
+>
+  <!-- ===== Hero ===== -->
+  <section class="hero on-dark">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <h1>Precise legal representation in real estate transactions</h1>
+      <p class="hero-sub">
+        A property transaction is, for most people, one of the most significant deals of their life.
+        Every file at our firm is handled personally - close to the detail, managing risk, and
+        reading the deal legally, fiscally and commercially, from the first review through to
+        completion.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary" href="/en/contact">Contact Us</a>
+        {
+          waHref && (
+            <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+              Message us on WhatsApp
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Practice areas ===== -->
+  <section class="section areas" id="areas" aria-labelledby="areas-title">
+    <div class="container">
+      <div class="section-head areas-head" data-reveal>
+        <h2 id="areas-title">Comprehensive representation in real estate and property</h2>
+      </div>
+      <ul class="areas-grid">
+        {
+          practiceAreas.map((area, i) => (
+            <li
+              class:list={['area', area.size === 'wide' && 'area--wide']}
+              style={`--area-image:url('${area.image}'); --reveal-delay:${Math.min(i, 5) * 70}ms`}
+              data-reveal
+            >
+              <span class="area-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d={area.icon}
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span class="area-label">{area.labelEn}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Foreign investors teaser ===== -->
+  <section class="section invest-teaser-section" aria-labelledby="invest-teaser-title">
+    <div class="container">
+      <div class="invest-teaser on-dark" data-reveal>
+        <div class="invest-teaser-copy">
+          <h2 id="invest-teaser-title">Buying or investing in Israeli real estate from abroad?</h2>
+          <p>
+            We give foreign buyers and investors end-to-end legal, commercial and strategic
+            guidance - from sourcing the opportunity through to closing.
+          </p>
+        </div>
+        <a class="btn btn--primary" href="/en/foreign-investors">Foreign Investors</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Introduction ===== -->
+  <section class="section intro" aria-labelledby="intro-title">
+    <div class="container intro-inner">
+      <div class="intro-photo" data-reveal>
+        <img
+          src={site.portraitPath}
+          alt="Adv. Matan Abir Lev"
+          width="560"
+          height="700"
+          loading="lazy"
+        />
+      </div>
+      <div class="intro-copy" data-reveal style="--reveal-delay:120ms">
+        <h2 id="intro-title">Adv. Matan Abir Lev</h2>
+        <p class="sub">
+          An Israeli attorney practising across every corner of real estate, who trained at one of
+          Israel's leading real estate law firms. He represents buyers, sellers, investors and
+          foreign residents in property transactions and development projects - personally,
+          responsively and transparently throughout.
+        </p>
+        <a class="btn btn--secondary" href="/en/about">More about Adv. Matan Abir Lev</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== The firm's approach ===== -->
+  <section class="section approach" aria-labelledby="approach-title">
+    <div class="container approach-inner">
+      <figure class="approach-figure" data-reveal>
+        <img
+          src="/images/desk-briefcase.webp"
+          alt="A leather case, building plans, transaction documents and keys on a desk"
+          width="1600"
+          height="900"
+          loading="lazy"
+        />
+      </figure>
+      <div class="approach-copy">
+        <div class="section-head" data-reveal>
+          <h2 id="approach-title">What you get when you choose our firm</h2>
+        </div>
+        <ul class="approach-list">
+          {
+            approach.map((item, i) => (
+              <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
+                <span class="approach-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <p class="approach-title">{item.title}</p>
+                  <p class="approach-body">{item.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <div class="container contact-inner">
+      <div class="contact-copy" data-reveal>
+        <h2 id="contact-title">We'd be glad to hear from you</h2>
+        <p class="sub">
+          Leave your details and we'll get back to you shortly, or reach the office directly by
+          phone or WhatsApp.
+        </p>
+        <ul class="contact-direct">
+          {
+            phoneDigits && (
+              <li>
+                <a class="btn btn--secondary" href={`tel:${phoneDigits}`}>
+                  Call the office <bdi dir="ltr">{site.phone}</bdi>
+                </a>
+              </li>
+            )
+          }
+          {
+            waHref && (
+              <li>
+                <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+                  Message us on WhatsApp
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+      <ContactForm idPrefix="en-home" lang="en" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    min-block-size: clamp(34rem, 84vh, 50rem);
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+    padding-block: var(--sp-9);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(
+        ellipse 90% 70% at 50% 50%,
+        rgba(6, 25, 34, 0.82) 0%,
+        rgba(6, 25, 34, 0.9) 55%,
+        rgba(6, 25, 34, 0.96) 100%
+      ),
+      url('/images/hero-building.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+    animation: hero-drift 26s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-drift {
+    from {
+      transform: scale(1.06) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.13) translate3d(1.2%, -1.4%, 0);
+    }
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 7rem;
+    z-index: -1;
+    background: linear-gradient(to bottom, transparent, var(--c-paper));
+  }
+
+  @media (max-width: 48rem) {
+    .hero-bg {
+      background-image:
+        radial-gradient(
+          ellipse 120% 60% at 50% 50%,
+          rgba(6, 25, 34, 0.85) 0%,
+          rgba(6, 25, 34, 0.94) 100%
+        ),
+        url('/images/hero-building-sm.webp');
+    }
+  }
+
+  .hero-inner {
+    max-width: 52rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-5);
+  }
+
+  .hero-sub {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    line-height: 1.7;
+    color: rgba(251, 252, 253, 0.88);
+    margin-inline: auto;
+    margin-block-end: var(--sp-7);
+    max-width: 44rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    justify-content: center;
+  }
+
+  /* ===== practice areas - same glass grid as the Hebrew home ===== */
+  .areas-head {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .areas-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+
+  .area--wide {
+    grid-column: span 2;
+  }
+
+  .area {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    min-block-size: 16rem;
+    padding: var(--sp-6);
+    text-align: center;
+    color: #fff;
+    background: var(--c-navy-deep);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: var(--area-image);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(2px) saturate(1.2);
+    background-image:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.14), transparent 40%),
+      linear-gradient(
+        155deg,
+        rgba(37, 150, 190, 0.3) 0%,
+        rgba(10, 37, 54, 0.5) 45%,
+        rgba(6, 25, 34, 0.76) 100%
+      );
+  }
+
+  .area-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: var(--radius-m);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(4px);
+  }
+
+  .area-label {
+    font-family: var(--ff-body);
+    font-size: var(--fs-ui);
+    font-weight: var(--fw-bold);
+    line-height: 1.5;
+    max-width: 22rem;
+    text-shadow: 0 1px 12px rgba(6, 25, 34, 0.6);
+  }
+
+  @media (max-width: 64rem) {
+    .areas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .area--wide {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .areas-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .area--wide {
+      grid-column: span 1;
+    }
+
+    .area {
+      min-block-size: 13rem;
+    }
+  }
+
+  /* ===== foreign investors teaser ===== */
+  .invest-teaser-section {
+    padding-block-start: 0;
+  }
+
+  .invest-teaser {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    padding: var(--sp-7);
+    border-radius: var(--radius-l);
+    background: var(--c-navy);
+    color: var(--c-paper);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .invest-teaser::before {
+    content: '';
+    position: absolute;
+    inset-block: -60%;
+    inset-inline-end: -10%;
+    inline-size: 45%;
+    z-index: -1;
+    background: radial-gradient(circle, rgba(111, 201, 232, 0.24), transparent 62%);
+  }
+
+  .invest-teaser-copy {
+    max-width: 42rem;
+  }
+
+  .invest-teaser h2 {
+    margin-block-end: var(--sp-3);
+  }
+
+  .invest-teaser p {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    color: rgba(251, 252, 253, 0.85);
+  }
+
+  /* ===== intro ===== */
+  .intro-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 22rem) 1fr;
+    gap: var(--sp-8);
+    align-items: center;
+  }
+
+  .intro-photo {
+    position: relative;
+  }
+
+  .intro-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+    z-index: 0;
+  }
+
+  .intro-photo img {
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .intro-copy {
+    max-width: var(--text-max);
+  }
+
+  .intro-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .intro-copy .sub {
+    margin-block-end: var(--sp-6);
+  }
+
+  /* ===== approach ===== */
+  .approach-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: var(--sp-8);
+    align-items: center;
+  }
+
+  .approach-figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .approach-figure img {
+    inline-size: 100%;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .approach-figure:hover img {
+    transform: scale(1.05);
+  }
+
+  .approach-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-6);
+  }
+
+  .approach-list li {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: flex-start;
+    padding-block-end: var(--sp-6);
+    border-block-end: 1px solid var(--c-navy-08);
+  }
+
+  .approach-list li:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+
+  .approach-num {
+    font-family: var(--ff-title);
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--c-teal);
+    flex-shrink: 0;
+  }
+
+  .approach-title {
+    font-family: var(--ff-title);
+    font-size: var(--fs-h3);
+    line-height: 1.3;
+    margin-block-end: var(--sp-2);
+  }
+
+  .approach-body {
+    color: var(--c-steel);
+    line-height: 1.75;
+  }
+
+  /* ===== contact ===== */
+  .contact-inner {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.35fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .contact-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .contact-copy .sub {
+    margin-block-end: var(--sp-6);
+    max-width: 34rem;
+  }
+
+  .contact-direct {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    justify-items: start;
+  }
+
+  @media (max-width: 62rem) {
+    .approach-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+  }
+
+  @media (max-width: 52rem) {
+    .intro-inner,
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .intro-photo {
+      max-width: 20rem;
+    }
+
+    .invest-teaser {
+      padding: var(--sp-6);
+    }
+  }
+</style>

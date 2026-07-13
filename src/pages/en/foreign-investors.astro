@@ -1,0 +1,865 @@
+---
+/**
+ * §7-§15 - the standalone English home for foreign buyers and investors.
+ * All copy on this page was supplied by the client and is reproduced verbatim,
+ * except the "off-market pricing" bullet in §9, which the client wrote in Hebrew
+ * and asked us to translate. That translation is deliberately hedged ("pursue
+ * pricing that improves value") rather than promissory - a law firm cannot
+ * guarantee a price outcome.
+ *
+ * Imagery per §15: Tel Aviv, Jerusalem, the coastline and modern architecture.
+ * No handshakes, no keys, no scales, no gavels, no smiling suits.
+ */
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+const sheetsUrl = import.meta.env.PUBLIC_SHEETS_WEBHOOK_URL || '';
+const redirectUrl = new URL('/en/thanks', Astro.site).href;
+
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'Hello, I am interested in purchasing or investing in real estate in Israel.',
+    )}`
+  : null;
+
+// §8.3
+const services = [
+  {
+    title: 'Property Search and Opportunity Sourcing',
+    body: "Identifying suitable residential and investment opportunities based on the client's objectives, preferred location, budget and investment strategy.",
+  },
+  {
+    title: 'Access to Developers and Off-Market Opportunities',
+    body: 'Direct relationships with developers and market participants provide exposure to selected projects, early-stage opportunities, pre-sale transactions and pricing opportunities that may not always be broadly available.',
+  },
+  {
+    title: 'Legal Due Diligence',
+    body: 'Comprehensive legal review of ownership rights, agreements, planning information, registrations, restrictions, risks and relevant transaction documents.',
+  },
+  {
+    title: 'Negotiation and Transaction Structuring',
+    body: "Managing negotiations, reviewing commercial terms and structuring the transaction in accordance with the client's legal and financial interests.",
+  },
+  {
+    title: 'Israeli Real Estate Taxation',
+    body: 'Reviewing purchase tax, capital gains considerations, applicable benefits and the relevant tax implications for foreign buyers.',
+  },
+  {
+    title: 'Financing and Mortgage Coordination',
+    body: 'Assistance in coordinating with banks, mortgage professionals and relevant financial providers regarding financing options for foreign residents.',
+  },
+  {
+    title: 'Purchase from Developers',
+    body: 'Legal representation in transactions involving new construction projects, including the review of developer agreements, payment schedules, guarantees, delivery provisions and buyer protections.',
+  },
+  {
+    title: 'Property Management and Professional Coordination',
+    body: 'Coordination with relevant professionals, including mortgage advisers, appraisers, engineers, inspectors, accountants, notaries and property management providers.',
+  },
+  {
+    title: 'Full Closing and Post-Purchase Support',
+    body: 'Ongoing support through execution, registration, transfer of rights, possession and completion of the transaction.',
+  },
+];
+
+// §9
+const whyUs = [
+  {
+    title: 'Off-Market Pricing and Negotiation',
+    body: 'Our relationships with developers and our reading of the market allow us to negotiate on your behalf and to pursue pricing that improves the value you receive for what you pay - with full transparency and a clear explanation of the process at every stage.',
+  },
+  {
+    title: 'Local Knowledge',
+    body: 'Extensive familiarity with the real estate market in Central Israel and Jerusalem, including residential projects, investment opportunities and key development areas.',
+  },
+  {
+    title: 'Strong Developer Relationships',
+    body: 'Close relationships with developers, entrepreneurs and market professionals provide access to projects, pricing information and potential opportunities.',
+  },
+  {
+    title: 'Legal and Commercial Perspective',
+    body: 'Each transaction is reviewed not only from a legal perspective, but also through its financial structure, risks, long-term implications and commercial potential.',
+  },
+  {
+    title: 'Direct Personal Representation',
+    body: 'Each client receives direct, personal and ongoing representation by Adv. Matan Abir Lev throughout the process.',
+  },
+  {
+    title: 'Fluent English and International Experience',
+    body: 'Clear communication in English and extensive experience working with international audiences and pro-Israel organizations.',
+  },
+];
+
+// §12
+const areas = [
+  {
+    title: 'Tel Aviv and Central Israel',
+    body: 'Residential properties, new development projects, investment opportunities and selected urban markets.',
+    image: '/images/invest-telaviv.webp',
+    alt: 'A penthouse terrace overlooking the Tel Aviv skyline and the Mediterranean',
+  },
+  {
+    title: 'Jerusalem',
+    body: 'Residential purchases, investment properties, new projects and opportunities tailored to foreign buyers.',
+    image: '/images/invest-jerusalem.webp',
+    alt: 'Jerusalem limestone architecture and the Old City walls at golden hour',
+  },
+  {
+    title: 'Herzliya and the Coastal Region',
+    body: 'Premium residential opportunities, investment properties and selected development projects.',
+    image: '/images/invest-coastal.webp',
+    alt: 'The Herzliya marina and seafront residential towers at blue hour',
+  },
+  {
+    title: 'Additional Opportunities Across Israel',
+    body: "Selected opportunities based on the client's objectives, investment strategy and preferred level of involvement.",
+    image: '/images/invest-modern.webp',
+    alt: 'A modern Israeli residential tower seen from below',
+  },
+];
+
+// §13
+const process = [
+  {
+    title: 'Introductory Consultation',
+    body: "Understanding the client's goals, budget, preferred locations, expected use of the property and investment strategy.",
+  },
+  {
+    title: 'Opportunity Identification',
+    body: 'Identifying and presenting suitable properties, projects and investment opportunities.',
+  },
+  {
+    title: 'Legal and Commercial Review',
+    body: 'Reviewing the transaction, legal documentation, taxation, financing considerations and material risks.',
+  },
+  {
+    title: 'Negotiation and Execution',
+    body: 'Managing negotiations, preparing and reviewing agreements and coordinating the execution process.',
+  },
+  {
+    title: 'Closing and Ongoing Support',
+    body: 'Supporting the client through payments, registration, possession and post-purchase matters.',
+  },
+];
+
+const propertyTypes = [
+  'Residential apartment',
+  'New-build / off-plan from a developer',
+  'Penthouse or premium residence',
+  'Investment / rental property',
+  'Land or development plot',
+  'Commercial property',
+  'Not sure yet',
+];
+
+const investmentAreas = [
+  'Tel Aviv and Central Israel',
+  'Jerusalem',
+  'Herzliya and the coastal region',
+  'Open to opportunities across Israel',
+];
+---
+
+<Base
+  title="Buy and Invest in Israeli Real Estate | Adv. Matan Abir Lev"
+  description="End-to-end legal, commercial and strategic guidance for foreign buyers and investors purchasing real estate in Israel: property sourcing, due diligence, negotiation, taxation, financing and closing."
+  lang="en"
+  altHref="/"
+  preloadImage="/images/invest-hero.webp"
+>
+  <!-- ===== §8.1 hero ===== -->
+  <section class="hero on-dark">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="hero-kicker">Invest in Israel</p>
+      <h1>Your Trusted Real Estate Partner in Israel</h1>
+      <p class="hero-sub">
+        End-to-end legal, commercial and strategic guidance for foreign buyers and investors
+        seeking real estate opportunities in Israel.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary" href="#inquiry">Schedule an Introductory Call</a>
+        {
+          waHref && (
+            <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+              Contact Us on WhatsApp
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== §8.2 opening ===== -->
+  <section class="section opening" aria-label="Introduction">
+    <div class="container opening-inner" data-reveal>
+      <p class="sub">
+        Purchasing property in Israel from abroad requires more than legal representation. It
+        requires a trusted local partner who understands the market, identifies relevant
+        opportunities, coordinates the professionals involved and protects your interests
+        throughout the entire process.
+      </p>
+      <p class="sub">
+        Our firm provides foreign buyers and investors with comprehensive support from the initial
+        search and evaluation stage through negotiations, financing, legal due diligence, taxation,
+        execution and completion.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== §8.3 the service ===== -->
+  <section class="section services" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="services-title">A Complete A-Z Real Estate Service</h2>
+      </div>
+      <ul class="services-grid">
+        {
+          services.map((item, i) => (
+            <li class="card service" data-reveal style={`--reveal-delay:${Math.min(i, 5) * 60}ms`}>
+              <span class="service-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §9 why work with us ===== -->
+  <section class="section why on-dark" aria-labelledby="why-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="why-title">Why Work With Our Firm</h2>
+      </div>
+      <ul class="why-grid">
+        {
+          whyUs.map((item, i) => (
+            <li class="why-item" data-reveal style={`--reveal-delay:${Math.min(i, 5) * 60}ms`}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §10 + §11 about ===== -->
+  <section class="section about" aria-labelledby="about-title">
+    <div class="container about-inner">
+      <div class="about-photo" data-reveal>
+        <img
+          src={site.portraitPath}
+          alt="Adv. Matan Abir Lev"
+          width="560"
+          height="700"
+          loading="lazy"
+        />
+      </div>
+      <div class="about-copy" data-reveal style="--reveal-delay:120ms">
+        <h2 id="about-title">About Adv. Matan Abir Lev</h2>
+        <p>
+          Adv. Matan Abir Lev is an Israeli real estate attorney focusing on property transactions,
+          real estate development, Israeli Land Authority matters, real estate taxation and the
+          representation of buyers, investors and foreign residents.
+        </p>
+        <p>
+          He holds an LL.B. degree and completed his legal internship at one of Israel's leading
+          real estate law firms, where he gained experience in real estate transactions, development
+          projects, investment structures and matters involving foreign investors.
+        </p>
+        <p>
+          Alongside his legal practice, Adv. Abir Lev brings experience in entrepreneurship,
+          business development, negotiations and the evaluation of real estate opportunities. This
+          combination enables him to examine each transaction from both a legal and commercial
+          perspective.
+        </p>
+        <p>
+          He has extensive knowledge of the real estate markets in Central Israel and Jerusalem and
+          maintains close relationships with developers and market professionals, providing exposure
+          to projects, pricing information and selected opportunities.
+        </p>
+
+        <h3 class="about-sub">Leadership, Service and International Experience</h3>
+        <p>
+          Adv. Matan Abir Lev is a combat officer in the IDF Combat Engineering Corps and has served
+          for many years in operational command roles. His military service reflects values of
+          responsibility, commitment, leadership and the ability to perform under complex
+          conditions.
+        </p>
+        <p>
+          He is also an experienced speaker for leading pro-Israel organizations, including
+          <bdi>FIDF</bdi> and <bdi>CAMERA</bdi>, and has addressed audiences in the United States and
+          other international settings.
+        </p>
+        <p>
+          His work with international communities provides him with significant experience in
+          cross-cultural communication, international relations and building long-term relationships
+          with Jewish and pro-Israel communities abroad.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== §12 key areas ===== -->
+  <section class="section areas" aria-labelledby="areas-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="areas-title">Key Areas of Focus</h2>
+      </div>
+      <ul class="areas-grid">
+        {
+          areas.map((area, i) => (
+            <li class="area-card" data-reveal style={`--reveal-delay:${Math.min(i, 3) * 80}ms`}>
+              <figure>
+                <img src={area.image} alt={area.alt} width="900" height="675" loading="lazy" />
+              </figure>
+              <div class="area-body">
+                <h3>{area.title}</h3>
+                <p>{area.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §13 process ===== -->
+  <section class="section process" aria-labelledby="process-title">
+    <div class="container process-inner">
+      <div class="section-head centered" data-reveal>
+        <h2 id="process-title">Our Process</h2>
+      </div>
+      <ol class="process-list">
+        {
+          process.map((step, i) => (
+            <li data-reveal style={`--reveal-delay:${i * 70}ms`}>
+              <span class="process-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== §14 call to action + enquiry form ===== -->
+  <section class="section inquiry" id="inquiry" aria-labelledby="inquiry-title">
+    <div class="container inquiry-inner">
+      <div class="inquiry-copy" data-reveal>
+        <h2 id="inquiry-title">Looking to Purchase or Invest in Israeli Real Estate?</h2>
+        <p class="sub">
+          Our firm provides foreign buyers and investors with direct, personal and comprehensive
+          guidance throughout the entire process.
+        </p>
+        <div class="inquiry-ctas">
+          {
+            waHref && (
+              <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+                Send Us a WhatsApp Message
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        accessKey ? (
+          <form
+            class="card inquiry-form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+            data-investor-form
+          >
+            <input type="hidden" name="access_key" value={accessKey} />
+            <input
+              type="hidden"
+              name="subject"
+              value="New foreign-investor enquiry - Adv. Matan Abir Lev"
+            />
+            <input type="hidden" name="from_name" value="Foreign Investors page - abirlev.com" />
+            <input type="hidden" name="redirect" value={redirectUrl} />
+            <input
+              type="checkbox"
+              name="botcheck"
+              class="visually-hidden"
+              tabindex="-1"
+              aria-hidden="true"
+            />
+
+            <div class="field">
+              <label for="inv-name">Full Name</label>
+              <input id="inv-name" name="Full Name" type="text" required autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="inv-email">Email</label>
+              <input id="inv-email" name="Email" type="email" required autocomplete="email" />
+            </div>
+            <div class="field">
+              <label for="inv-phone">Phone Number</label>
+              <input id="inv-phone" name="Phone Number" type="tel" required autocomplete="tel" />
+            </div>
+            <div class="field">
+              <label for="inv-country">Country of Residence</label>
+              <input
+                id="inv-country"
+                name="Country of Residence"
+                type="text"
+                required
+                autocomplete="country-name"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-area">Preferred Investment Area</label>
+              <select id="inv-area" name="Preferred Investment Area" required>
+                <option value="">Choose an area…</option>
+                {investmentAreas.map((a) => (
+                  <option>{a}</option>
+                ))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="inv-budget">Estimated Budget</label>
+              <input
+                id="inv-budget"
+                name="Estimated Budget"
+                type="text"
+                placeholder="e.g. $1.5M - $2M"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="inv-type">Type of Property</label>
+              <select id="inv-type" name="Type of Property" required>
+                <option value="">Choose a property type…</option>
+                {propertyTypes.map((p) => (
+                  <option>{p}</option>
+                ))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="inv-message">Message</label>
+              <textarea id="inv-message" name="Message" rows="4" required />
+            </div>
+            <div class="field checkbox-row">
+              <input id="inv-consent" type="checkbox" name="Consent" value="Given" required />
+              <label for="inv-consent">
+                I consent to my details being passed to Adv. Matan Abir Lev so that he may review my
+                enquiry and contact me about it.{' '}
+                <a href="/privacy" lang="he">
+                  Privacy Policy
+                </a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Submit Inquiry</button>
+          </form>
+        ) : (
+          <div class="card">
+            <p class="sub">The enquiry form will go live once site setup is complete.</p>
+            <p>In the meantime, please reach us on WhatsApp or by email.</p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<script is:inline define:vars={{ sheetsUrl }}>
+  /**
+   * §16.2.4 - the investor enquiry must reach the mail AND the CRM sheet.
+   *
+   * The form itself is a plain HTML POST to Web3Forms (no JS needed - that is what
+   * makes it work even if this script never runs). The sheet mirror rides along via
+   * sendBeacon, which is the one API guaranteed to survive the page unloading as the
+   * browser navigates to the thank-you page. A normal fetch() would be cancelled.
+   *
+   * If SHEETS_WEBHOOK_URL is not configured, this is a no-op and the email still goes.
+   */
+  (() => {
+    const form = document.querySelector('[data-investor-form]');
+    if (!form || !sheetsUrl || !navigator.sendBeacon) return;
+
+    form.addEventListener('submit', () => {
+      try {
+        const data = new FormData(form);
+        const params = new URLSearchParams();
+        params.set('סוג רשומה', 'ליד משקיע חוץ');
+        for (const [k, v] of data.entries()) {
+          if (k === 'access_key' || k === 'botcheck' || k === 'redirect') continue;
+          params.set(k, String(v));
+        }
+        params.set('תאריך יצירת ליד', new Date().toISOString());
+        navigator.sendBeacon(
+          sheetsUrl,
+          new Blob([params.toString()], {
+            type: 'application/x-www-form-urlencoded;charset=UTF-8',
+          }),
+        );
+      } catch {
+        /* the sheet is a convenience; never block the email on it */
+      }
+    });
+  })();
+</script>
+
+<style>
+  /* ===== hero ===== */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    min-block-size: clamp(32rem, 78vh, 46rem);
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+    padding-block: var(--sp-9);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* LTR page: the copy sits on the left, so the scrim is heaviest there */
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(6, 25, 34, 0.94) 0%,
+        rgba(6, 25, 34, 0.84) 40%,
+        rgba(6, 25, 34, 0.5) 75%,
+        rgba(6, 25, 34, 0.35) 100%
+      ),
+      url('/images/invest-hero.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 6rem;
+    z-index: -1;
+    background: linear-gradient(to bottom, transparent, var(--c-paper));
+  }
+
+  @media (max-width: 48rem) {
+    .hero-bg {
+      background-image:
+        linear-gradient(to top, rgba(6, 25, 34, 0.95) 40%, rgba(6, 25, 34, 0.78) 100%),
+        url('/images/invest-hero-sm.webp');
+    }
+  }
+
+  .hero-inner {
+    max-width: 50rem; /* the two CTAs must sit side by side, not stack */
+  }
+
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-teal-bright);
+    margin-block-end: var(--sp-4);
+  }
+
+  .hero-kicker::before {
+    content: '';
+    inline-size: 2.25rem;
+    block-size: 2px;
+    background: var(--c-teal-bright);
+    border-radius: 2px;
+  }
+
+  .hero h1 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-5);
+  }
+
+  .hero-sub {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    line-height: 1.65;
+    color: rgba(251, 252, 253, 0.88);
+    margin-block-end: var(--sp-7);
+    max-width: 38rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  /* ===== opening ===== */
+  .opening-inner {
+    max-width: 52rem;
+    display: grid;
+    gap: var(--sp-5);
+  }
+
+  .section-head.centered {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  /* ===== services ===== */
+  .services-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .service {
+    display: grid;
+    gap: var(--sp-3);
+    align-content: start;
+  }
+
+  .service-num {
+    font-family: var(--ff-title);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--c-teal);
+  }
+
+  .service h3 {
+    line-height: 1.3;
+  }
+
+  .service p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== why ===== */
+  .why {
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+  }
+
+  .why-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--sp-6) var(--sp-7);
+  }
+
+  .why-item {
+    padding-inline-start: var(--sp-5);
+    border-inline-start: 3px solid var(--c-teal);
+  }
+
+  .why-item h3 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-3);
+  }
+
+  .why-item p {
+    color: rgba(251, 252, 253, 0.78);
+    line-height: 1.7;
+  }
+
+  /* ===== about ===== */
+  .about-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 21rem) 1fr;
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .about-photo {
+    position: relative;
+    position: sticky;
+    inset-block-start: var(--sp-8);
+  }
+
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+  }
+
+  .about-photo img {
+    position: relative;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .about-copy {
+    max-width: var(--text-max);
+  }
+
+  .about-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .about-copy p {
+    color: var(--c-steel);
+    margin-block-end: var(--sp-5);
+  }
+
+  .about-sub {
+    margin-block: var(--sp-8) var(--sp-4);
+    border-inline-start: 4px solid var(--c-teal);
+    padding-inline-start: var(--sp-4);
+  }
+
+  /* ===== key areas ===== */
+  .areas-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--sp-6);
+  }
+
+  .area-card {
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    background: var(--c-surface);
+    border: 1px solid var(--c-navy-08);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .area-card figure {
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .area-card img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .area-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .area-body {
+    padding: var(--sp-5) var(--sp-6) var(--sp-6);
+  }
+
+  .area-body h3 {
+    margin-block-end: var(--sp-3);
+  }
+
+  .area-body p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== process ===== */
+  .process-inner {
+    max-width: 56rem;
+  }
+
+  .process-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-6);
+    counter-reset: none;
+  }
+
+  .process-list li {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: flex-start;
+    padding-block-end: var(--sp-6);
+    border-block-end: 1px solid var(--c-navy-08);
+  }
+
+  .process-list li:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+
+  .process-num {
+    font-family: var(--ff-title);
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--c-teal);
+    flex-shrink: 0;
+  }
+
+  .process-list h3 {
+    margin-block-end: var(--sp-2);
+  }
+
+  .process-list p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== inquiry ===== */
+  .inquiry-inner {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.25fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .inquiry-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .inquiry-copy .sub {
+    margin-block-end: var(--sp-6);
+  }
+
+  .inquiry-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .inquiry-form .btn {
+    inline-size: 100%;
+  }
+
+  @media (max-width: 62rem) {
+    .about-inner,
+    .inquiry-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .about-photo {
+      position: static;
+      max-width: 20rem;
+    }
+  }
+</style>

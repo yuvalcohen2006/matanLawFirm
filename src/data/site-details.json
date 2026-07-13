@@ -1,0 +1,21 @@
+{
+  "_comment": "פרטי המשרד - קובץ יחיד שממנו כל האתר קורא פרטים אמיתיים. מלאו כל שדה לפי ההסבר ב-site-details.README.md. שדות אופציונליים שיישארו ריקים פשוט לא יוצגו.",
+  "_phoneComment": "phone = מספר המשרד המוצג באתר (כותרת, פוטר, יצירת קשר, כפתורי חיוג). whatsappNumber נשאר הנייד - קו המשרד אינו יכול לקבל הודעות WhatsApp.",
+  "phone": "03-5607010",
+  "email": "matan@abirlev.com",
+  "leadDestinationEmail": "Matan@abirlev.com",
+  "officeAddress": "שפע טל 1, תל אביב",
+  "whatsappNumber": "972504009594",
+  "whatsappGreeting": "שלום, אשמח לקבל פרטים על ליווי משפטי בעסקת נדל\"ן.",
+  "officeHours": "ימים א׳-ה׳, בתיאום מראש",
+  "linkedinUrl": "",
+  "facebookUrl": "",
+  "instagramUrl": "",
+  "domain": "https://www.abirlev.com",
+  "accessibilityCoordinatorName": "עו\"ד מתן אביר לב",
+  "accessibilityCoordinatorContact": "matan@abirlev.com",
+  "logoPath": "/logo.png",
+  "portraitPath": "/images/matan.webp",
+  "googleAnalyticsId": "",
+  "metaPixelId": ""
+}

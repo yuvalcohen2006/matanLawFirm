@@ -1,0 +1,107 @@
+/* ============================================================
+   Design tokens - the ONLY source of colors, type and spacing.
+
+   TYPE
+   Secular One (display) for titles, Alef (sans) for everything else.
+   Secular One ships a single weight (400) - it is already heavy by design,
+   so never ask it for a bold. Running text is Alef **Regular (400)**: the
+   page reads light and airy, and hierarchy comes from FAMILY (display vs
+   sans), SIZE and COLOR - never weight. Alef Bold (700) is reserved for the
+   few places that must shout: card labels, buttons, form labels.
+
+   Nothing is below 16px anywhere in the system.
+   ============================================================ */
+:root {
+  /* ---------- palette: brand teal + deep navy on clean white ---------- */
+  --c-navy: #0A2536;       /* primary text, dark surfaces */
+  --c-navy-deep: #061922;  /* footer / hero base - one step darker */
+  --c-steel: #4A6274;      /* secondary text - 6.4:1 on paper, passes AA */
+  --c-paper: #FBFCFD;      /* page background - clean, a hair off pure white */
+  --c-surface: #FFFFFF;    /* cards */
+  --c-grey-soft: #F1F4F6;  /* the "super light grey" nav/hover wash */
+
+  /* The brand teal comes in three weights, and they are NOT interchangeable:
+       --c-teal        the logo colour. Fills, rules, borders, button hover.
+                       Only 3.4:1 on white, so it must never carry small text
+                       on a light surface - it is fine as a large-text/UI colour.
+       --c-teal-text   the same hue darkened until it passes AA on white (5.4:1)
+                       and on paper (5.2:1). Use for any teal TEXT on light, and
+                       for focus rings (which need 3:1 as non-text contrast).
+       --c-teal-bright for dark surfaces only - 9.6:1 on the deep navy. */
+  --c-teal: #2596BE;
+  --c-teal-text: #1B7291;
+  --c-teal-bright: #6FC9E8;
+  --c-teal-tint: #E6F3F9;  /* accent wash - icon tiles, highlights */
+
+  /* alpha variants (no new hues) */
+  --c-navy-90: rgba(10, 37, 54, 0.9);
+  --c-navy-12: rgba(10, 37, 54, 0.12);
+  --c-navy-08: rgba(10, 37, 54, 0.08);
+  --c-teal-60: rgba(37, 150, 190, 0.6);
+  --c-teal-40: rgba(37, 150, 190, 0.4);
+  --c-teal-15: rgba(37, 150, 190, 0.15);
+  --c-steel-30: rgba(74, 98, 116, 0.3);
+  --c-steel-15: rgba(74, 98, 116, 0.15);
+
+  /* back-compat aliases - the old brass names now resolve to teal, so any
+     stylesheet still asking for brass gets the brand colour instead of gold. */
+  --c-brass: var(--c-teal);
+  --c-brass-text: var(--c-teal-text);
+  --c-brass-bright: var(--c-teal-bright);
+  --c-brass-tint: var(--c-teal-tint);
+  --c-brass-40: var(--c-teal-40);
+  --c-brass-15: var(--c-teal-15);
+  --c-ice: var(--c-paper);
+  --c-mint: var(--c-teal-tint);
+
+  /* ---------- typography ---------- */
+  --ff-body: 'Alef', 'Arial Hebrew', 'David', sans-serif;
+  --ff-title: 'Secular One', 'Alef', 'Arial Hebrew', sans-serif;
+
+  /* running text is LIGHT by design - see note above */
+  --fw-body: 400;
+  --fw-bold: 700;
+  --fw-title: 400; /* Secular One has one weight; asking for 700 fakes a bold */
+
+  /* fluid scale: phone → desktop. The floor is 16px; nothing is smaller. */
+  --fs-small: 1rem;                                        /* 16px - helper text, the absolute floor */
+  --fs-ui: 1.125rem;                                       /* 18px - nav links, buttons, card labels */
+  --fs-body: clamp(1.0625rem, 0.3vw + 1rem, 1.1875rem);    /* 17 → 19 */
+  --fs-lead: clamp(1.25rem, 0.75vw + 1.05rem, 1.5rem);     /* 20 → 24 - the big, thin paragraph */
+  --fs-h3: clamp(1.375rem, 0.7vw + 1.2rem, 1.625rem);      /* 22 → 26 */
+  --fs-h2: clamp(1.75rem, 2vw + 1.1rem, 2.5rem);           /* 28 → 40 */
+  --fs-h1: clamp(2.125rem, 3.4vw + 1.2rem, 3.5rem);        /* 34 → 56 */
+
+  --lh-body: 1.8;
+  --lh-tight: 1.2;
+
+  /* ---------- spacing ---------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 6.5rem;   /* section rhythm on desktop */
+
+  /* ---------- shape & elevation (symmetric - RTL-safe) ---------- */
+  --radius-s: 8px;
+  --radius-m: 10px;  /* the button radius, per the agreed button design */
+  --radius-l: 22px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 2px 10px rgba(10, 37, 54, 0.05), 0 8px 30px rgba(10, 37, 54, 0.05);
+  --shadow-lift: 0 10px 24px rgba(10, 37, 54, 0.1), 0 24px 60px rgba(10, 37, 54, 0.11);
+  --shadow-btn: 0 4px 14px rgba(37, 150, 190, 0.22);
+  --shadow-btn-hover: 0 10px 28px rgba(37, 150, 190, 0.3);
+
+  /* ---------- motion ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+
+  --content-max: 76rem;
+  --text-max: 42rem;
+}

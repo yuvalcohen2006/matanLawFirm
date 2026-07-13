@@ -1,0 +1,434 @@
+---
+import site from '../data/site-details.json';
+import OfficeMap from './OfficeMap.astro';
+import { t, EN_HOME, HE_HOME, INVESTORS_PAGE, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'he' } = Astro.props;
+const s = t(lang);
+const he = lang === 'he';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(site.whatsappGreeting)}`
+  : null;
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+
+const usefulLinks = he
+  ? [
+      { label: 'ראשי', href: HE_HOME },
+      { label: 'אודות המשרד', href: '/about' },
+      { label: 'תחומי פעילות', href: '/#areas' },
+      { label: 'מחשבון החזר מס-רמ״י', href: '/calculator' },
+      { label: 'יצירת קשר', href: '/contact' },
+      { label: 'FOREIGN INVESTORS', href: INVESTORS_PAGE },
+    ]
+  : [
+      { label: 'Home', href: EN_HOME },
+      { label: 'About the Firm', href: '/en/about' },
+      { label: 'Practice Areas', href: '/en/#areas' },
+      { label: 'Foreign Investors', href: INVESTORS_PAGE },
+      { label: 'Contact Us', href: '/en/contact' },
+    ];
+
+// The legal pages exist in Hebrew only (see src/i18n/ui.ts for why), so the
+// English footer links to them with a lang attribute rather than pretending.
+const legalLinks = [
+  { label: s.privacy, href: '/privacy' },
+  { label: s.accessibility, href: '/accessibility' },
+  { label: s.terms, href: '/terms' },
+];
+
+const socials = [
+  { url: site.linkedinUrl, label: he ? 'לינקדאין' : 'LinkedIn' },
+  { url: site.facebookUrl, label: he ? 'פייסבוק' : 'Facebook' },
+  { url: site.instagramUrl, label: he ? 'אינסטגרם' : 'Instagram' },
+].filter((x) => filled(x.url));
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <!-- 1 - the firm -->
+    <div class="footer-col footer-brand">
+      <img src={site.logoPath} alt={s.logoAlt} width="1041" height="512" loading="lazy" />
+      <p>{s.footerBlurb}</p>
+      {
+        filled(site.officeHours) && (
+          <p class="footer-hours">
+            {s.footerHours} {he ? site.officeHours : 'Sun-Thu, by appointment'}
+          </p>
+        )
+      }
+    </div>
+
+    <!-- 2 - navigation -->
+    <div class="footer-col">
+      <h2 class="footer-title">{s.footerLinks}</h2>
+      <ul class="footer-links">
+        {usefulLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      </ul>
+    </div>
+
+    <!-- 3 - reach us -->
+    <div class="footer-col">
+      <h2 class="footer-title">{s.footerReach}</h2>
+      <ul class="footer-links">
+        {
+          phoneDigits && (
+            <li>
+              <a href={`tel:${phoneDigits}`}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <bdi dir="ltr">{site.phone}</bdi>
+              </a>
+            </li>
+          )
+        }
+        {
+          waHref && (
+            <li>
+              <a href={waHref} target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+                  <path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.9 1 3.9 1.5 4.7 1.5 6.6 0 12-5.3 12-11.9C28 8.3 22.6 3 16 3Zm0 21.6c-1.6 0-3.3-.4-4.7-1.3l-.3-.2-4.3 1.3 1.3-4.1-.2-.3a9.2 9.2 0 0 1-1.6-5.1c0-5.2 4.4-9.4 9.8-9.4s9.8 4.2 9.8 9.4-4.4 9.7-9.8 9.7Zm5.4-7.1c-.3-.2-1.7-.9-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1a7.7 7.7 0 0 1-3.9-3.4c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.6l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.6.7.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.7-.5Z" />
+                </svg>
+                {s.whatsapp}
+              </a>
+            </li>
+          )
+        }
+        {
+          filled(site.email) && (
+            <li>
+              <a href={`mailto:${site.email}`}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M3 6h18v12H3zM3 7l9 6 9-6"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <bdi dir="ltr">{site.email}</bdi>
+              </a>
+            </li>
+          )
+        }
+        {
+          socials.map((x) => (
+            <li>
+              <a href={x.url} target="_blank" rel="noopener noreferrer">
+                {x.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- 4 - §5: the office on a map, right next to the address -->
+    <div class="footer-col">
+      <h2 class="footer-title">{s.mapTitle}</h2>
+      <OfficeMap lang={lang} variant="compact" />
+    </div>
+  </div>
+
+  <!-- 5 - leave an address and we call back -->
+  <div class="container footer-callback">
+    <h2 class="footer-title">{s.footerCallback}</h2>
+    {
+      accessKey ? (
+        <form class="footer-form" data-callback-form>
+          <input type="hidden" name="access_key" value={accessKey} />
+          <input
+            type="hidden"
+            name="subject"
+            value={he ? 'בקשת חזרה מהאתר - עו״ד מתן אביר לב' : 'Call-back request - Adv. Matan Abir Lev'}
+          />
+          <input type="hidden" name="from_name" value="אתר עו״ד מתן אביר לב" />
+          <input
+            type="checkbox"
+            name="botcheck"
+            class="visually-hidden"
+            tabindex="-1"
+            aria-hidden="true"
+          />
+          <label class="visually-hidden" for="footer-email">{s.footerEmailPlaceholder}</label>
+          <div class="footer-field">
+            <input
+              id="footer-email"
+              type="email"
+              name={he ? 'דוא״ל' : 'Email'}
+              dir="ltr"
+              required
+              placeholder={s.footerEmailPlaceholder}
+            />
+            <button type="submit" class="btn btn--primary btn--small">{s.footerSend}</button>
+          </div>
+          <p class="footer-note">{s.footerNote}</p>
+          <p class="footer-status" role="status" aria-live="polite"></p>
+        </form>
+      ) : (
+        <p class="footer-note">{s.footerFormOff}</p>
+      )
+    }
+  </div>
+
+  <div class="container footer-legal">
+    <p>{s.footerRights}</p>
+    <ul>
+      {legalLinks.map((link) => <li><a href={link.href} lang="he">{link.label}</a></li>)}
+    </ul>
+  </div>
+</footer>
+
+<script
+  is:inline
+  define:vars={{
+    sending: s.footerSending,
+    okMsg: s.footerOk,
+    errMsg: s.footerError,
+  }}
+>
+  // The call-back form posts to the same Web3Forms endpoint the contact form uses,
+  // but over fetch so the visitor is never bounced off the page from the footer.
+  (() => {
+    const form = document.querySelector('[data-callback-form]');
+    if (!form) return;
+
+    const status = form.querySelector('.footer-status');
+    const submit = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submit.disabled) return;
+
+      submit.disabled = true;
+      status.textContent = sending;
+      status.className = 'footer-status';
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        status.textContent = okMsg;
+        status.className = 'footer-status is-ok';
+      } catch {
+        status.textContent = errMsg;
+        status.className = 'footer-status is-error';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  })();
+</script>
+
+<style>
+  .site-footer {
+    position: relative;
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+    padding-block: var(--sp-8) var(--sp-6);
+    margin-block-start: var(--sp-9);
+  }
+
+  /* hairline of teal across the very top of the footer */
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--c-teal) 30%,
+      var(--c-teal) 70%,
+      transparent
+    );
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 1fr 1.4fr;
+    gap: var(--sp-7);
+  }
+
+  .footer-title {
+    font-family: var(--ff-title);
+    font-size: var(--fs-ui);
+    color: var(--c-teal-bright);
+    margin-block-end: var(--sp-4);
+  }
+
+  .site-footer p,
+  .site-footer li {
+    color: rgba(251, 252, 253, 0.8);
+    font-size: var(--fs-small);
+    line-height: 1.7;
+  }
+
+  /* the logo is teal-on-transparent, which would vanish on the navy -
+     lift it to white and keep the mark legible */
+  .footer-brand img {
+    block-size: 3.25rem;
+    inline-size: auto;
+    margin-block-end: var(--sp-4);
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+  }
+
+  .footer-hours {
+    margin-block-start: var(--sp-3);
+    color: rgba(251, 252, 253, 0.62) !important;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: rgba(251, 252, 253, 0.8);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .footer-links a:hover {
+    color: var(--c-teal-bright);
+  }
+
+  .footer-links svg {
+    flex-shrink: 0;
+    color: var(--c-teal-bright);
+  }
+
+  /* ===== call-back form ===== */
+  .footer-callback {
+    margin-block-start: var(--sp-7);
+    padding-block-start: var(--sp-6);
+    border-block-start: 1px solid rgba(251, 252, 253, 0.15);
+  }
+
+  .footer-form {
+    max-width: 32rem;
+  }
+
+  .footer-field {
+    display: flex;
+    gap: var(--sp-2);
+  }
+
+  .footer-field input {
+    min-block-size: 2.875rem;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--c-paper);
+    font-size: var(--fs-small);
+  }
+
+  .footer-field input::placeholder {
+    color: rgba(251, 252, 253, 0.5);
+  }
+
+  .footer-field input:hover,
+  .footer-field input:focus {
+    border-color: var(--c-teal-bright);
+    box-shadow: 0 0 0 4px rgba(111, 201, 232, 0.16);
+  }
+
+  .footer-field .btn {
+    flex-shrink: 0;
+    padding-inline: var(--sp-5);
+    font-size: var(--fs-small);
+  }
+
+  .footer-note {
+    margin-block-start: var(--sp-3);
+    color: rgba(251, 252, 253, 0.55) !important;
+  }
+
+  .footer-status:empty {
+    display: none;
+  }
+
+  .footer-status {
+    margin-block-start: var(--sp-2);
+    font-weight: var(--fw-bold);
+  }
+
+  .footer-status.is-ok {
+    color: var(--c-teal-bright) !important;
+  }
+
+  .footer-status.is-error {
+    color: #FF9C93 !important;
+  }
+
+  /* ===== bottom bar ===== */
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    border-block-start: 1px solid rgba(251, 252, 253, 0.15);
+    margin-block-start: var(--sp-7);
+    padding-block-start: var(--sp-5);
+  }
+
+  .footer-legal p {
+    color: rgba(251, 252, 253, 0.55) !important;
+    max-width: 46rem;
+  }
+
+  .footer-legal ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-5);
+  }
+
+  .footer-legal a {
+    color: rgba(251, 252, 253, 0.7);
+    text-decoration: none;
+  }
+
+  .footer-legal a:hover {
+    color: var(--c-teal-bright);
+  }
+
+  @media (max-width: 68rem) {
+    .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+    }
+  }
+</style>

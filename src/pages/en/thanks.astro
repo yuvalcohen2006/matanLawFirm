@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Enquiry received - Adv. Matan Abir Lev"
+  description="Your enquiry was sent successfully."
+  noindex={true}
+  lang="en"
+  altHref="/thanks"
+>
+  <section class="section">
+    <div class="container thanks">
+      <h1>Your enquiry has been received</h1>
+      <p>Thank you for getting in touch. Our office will come back to you shortly.</p>
+      <p><a class="btn btn--secondary" href="/en/">Back to the home page</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks {
+    max-width: var(--text-max);
+    text-align: center;
+    padding-block: var(--sp-8);
+  }
+
+  .thanks h1 {
+    margin-block-end: var(--sp-4);
+  }
+
+  .thanks p {
+    margin-block-end: var(--sp-5);
+  }
+</style>

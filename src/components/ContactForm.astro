@@ -1,0 +1,183 @@
+---
+// טופס יצירת קשר - HTML טהור, ללא JavaScript.
+// שולח ל-Web3Forms בשליחת טופס רגילה עם הפניה לעמוד תודה.
+// נושאי הפנייה נגזרים מתחומי הפעילות, כדי ששתי הרשימות לא ייפרדו זו מזו.
+import site from '../data/site-details.json';
+import { practiceAreas } from '../data/practice-areas';
+import { type Lang } from '../i18n/ui';
+
+interface Props {
+  /** מזהה ייחודי כשמופיעים שני טפסים באתר (נגישות: for/id) */
+  idPrefix?: string;
+  lang?: Lang;
+}
+
+const { idPrefix = 'contact', lang = 'he' } = Astro.props;
+const he = lang === 'he';
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+const redirectUrl = new URL(he ? '/thanks' : '/en/thanks', Astro.site).href;
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const phoneDigits = filled(site.phone) ? site.phone.replace(/[^\d+]/g, '') : null;
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(site.whatsappGreeting)}`
+  : null;
+
+const c = he
+  ? {
+      name: 'שם מלא',
+      phone: 'מספר טלפון',
+      email: 'דוא״ל',
+      topic: 'נושא הפנייה',
+      topicPlaceholder: 'בחירת נושא…',
+      other: 'אחר',
+      message: 'הודעה',
+      consent:
+        'אני מאשר/ת את העברת הפרטים לעו״ד מתן אביר לב לצורך ביצוע הבדיקה ויצירת קשר בקשר לפנייתי.',
+      privacy: 'מדיניות פרטיות',
+      submit: 'שליחת פנייה',
+      whatsapp: 'או פנייה ישירה בוואטסאפ',
+      subject: 'פנייה חדשה מאתר עו״ד מתן אביר לב',
+      offTitle: 'טופס הפנייה יופעל עם השלמת הגדרת האתר.',
+      offBody: 'בינתיים נשמח לשמוע מכם',
+      offPhone: 'בטלפון',
+      offEmail: 'או בדוא״ל',
+      consentValue: 'אושרה',
+      consentField: 'הסכמה',
+    }
+  : {
+      name: 'Full Name',
+      phone: 'Phone Number',
+      email: 'Email',
+      topic: 'Subject',
+      topicPlaceholder: 'Choose a subject…',
+      other: 'Other',
+      message: 'Message',
+      consent:
+        'I consent to my details being passed to Adv. Matan Abir Lev so that he may review my enquiry and contact me about it.',
+      privacy: 'Privacy Policy',
+      submit: 'Send Enquiry',
+      whatsapp: 'Or message us on WhatsApp',
+      subject: 'New enquiry - Adv. Matan Abir Lev website',
+      offTitle: 'The enquiry form will go live once site setup is complete.',
+      offBody: "In the meantime we'd be glad to hear from you",
+      offPhone: 'by phone',
+      offEmail: 'or by email',
+      consentValue: 'Given',
+      consentField: 'Consent',
+    };
+
+const topics = [...practiceAreas.map((a) => (he ? a.label : a.labelEn)), c.other];
+---
+
+{
+  accessKey ? (
+    <form class="card contact-form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value={accessKey} />
+      <input type="hidden" name="subject" value={c.subject} />
+      <input type="hidden" name="from_name" value="אתר עו״ד מתן אביר לב" />
+      <input type="hidden" name="redirect" value={redirectUrl} />
+      <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" aria-hidden="true" />
+
+      <div class="field">
+        <label for={`${idPrefix}-name`}>{c.name}</label>
+        <input id={`${idPrefix}-name`} name={c.name} type="text" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for={`${idPrefix}-phone`}>{c.phone}</label>
+        <input
+          id={`${idPrefix}-phone`}
+          name={c.phone}
+          type="tel"
+          dir="ltr"
+          required
+          autocomplete="tel"
+          pattern="[0-9+\-\s]{9,15}"
+        />
+      </div>
+      <div class="field">
+        <label for={`${idPrefix}-email`}>{c.email}</label>
+        <input id={`${idPrefix}-email`} name={c.email} type="email" dir="ltr" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for={`${idPrefix}-topic`}>{c.topic}</label>
+        <select id={`${idPrefix}-topic`} name={c.topic} required>
+          <option value="">{c.topicPlaceholder}</option>
+          {topics.map((topic) => (
+            <option>{topic}</option>
+          ))}
+        </select>
+      </div>
+      <div class="field">
+        <label for={`${idPrefix}-message`}>{c.message}</label>
+        <textarea id={`${idPrefix}-message`} name={c.message} rows="4" required />
+      </div>
+      <div class="field checkbox-row">
+        <input
+          id={`${idPrefix}-consent`}
+          type="checkbox"
+          name={c.consentField}
+          value={c.consentValue}
+          required
+        />
+        <label for={`${idPrefix}-consent`}>
+          {c.consent}{' '}
+          <a href="/privacy" lang="he">
+            {c.privacy}
+          </a>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">
+          {c.submit}
+        </button>
+        {waHref && (
+          <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+            {c.whatsapp}
+          </a>
+        )}
+      </div>
+    </form>
+  ) : (
+    <div class="card">
+      <p class="sub">{c.offTitle}</p>
+      <p>
+        {c.offBody}
+        {phoneDigits && (
+          <>
+            {' '}
+            {c.offPhone}{' '}
+            <a href={`tel:${phoneDigits}`}>
+              <bdi dir="ltr">{site.phone}</bdi>
+            </a>
+          </>
+        )}
+        {filled(site.email) && (
+          <>
+            {' '}
+            {c.offEmail}{' '}
+            <a href={`mailto:${site.email}`}>
+              <bdi dir="ltr">{site.email}</bdi>
+            </a>
+          </>
+        )}
+        .
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .contact-form {
+    max-width: var(--text-max);
+  }
+
+  .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+</style>

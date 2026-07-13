@@ -1,0 +1,4136 @@
+{
+  "_comment": "נתוני מגרשים ממכרזי רמ\"י - הופק אוטומטית מחוברות המכרז. ראו EXTRACTION_REPORT.md. אין לערוך ידנית ללא אימות מול החוברות. אין לשמור כאן עלות רכיב קרקע: עלות הקרקע נקבעת פר-רוכש ומגיעה אך ורק מהקלט של המשתמש במחשבון.",
+  "generatedFrom": "tender booklets in /assets",
+  "purchaseTaxRate": 0.06,
+  "overpaymentThresholdILS": 1500,
+  "settlements": [
+    {
+      "id": "arad",
+      "name": "ערד",
+      "tenderNumber": "בש/297/2025",
+      "neighborhood": "שכונת רכסים (רובע 12)",
+      "developmentCompletionRate": 0.1333,
+      "developmentCompletionRateSource": "נמסר על ידי הלקוח (עו\"ד מתן אביר לב); אינו מודפס בחוברת - עמודת 'אחוז ביצוע משוקלל' בנספח ב'1 ריקה",
+      "developmentCostsVatNote": "כולל מע\"מ (18%)",
+      "devCostIndexBase": "07/2025",
+      "sourceBooklet": "חוברת המכרז.pdf",
+      "sourcePages": {
+        "invitation": "1-4",
+        "plotList": "55-90",
+        "devCosts": "92-101"
+      },
+      "plots": [
+        {
+          "plotNumber": "327",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "337",
+          "areaSqm": 926,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 878034.87,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "341",
+          "areaSqm": 955,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 894691.02,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "342",
+          "areaSqm": 942,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 887472.73,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "384",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "393",
+          "areaSqm": 770,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 793089.19,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "394",
+          "areaSqm": 777,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 796975.66,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "403",
+          "areaSqm": 708,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 759222.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "404",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "405",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "406",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "407",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "408",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "409",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "410",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "411",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "412",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "413",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "414",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "415",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "416",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "417",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "418",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "419",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "420",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "421",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "422",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "423",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "424",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 58,
+            "dev": 92
+          }
+        },
+        {
+          "plotNumber": "425",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "426",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "427",
+          "areaSqm": 703,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 756446.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "428",
+          "areaSqm": 693,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 750893.67,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "429",
+          "areaSqm": 693,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 750893.67,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "430",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "431",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "432",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "433",
+          "areaSqm": 619,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 709809.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "434",
+          "areaSqm": 619,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "435",
+          "areaSqm": 619,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "436",
+          "areaSqm": 619,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "437",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "438",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "439",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "440",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "441",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "442",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "443",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "444",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "445",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712585.62,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "446",
+          "areaSqm": 732,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 772546.57,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "447",
+          "areaSqm": 791,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 805303.24,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 61,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "448",
+          "areaSqm": 634,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 718137.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "449",
+          "areaSqm": 634,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 718692.64,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "450",
+          "areaSqm": 852,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 838615.55,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "451",
+          "areaSqm": 760,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 788092.45,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "452",
+          "areaSqm": 695,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 751449.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "453",
+          "areaSqm": 590,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 693708.91,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 93
+          }
+        },
+        {
+          "plotNumber": "454",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 62,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "455",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "456",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "457",
+          "areaSqm": 579,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 687046.24,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "458",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "459",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "460",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "461",
+          "areaSqm": 656,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 730352.05,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "462",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 63,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "463",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "464",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "465",
+          "areaSqm": 599,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 698150.02,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "466",
+          "areaSqm": 656,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 730352.05,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "467",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "468",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "469",
+          "areaSqm": 620,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710365.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 64,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "470",
+          "areaSqm": 572,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 683159.79,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "471",
+          "areaSqm": 648,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 725909.94,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "472",
+          "areaSqm": 617,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 708143.52,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "473",
+          "areaSqm": 705,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 758111.98,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "474",
+          "areaSqm": 689,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 748673.12,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "475",
+          "areaSqm": 688,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 748673.12,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "476",
+          "areaSqm": 700,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 754225.5,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "477",
+          "areaSqm": 709,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 759222.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 65,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "478",
+          "areaSqm": 671,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 738679.63,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "479",
+          "areaSqm": 689,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 748673.12,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "480",
+          "areaSqm": 689,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 748673.12,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "481",
+          "areaSqm": 715,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 763108.72,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "482",
+          "areaSqm": 754,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 783650.35,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 94
+          }
+        },
+        {
+          "plotNumber": "483",
+          "areaSqm": 557,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 674832.2,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "484",
+          "areaSqm": 598,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 698150.02,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 66,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "485",
+          "areaSqm": 559,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 676497.12,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "486",
+          "areaSqm": 561,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 677607.4,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "487",
+          "areaSqm": 652,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 728130.5,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "488",
+          "areaSqm": 558,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 675942.48,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "489",
+          "areaSqm": 564,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 679273.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "490",
+          "areaSqm": 564,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 679273.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "491",
+          "areaSqm": 670,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 737569.35,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "492",
+          "areaSqm": 660,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 732016.97,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 67,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "493",
+          "areaSqm": 612,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 705367.33,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "494",
+          "areaSqm": 609,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 704257.04,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "495",
+          "areaSqm": 611,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 705367.33,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "496",
+          "areaSqm": 611,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 705367.33,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "497",
+          "areaSqm": 634,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 718137.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "498",
+          "areaSqm": 637,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719247.28,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "499",
+          "areaSqm": 615,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 707033.24,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 68,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "500",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 743676.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "501",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 743676.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "502",
+          "areaSqm": 702,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755890.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "503",
+          "areaSqm": 702,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755890.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "504",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 743676.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "505",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 743676.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "506",
+          "areaSqm": 702,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755890.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "507",
+          "areaSqm": 618,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 709253.79,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 69,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "508",
+          "areaSqm": 578,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 687046.24,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "509",
+          "areaSqm": 634,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 718137.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "510",
+          "areaSqm": 610,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 704812.68,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "511",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 716472.09,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 95
+          }
+        },
+        {
+          "plotNumber": "512",
+          "areaSqm": 603,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 700926.21,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "513",
+          "areaSqm": 596,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 697595.39,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "514",
+          "areaSqm": 802,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 813631.82,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 70,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "515",
+          "areaSqm": 693,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 750893.67,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "516",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 698705.66,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "517",
+          "areaSqm": 562,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 677607.4,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "518",
+          "areaSqm": 765,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 791423.28,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "519",
+          "areaSqm": 687,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 747007.21,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "520",
+          "areaSqm": 574,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 684825.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "521",
+          "areaSqm": 722,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 766995.19,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "522",
+          "areaSqm": 704,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 756446.06,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 71,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "523",
+          "areaSqm": 734,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 773102.21,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "524",
+          "areaSqm": 737,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 775322.77,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "525",
+          "areaSqm": 613,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 706478.6,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "526",
+          "areaSqm": 604,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 701481.85,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "527",
+          "areaSqm": 706,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 757556.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "528",
+          "areaSqm": 642,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 722579.11,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "529",
+          "areaSqm": 570,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 682604.15,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 72,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "530",
+          "areaSqm": 665,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 734793.15,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "531",
+          "areaSqm": 598,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 698705.66,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "532",
+          "areaSqm": 559,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 675942.48,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "533",
+          "areaSqm": 571,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 683159.79,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "534",
+          "areaSqm": 572,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 683715.42,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "535",
+          "areaSqm": 576,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 685380.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "536",
+          "areaSqm": 724,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 767549.82,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "537",
+          "areaSqm": 637,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719802.92,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 73,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "538",
+          "areaSqm": 717,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 763663.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "539",
+          "areaSqm": 703,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755890.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "540",
+          "areaSqm": 691,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 749228.76,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 96
+          }
+        },
+        {
+          "plotNumber": "541",
+          "areaSqm": 716,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 763663.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "542",
+          "areaSqm": 662,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "543",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "544",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 74,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "545",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733682.88,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "546",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "547",
+          "areaSqm": 661,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 733127.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "548",
+          "areaSqm": 713,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 762553.07,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "549",
+          "areaSqm": 707,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 758111.98,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "550",
+          "areaSqm": 703,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755335.78,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "551",
+          "areaSqm": 702,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 755890.43,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "552",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 75,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "553",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "554",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "555",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "556",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "557",
+          "areaSqm": 626,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 713695.9,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "558",
+          "areaSqm": 626,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 713695.9,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "559",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 76,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "560",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "561",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "562",
+          "areaSqm": 635,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 717582.36,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "563",
+          "areaSqm": 639,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719802.92,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "564",
+          "areaSqm": 639,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719802.92,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "565",
+          "areaSqm": 650,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 727020.22,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "566",
+          "areaSqm": 650,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 727020.22,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "567",
+          "areaSqm": 638,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 720358.56,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 77,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "568",
+          "areaSqm": 646,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 725355.3,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "569",
+          "areaSqm": 640,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 722023.48,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 97
+          }
+        },
+        {
+          "plotNumber": "570",
+          "areaSqm": 738,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 776988.68,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "571",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "572",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "573",
+          "areaSqm": 622,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "574",
+          "areaSqm": 708,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 759222.25,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 78,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "575",
+          "areaSqm": 660,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 732572.61,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "576",
+          "areaSqm": 676,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 741455.82,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "577",
+          "areaSqm": 650,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 727020.22,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "578",
+          "areaSqm": 650,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 727020.22,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "579",
+          "areaSqm": 639,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 720358.56,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "580",
+          "areaSqm": 639,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719802.92,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "581",
+          "areaSqm": 639,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 719802.92,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "582",
+          "areaSqm": 622,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 79,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "583",
+          "areaSqm": 622,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "584",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "585",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "586",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "587",
+          "areaSqm": 625,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712029.97,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "588",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 744232.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "589",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 744232.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 80,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "590",
+          "areaSqm": 656,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 729796.41,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "591",
+          "areaSqm": 655,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 729796.41,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "592",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 744232.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "593",
+          "areaSqm": 681,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 744232.01,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "594",
+          "areaSqm": 625,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 712029.97,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "595",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "596",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "597",
+          "areaSqm": 622,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 81,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "598",
+          "areaSqm": 622,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 711475.34,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 98
+          }
+        },
+        {
+          "plotNumber": "599",
+          "areaSqm": 753,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 784761.61,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "600",
+          "areaSqm": 669,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 738679.63,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "601",
+          "areaSqm": 588,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 693153.26,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "602",
+          "areaSqm": 572,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 683715.42,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "603",
+          "areaSqm": 605,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 702036.49,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "604",
+          "areaSqm": 844,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 834729.07,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 82,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "605",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 713140.26,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "606",
+          "areaSqm": 624,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 713140.26,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "607",
+          "areaSqm": 605,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 702036.49,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "608",
+          "areaSqm": 569,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 681493.87,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "609",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "610",
+          "areaSqm": 591,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 694263.55,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "611",
+          "areaSqm": 694,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 750339.04,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "612",
+          "areaSqm": 653,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 728686.13,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 83,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "613",
+          "areaSqm": 638,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 720358.56,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "614",
+          "areaSqm": 584,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 689822.45,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "615",
+          "areaSqm": 627,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 714250.54,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "616",
+          "areaSqm": 696,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 752559.59,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "617",
+          "areaSqm": 625,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 713140.26,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "618",
+          "areaSqm": 673,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 739789.91,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "619",
+          "areaSqm": 603,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 700926.21,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 84,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "620",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "621",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "622",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "623",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "624",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "625",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "626",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "627",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 85,
+            "dev": 99
+          }
+        },
+        {
+          "plotNumber": "628",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "629",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "630",
+          "areaSqm": 614,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 707033.24,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "631",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "632",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "633",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "634",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 86,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "635",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "636",
+          "areaSqm": 630,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 715916.46,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "637",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "638",
+          "areaSqm": 656,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 730352.05,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "639",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "640",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "641",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "642",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 87,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "643",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "644",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "645",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "646",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 699260.31,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "647",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "648",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "649",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 88,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "650",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "651",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "652",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "653",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "654",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "655",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "656",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 100
+          }
+        },
+        {
+          "plotNumber": "657",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 89,
+            "dev": 101
+          }
+        },
+        {
+          "plotNumber": "658",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 90,
+            "dev": 101
+          }
+        },
+        {
+          "plotNumber": "659",
+          "areaSqm": 621,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 710919.7,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 90,
+            "dev": 101
+          }
+        }
+      ]
+    },
+    {
+      "id": "beit-shean",
+      "name": "בית שאן",
+      "tenderNumber": "צפ/106/2025",
+      "neighborhood": "השכונה המערבית (יתרות 2024)",
+      "developmentCompletionRate": 0.1185,
+      "developmentCompletionRateSource": "נמסר על ידי הלקוח; תואם את 'אחוז ביצוע משוקלל: 11.85%' המודפס בנספח ב'1 (עמ' 62)",
+      "developmentCostsVatNote": "כולל מע\"מ",
+      "devCostIndexBase": "04/2025",
+      "sourceBooklet": "חוברת מכרז בית שאן 106.2025.pdf",
+      "sourcePages": {
+        "invitation": "4",
+        "plotList": "59-60",
+        "devCosts": "62"
+      },
+      "plots": [
+        {
+          "plotNumber": "252",
+          "areaSqm": 450,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 393092,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "264",
+          "areaSqm": 450,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 393092,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "278",
+          "areaSqm": 450,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 393092,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "289",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 613440,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "294",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 614014,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "297",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 614014,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 59,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "305",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 614014,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "306",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 614014,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 62
+          }
+        },
+        {
+          "plotNumber": "312",
+          "areaSqm": 600,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 614014,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 60,
+            "dev": 62
+          }
+        }
+      ]
+    },
+    {
+      "id": "metula",
+      "name": "מטולה",
+      "tenderNumber": "צפ/405/2025",
+      "neighborhood": "שכונת הר צפייה",
+      "developmentCompletionRate": 0.3743,
+      "developmentCompletionRateSource": "נמסר על ידי הלקוח; תואם את 'אחוז ביצוע משוקלל: 37.43%' המודפס בנספח ב'1 (עמ' 58)",
+      "developmentCostsVatNote": "כולל מע\"מ",
+      "devCostIndexBase": "08/2025",
+      "sourceBooklet": "חוברת מכרז מטולה 405.2025.pdf",
+      "sourcePages": {
+        "invitation": "4",
+        "plotList": "54-56",
+        "devCosts": "58-59"
+      },
+      "plots": [
+        {
+          "plotNumber": "12",
+          "areaSqm": 498,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 341313,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "14",
+          "areaSqm": 506,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 350955,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "17",
+          "areaSqm": 505,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 348801,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "18",
+          "areaSqm": 505,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 348801,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "31",
+          "areaSqm": 493,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 334852,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "32",
+          "areaSqm": 495,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 337005,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "33",
+          "areaSqm": 476,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 316029,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "38",
+          "areaSqm": 501,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 345057,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "39",
+          "areaSqm": 498,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 340750,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 54,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "40",
+          "areaSqm": 506,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 349364,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "47",
+          "areaSqm": 467,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 305824,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "54",
+          "areaSqm": 501,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 344493,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "56",
+          "areaSqm": 513,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 357417,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "62",
+          "areaSqm": 528,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 374084,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "69",
+          "areaSqm": 502,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 345057,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "70",
+          "areaSqm": 510,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 354699,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "71",
+          "areaSqm": 529,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 377263,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "77",
+          "areaSqm": 500,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 342904,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 58
+          }
+        },
+        {
+          "plotNumber": "79",
+          "areaSqm": 503,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 346647,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "87",
+          "areaSqm": 493,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 334852,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "88",
+          "areaSqm": 519,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 363878,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "89",
+          "areaSqm": 571,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 422959,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        }
+      ]
+    },
+    {
+      "id": "ramat-yishai",
+      "name": "רמת ישי",
+      "tenderNumber": "צפ/113/2025",
+      "neighborhood": "שכונת פרדס וחיסכון שלב א'",
+      "developmentCompletionRate": 0.575,
+      "developmentCompletionRateSource": "נמסר על ידי הלקוח; תואם את 'אחוז ביצוע משוקלל: 57.50%' המודפס בנספח ב'1 (עמ' 59)",
+      "developmentCostsVatNote": "כולל מע\"מ",
+      "devCostIndexBase": "04/2025",
+      "sourceBooklet": "חוברת מכרז רמת ישי 113.2025.pdf",
+      "sourcePages": {
+        "invitation": "4",
+        "plotList": "55-57",
+        "devCosts": "59"
+      },
+      "plots": [
+        {
+          "plotNumber": "111",
+          "areaSqm": 362,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 338977,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "112",
+          "areaSqm": 334,
+          "unitCount": null,
+          "isDuplex": null,
+          "developmentCostFullPlot": 324495,
+          "needsManualFill": true,
+          "notes": "סתירה במספר יחידות הדיור: נספח ב' מציג 2 יח\"ד ומחיר ליחידה (816,437 ₪), אך טבלת פרטי המגרשים בהזמנה (עמ' 4), שער החוברת (17 מגרשים / 29 יח\"ד) ונספח ב'1 מציגים יח\"ד אחת. נדרש אימות מול רמ\"י.",
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "123",
+          "areaSqm": 477,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 550198,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "124",
+          "areaSqm": 305,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 309495,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "125",
+          "areaSqm": 484,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 553818,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "126",
+          "areaSqm": 516,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 570370,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 55,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "131",
+          "areaSqm": 297,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 305357,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "134",
+          "areaSqm": 444,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 533129,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "137",
+          "areaSqm": 509,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 566749,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "138",
+          "areaSqm": 644,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 636577,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "139",
+          "areaSqm": 539,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 582267,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "140",
+          "areaSqm": 525,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 575025,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "141",
+          "areaSqm": 553,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 589508,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "142",
+          "areaSqm": 603,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 615369,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 56,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "143",
+          "areaSqm": 647,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 638128,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "144",
+          "areaSqm": 743,
+          "unitCount": 2,
+          "isDuplex": true,
+          "developmentCostFullPlot": 687782,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 59
+          }
+        },
+        {
+          "plotNumber": "145",
+          "areaSqm": 292,
+          "unitCount": 1,
+          "isDuplex": false,
+          "developmentCostFullPlot": 302771,
+          "needsManualFill": false,
+          "notes": null,
+          "sourcePages": {
+            "land": 57,
+            "dev": 59
+          }
+        }
+      ]
+    }
+  ]
+}

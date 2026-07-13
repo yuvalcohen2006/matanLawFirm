@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="הפנייה התקבלה - עו״ד מתן אביר לב"
+  description="הפנייה נשלחה בהצלחה."
+  noindex={true}
+>
+  <section class="section">
+    <div class="container thanks">
+      <h1>הפנייה התקבלה בהצלחה</h1>
+      <p>תודה על פנייתכם. משרדנו יחזור אליכם בהקדם.</p>
+      <p><a class="btn btn--secondary" href="/">חזרה לעמוד הבית</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks {
+    max-width: var(--text-max);
+    text-align: center;
+    padding-block: var(--sp-8);
+  }
+
+  .thanks h1 {
+    margin-block-end: var(--sp-4);
+  }
+
+  .thanks p {
+    margin-block-end: var(--sp-5);
+  }
+</style>

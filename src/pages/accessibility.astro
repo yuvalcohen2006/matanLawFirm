@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+---
+
+<Base
+  title="הצהרת נגישות - עו״ד מתן אביר לב"
+  description="הצהרת הנגישות של אתר משרד עו״ד מתן אביר לב: התאמות הנגישות שבוצעו, מגבלות ידועות ופרטי רכז הנגישות."
+>
+  <section class="section">
+    <div class="container legal">
+      <h1>הצהרת נגישות</h1>
+      <p>
+        משרד עו״ד מתן אביר לב רואה חשיבות רבה במתן שירות שוויוני ונגיש לכלל הציבור, לרבות
+        אנשים עם מוגבלות. אתר זה תוכנן ונבנה כך שיעמוד בדרישות תקנות שוויון זכויות לאנשים עם
+        מוגבלות (התאמות נגישות לשירות), התשע״ג-2013, ובתקן הישראלי ת״י 5568 המבוסס על הנחיות
+        <bdi dir="ltr">WCAG 2.1</bdi> ברמה AA.
+      </p>
+
+      <h2 class="sub">התאמות הנגישות באתר</h2>
+      <ul>
+        <li>מבנה עמודים סמנטי עם כותרות מדורגות, אזורי ניווט מוגדרים וקישור דילוג לתוכן.</li>
+        <li>האתר ניתן לתפעול מלא באמצעות מקלדת, כולל טפסים ומחשבון בדיקת מס הרכישה.</li>
+        <li>סימון מיקוד (פוקוס) נראה לעין בכל רכיב אינטראקטיבי.</li>
+        <li>ניגודיות צבעים העומדת בדרישות רמה AA לפחות.</li>
+        <li>תיאורי טקסט חלופיים (alt) לתמונות בעלות משמעות.</li>
+        <li>שדות טופס עם תוויות מפורשות, והודעות שגיאה המוקראות על ידי קוראי מסך.</li>
+        <li>תמיכה בהגדלת טקסט בדפדפן עד 200% ללא פגיעה בתוכן ובתפקוד.</li>
+        <li>האתר מותאם לצפייה במחשב ובמכשירים ניידים.</li>
+      </ul>
+
+      <h2 class="sub">מגבלות ידועות</h2>
+      <p>
+        חרף מאמצינו, ייתכן שחלקים מסוימים באתר טרם הונגשו במלואם - למשל מסמכים חיצוניים או
+        שירותי צד שלישי (כגון שירות שליחת הטפסים). אם נתקלתם בקושי, נשמח שתיידעו אותנו ונפעל
+        לתקנו בהקדם.
+      </p>
+
+      <h2 class="sub">רכז הנגישות</h2>
+      <p>
+        {site.accessibilityCoordinatorName}
+        {
+          filled(site.accessibilityCoordinatorContact) && (
+            <>
+              {' - '}
+              <bdi dir="ltr">{site.accessibilityCoordinatorContact}</bdi>
+            </>
+          )
+        }
+      </p>
+      <!-- REVIEW BY LAWYER: לעדכן את תאריך העדכון בעת שינוי מהותי באתר -->
+      <p>הצהרה זו עודכנה לאחרונה: יולי 2026.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal {
+    max-width: var(--text-max);
+  }
+
+  .legal h1 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .legal .sub {
+    margin-block: var(--sp-5) var(--sp-2);
+  }
+
+  .legal p,
+  .legal li {
+    margin-block-end: var(--sp-3);
+  }
+
+  .legal ul {
+    padding-inline-start: var(--sp-5);
+  }
+</style>

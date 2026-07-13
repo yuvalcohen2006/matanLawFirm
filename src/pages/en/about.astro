@@ -1,0 +1,243 @@
+---
+/**
+ * The English "About" page. §10 and §11 of the client's brief supplied the copy
+ * for the professional biography and the military / international section; both
+ * are reproduced verbatim. The remaining paragraphs mirror the Hebrew page.
+ */
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'Hello, I would like to hear more about legal representation for a real estate transaction.',
+    )}`
+  : null;
+---
+
+<Base
+  title="About the Firm - Adv. Matan Abir Lev"
+  description="The law offices of Matan Abir Lev provide legal representation in real estate, property and real estate taxation, combining legal rigour, commercial thinking, attention to detail and personal service."
+  lang="en"
+  altHref="/about"
+>
+  <section class="section">
+    <div class="container about-inner">
+      <div class="about-photo">
+        <img src={site.portraitPath} alt="Adv. Matan Abir Lev" width="560" height="700" />
+      </div>
+      <article class="about-copy">
+        <h1>About the Firm</h1>
+        <p class="sub about-lead">
+          The law offices of Matan Abir Lev provide legal representation in real estate, property
+          and real estate taxation, combining legal rigour, commercial thinking, close attention to
+          detail and personal service.
+        </p>
+        <p>
+          Adv. Matan Abir Lev is an Israeli real estate attorney focusing on property transactions,
+          real estate development, Israeli Land Authority matters, real estate taxation and the
+          representation of buyers, investors and foreign residents.
+        </p>
+        <p>
+          He holds an LL.B. degree and completed his legal internship at one of Israel's leading
+          real estate law firms, where he gained experience in real estate transactions, development
+          projects, investment structures and matters involving foreign investors.
+        </p>
+        <p>
+          Alongside his legal practice, Adv. Abir Lev brings experience in entrepreneurship,
+          business development, negotiations and the evaluation of real estate opportunities. This
+          combination enables him to examine each transaction from both a legal and commercial
+          perspective.
+        </p>
+        <p>
+          He has extensive knowledge of the real estate markets in Central Israel and Jerusalem and
+          maintains close relationships with developers and market professionals, providing exposure
+          to projects, pricing information and selected opportunities.
+        </p>
+
+        <h2 class="sub">How we serve our clients</h2>
+        <p>
+          A property transaction is, for most people, the most significant deal of their life, or a
+          principal source of income for a business. For that reason every file at our firm is
+          handled personally and directly, and is never passed between changing hands.
+        </p>
+        <p>
+          We insist on close attention to detail, on finding and managing risks before they become
+          problems, on staying available throughout, and on full transparency with the client. At
+          every stage the client gets a clear picture: what has been reviewed, what came up, and
+          what happens next.
+        </p>
+
+        <h2 class="sub">Leadership, Service and International Experience</h2>
+        <p>
+          Adv. Matan Abir Lev is a combat officer in the IDF Combat Engineering Corps and has served
+          for many years in operational command roles. His military service reflects values of
+          responsibility, commitment, leadership and the ability to perform under complex
+          conditions.
+        </p>
+        <p>
+          He is also an experienced speaker for leading pro-Israel organizations, including
+          <bdi>FIDF</bdi> and <bdi>CAMERA</bdi>, and has addressed audiences in the United States and
+          other international settings.
+        </p>
+        <p>
+          His work with international communities provides him with significant experience in
+          cross-cultural communication, international relations and building long-term relationships
+          with Jewish and pro-Israel communities abroad.
+        </p>
+
+        <p>
+          <a class="btn btn--primary" href="/en/contact">Contact Us</a>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="office-band on-dark" aria-labelledby="office-band-title">
+    <div class="office-band-bg" aria-hidden="true"></div>
+    <div class="container office-band-inner">
+      <h2 id="office-band-title">
+        We represent property transactions from the first review through to completion
+      </h2>
+      <p>
+        Purchase and sale, developer transactions, land deals, Israel Land Authority matters and
+        real estate taxation - represented personally, directly and with full transparency.
+      </p>
+      <div class="office-band-ctas">
+        {
+          waHref && (
+            <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+              Message us on WhatsApp
+            </a>
+          )
+        }
+        <a class="btn btn--secondary" href="/en/contact">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .office-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--c-navy);
+    color: var(--c-paper);
+    padding-block: var(--sp-8);
+  }
+
+  .office-band-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(6, 25, 34, 0.96) 0%,
+        rgba(6, 25, 34, 0.87) 45%,
+        rgba(6, 25, 34, 0.62) 100%
+      ),
+      url('/images/office-boardroom.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  @media (max-width: 48rem) {
+    .office-band-bg {
+      background-image:
+        linear-gradient(to top, rgba(6, 25, 34, 0.96) 40%, rgba(6, 25, 34, 0.82) 100%),
+        url('/images/office-boardroom-sm.webp');
+    }
+  }
+
+  .office-band-inner {
+    max-width: 44rem;
+  }
+
+  .office-band h2 {
+    margin-block-end: var(--sp-4);
+  }
+
+  .office-band p {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    color: rgba(251, 252, 253, 0.88);
+    margin-block-end: var(--sp-7);
+  }
+
+  .office-band-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .about-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 22rem) 1fr;
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .about-photo {
+    position: relative;
+    position: sticky;
+    inset-block-start: var(--sp-8);
+  }
+
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+  }
+
+  .about-photo img {
+    position: relative;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .about-copy {
+    max-width: var(--text-max);
+  }
+
+  .about-copy h1 {
+    margin-block-end: var(--sp-6);
+  }
+
+  .about-copy p {
+    margin-block-end: var(--sp-5);
+    color: var(--c-steel);
+  }
+
+  .about-lead {
+    color: var(--c-navy) !important;
+    margin-block-end: var(--sp-6) !important;
+  }
+
+  .about-copy h2.sub {
+    font-family: var(--ff-title);
+    font-size: var(--fs-h3);
+    color: var(--c-navy);
+    margin-block: var(--sp-8) var(--sp-4);
+    border-inline-start: 4px solid var(--c-teal);
+    padding-inline-start: var(--sp-4);
+  }
+
+  @media (max-width: 52rem) {
+    .about-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .about-photo {
+      position: static;
+      max-width: 20rem;
+    }
+  }
+</style>

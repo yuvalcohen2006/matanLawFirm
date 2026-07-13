@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(site.whatsappGreeting)}`
+  : null;
+---
+
+<Base
+  title="אודות המשרד - עו״ד מתן אביר לב"
+  description="משרד עורכי הדין מתן אביר לב מעניק ליווי משפטי בתחום הנדל״ן, המקרקעין ומיסוי המקרקעין, תוך שילוב בין מקצועיות משפטית, חשיבה עסקית, ירידה לפרטים ושירות אישי."
+  lang="he"
+  altHref="/en/about"
+>
+  <section class="section">
+    <div class="container about-inner">
+      <div class="about-photo">
+        <img src={site.portraitPath} alt="עו״ד מתן אביר לב" width="560" height="700" />
+      </div>
+      <article class="about-copy">
+        <h1>אודות המשרד</h1>
+        <p class="sub about-lead">
+          משרד עורכי הדין מתן אביר לב מעניק ליווי משפטי בתחום הנדל״ן, המקרקעין ומיסוי המקרקעין,
+          תוך שילוב בין מקצועיות משפטית, חשיבה עסקית, ירידה לפרטים ושירות אישי.
+        </p>
+        <p>
+          עו״ד מתן אביר לב עוסק בתחום המקרקעין על כל גווניו. הוא בוגר תואר ראשון במשפטים, ואת
+          התמחותו ביצע באחת מפירמות עורכי הדין המובילות בישראל בתחום הנדל״ן.
+        </p>
+        <p>
+          לצד העשייה המשפטית, עו״ד אביר לב מגיע מעולמות היזמות והפיתוח העסקי, לרבות ניהול משא
+          ומתן, בחינת הזדמנויות נדל״ן וליווי עסקאות ויוזמות משלב הרעיון ועד למימוש. ניסיון זה
+          מאפשר למשרדנו לבחון כל עסקה לא רק דרך המסמכים וההסכמים, אלא גם דרך המספרים, הסיכונים
+          וההזדמנויות הטמונים בה.
+        </p>
+
+        <h2 class="sub">תפיסת השירות של משרדנו</h2>
+        <p>
+          עסקת מקרקעין היא לרוב אחת העסקאות המשמעותיות בחייו של אדם או מקור הכנסה מרכזי עבור
+          איש עסקים. משום כך, כל תיק במשרדנו מטופל באופן אישי וישיר ואינו עובר בין גורמים
+          מתחלפים.
+        </p>
+        <p>
+          משרדנו מקפיד על ירידה לפרטים, איתור וניהול סיכונים לפני שהם הופכים לבעיות, זמינות
+          לאורך התהליך ושקיפות מלאה מול הלקוח. בכל שלב הלקוח מקבל תמונת מצב ברורה: מה נבדק,
+          אילו ממצאים עלו ומהו הצעד הבא.
+        </p>
+
+        <h2 class="sub">מידע אישי</h2>
+        <p>עו״ד מתן אביר לב נשוי לשלי, מהנדסת ביוטכנולוגיה.</p>
+        <p>
+          לצד פעילותו המשפטית, עו״ד אביר לב משמש מרצה עבור ארגונים פרו־ישראליים מובילים, ובהם
+          <bdi dir="ltr">FIDF</bdi> ו־<bdi dir="ltr">CAMERA</bdi>, ומביא בפני קהלים בארץ ובעולם
+          את סיפור שירותו, פעילותו וניסיונו.
+        </p>
+        <!-- §2.1 - נוסח מעודכן לבקשת הלקוח: "תפקידי פיקוד קרביים" -->
+        <p>
+          עו״ד מתן אביר לב הוא קצין מילואים בהנדסה קרבית ומשרת לאורך השנים בתפקידי פיקוד
+          קרביים. ערכים של אחריות, מחויבות, יסודיות ועמידה לצד אנשים מלווים גם את עבודתו
+          המקצועית ואת תפיסת השירות של משרדנו.
+        </p>
+
+        <p>
+          <a class="btn btn--primary" href="/contact">יצירת קשר</a>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== באנר תמונה + הזמנה ליצירת קשר ===== -->
+  <section class="office-band on-dark" aria-labelledby="office-band-title">
+    <div class="office-band-bg" aria-hidden="true"></div>
+    <div class="container office-band-inner">
+      <h2 id="office-band-title">
+        משרדנו מלווה עסקאות מקרקעין מהבדיקה הראשונה ועד להשלמת העסקה
+      </h2>
+      <p>
+        רכישה ומכירה, עסקאות קבלן, עסקאות קרקע, רשות מקרקעי ישראל והיבטי מיסוי מקרקעין - בליווי
+        אישי וישיר ובשקיפות מלאה.
+      </p>
+      <div class="office-band-ctas">
+        {
+          waHref && (
+            <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+              שלחו לנו WhatsApp
+            </a>
+          )
+        }
+        <a class="btn btn--secondary" href="/contact">יצירת קשר</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ===== office image band ===== */
+  .office-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--c-navy);
+    color: var(--c-paper);
+    padding-block: var(--sp-8);
+  }
+
+  .office-band-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(
+        to left,
+        rgba(6, 25, 34, 0.96) 0%,
+        rgba(6, 25, 34, 0.87) 45%,
+        rgba(6, 25, 34, 0.62) 100%
+      ),
+      url('/images/office-boardroom.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  @media (max-width: 48rem) {
+    .office-band-bg {
+      background-image:
+        linear-gradient(to top, rgba(6, 25, 34, 0.96) 40%, rgba(6, 25, 34, 0.82) 100%),
+        url('/images/office-boardroom-sm.webp');
+    }
+  }
+
+  .office-band-inner {
+    max-width: 44rem;
+  }
+
+  .office-band h2 {
+    margin-block-end: var(--sp-4);
+  }
+
+  .office-band p {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    color: rgba(251, 252, 253, 0.88);
+    margin-block-end: var(--sp-7);
+  }
+
+  .office-band-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .about-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 22rem) 1fr;
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .about-photo {
+    position: relative;
+    position: sticky;
+    inset-block-start: var(--sp-8);
+  }
+
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(-14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+  }
+
+  .about-photo img {
+    position: relative;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .about-copy {
+    max-width: var(--text-max);
+  }
+
+  .about-copy h1 {
+    margin-block-end: var(--sp-6);
+  }
+
+  .about-copy p {
+    margin-block-end: var(--sp-5);
+    color: var(--c-steel);
+  }
+
+  .about-lead {
+    color: var(--c-navy) !important;
+    margin-block-end: var(--sp-6) !important;
+  }
+
+  /* section headings inside the essay - display face, teal rule, plenty of air */
+  .about-copy h2.sub {
+    font-family: var(--ff-title);
+    font-size: var(--fs-h3);
+    color: var(--c-navy);
+    margin-block: var(--sp-8) var(--sp-4);
+    border-inline-start: 4px solid var(--c-teal);
+    padding-inline-start: var(--sp-4);
+  }
+
+  @media (max-width: 52rem) {
+    .about-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .about-photo {
+      position: static;
+      max-width: 20rem;
+    }
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Calculator from '../components/calculator/Calculator';
+---
+
+<Base
+  title="מחשבון החזר מס רכישה לזוכים במכרזי רמ״י - פיילוט למשרתי מילואים | עו״ד מתן אביר לב"
+  description="מילואימניקים וזוכי מכרזים - בדקו האם קיים פוטנציאל ראשוני להחזר מס רכישה. פיילוט הפועל כרגע על ארבעה מכרזים של רשות מקרקעי ישראל."
+>
+  <section class="section calc-section">
+    <div class="container">
+      <Calculator client:load />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .calc-section {
+    padding-block-start: var(--sp-6);
+  }
+</style>
