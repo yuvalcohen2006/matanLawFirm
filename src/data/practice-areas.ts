@@ -2,14 +2,14 @@
  * The firm's practice areas - the single source for the header dropdown and the
  * home-page grid, in both languages, so nothing can drift apart.
  *
- * `size` drives the home-page layout: the grid is three columns, a `wide` card
- * spans two of them and a `small` card spans one. The order below is therefore
- * load-bearing - wide, small, small, wide, wide, small, small, wide - which tiles
- * into four clean rows of exactly three columns. Longer labels went on the wide
- * cards, short ones on the squares. Add or remove an area and you must re-check
- * that the sizes still sum to a multiple of three per row.
+ * The array below is in READING order: it drives the header dropdown, and the
+ * subject list on the contact form. The home-page grid uses a different order -
+ * see `practiceAreasGrid` at the bottom - because the tiles have to interlock.
  *
- * `blurb` is only used in the header dropdown; the cards carry the label alone.
+ * `size` is a property of the label, not of the layout: a long label needs a
+ * `wide` tile, a short one fits a `small` square.
+ *
+ * `blurb` is only used in the header dropdown; the tiles carry the label alone.
  */
 export interface PracticeArea {
   id: string;
@@ -88,7 +88,10 @@ export const practiceAreas: PracticeArea[] = [
     // §2.3 - שירות חדש לבקשת הלקוח
     id: 'foreign',
     label: 'ייצוג וליווי משקיעי חוץ',
-    labelEn: 'Foreign Investor Representation',
+    // Deliberately short. This sits on a small square tile on the English home
+    // page, and "Representation" is a 14-character unbreakable word that will not
+    // fit one - it overflowed and was clipped. The blurb carries the detail.
+    labelEn: 'Foreign Investors',
     blurb:
       'ליווי משפטי ועסקי למשקיעים ולתושבי חוץ ברכישת נכסים ובהשקעות נדל״ן בישראל - מאיתור ההזדמנות ועד השלמת העסקה.',
     blurbEn:
@@ -111,3 +114,34 @@ export const practiceAreas: PracticeArea[] = [
     icon: 'M4 19h16M7 15.5l3.5-4.5 3 2.5L19 7M19 7h-3.6M19 7v3.6',
   },
 ];
+
+/**
+ * The home-page tiling order, which is NOT the reading order above.
+ *
+ * The grid is six columns; a `wide` tile spans two and a `small` square spans
+ * one. Laid out as
+ *
+ *     small  wide   small  wide     ← 1 + 2 + 1 + 2 = 6
+ *     wide   small  wide   small    ← 2 + 1 + 2 + 1 = 6
+ *
+ * you get two rows of four tiles, with the long and short shapes alternating and
+ * the second row mirroring the first. Both rows must still total six columns, so
+ * this list is load-bearing: change it and the grid grows a hole. Every id here
+ * must exist above, and the size beside it must match the size declared there.
+ */
+const GRID_ORDER: readonly string[] = [
+  'tax',           // small
+  'purchase',      // wide
+  'rmi',           // small
+  'developer',     // wide
+  'land',          // wide
+  'renewal',       // small
+  'entrepreneurs', // wide
+  'foreign',       // small
+];
+
+export const practiceAreasGrid: PracticeArea[] = GRID_ORDER.map((id) => {
+  const area = practiceAreas.find((a) => a.id === id);
+  if (!area) throw new Error(`practice-areas: GRID_ORDER lists unknown id "${id}"`);
+  return area;
+});

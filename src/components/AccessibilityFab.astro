@@ -173,9 +173,16 @@ const s = t(lang);
       transform var(--dur-base) var(--ease-out);
   }
 
+  /* Lifts on hover and drops back on press, like every other control on the site.
+     The fill does darken here, unlike the buttons - this one is a circle with no
+     label to wash out, and a colour shift is the clearest affordance it has. */
   .a11y-fab:hover {
     background: var(--c-teal-text);
     transform: translateY(-3px) scale(1.05);
+  }
+
+  .a11y-fab:active {
+    transform: translateY(0) scale(1);
   }
 
   .a11y-panel {

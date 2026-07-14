@@ -1,204 +1,166 @@
-# Setup guide — click by click
+# What's left to do
 
-Everything below is a literal sequence of clicks. Do the steps in order. Each one ends with a
-**Check it worked** box; if that check fails, don't move on.
+Everything in code is done, built and verified. `.env` is filled in, the domain is wired through
+the site, and Vercel has the environment variables.
 
-There are **four** things to set up. Only two of them are strictly required for the site to work.
+**Three things stand between you and a live site**, and they must happen in this order:
 
-| # | Step | Required? | Status right now |
-|---|------|-----------|------------------|
-| 1 | Web3Forms — emails every lead to the office | **Required** | ✅ Already done (key is in `.env`) |
-| 2 | **Cloudinary — stores the uploaded tax assessment** | **Required for the calculator's file upload** | ❌ **NOT DONE — see Step 2** |
-| 3 | Google Sheet — a running log of every lead | Optional | ❌ Not done |
-| 4 | Deploy to Vercel + point the domain | **Required to go live** | ❌ Not done |
+| # | Step | Roughly |
+|---|------|---------|
+| 1 | ⚠️ **Cloudinary: allow PDF delivery** | 2 min |
+| 2 | **Namecheap: create the two DNS records** | 5 min + waiting |
+| 3 | **Deploy, then send one real test lead** | 10 min |
 
----
-
-## ⚠️ Read this first: the one thing that is currently broken
-
-The calculator asks *"האם יש ברשותך עותק של שומת מס הרכישה?"*. If the user answers **כן**, an upload
-field opens immediately and they can pick a PDF/JPG/JPEG/PNG. **That part works.**
-
-But the file has nowhere to be stored, because Cloudinary is not configured. So right now:
-
-- the file is **not** saved,
-- the lead email says `האם הועלתה שומה: לא` and `קישור ישיר לקובץ השומה: לא הועלה`,
-- instead, the email carries a warning line so nothing is lost silently:
-  > `הערת מערכת: לפונה יש קובץ שומה (shuma.pdf) אך הוא לא נשמר - העלאת הקבצים אינה מוגדרת או נכשלה. יש לבקש את הקובץ מהפונה.`
-
-**Step 2 fixes this and takes about three minutes.** Until you do it, Matan has to phone the client
-and ask them to email the assessment.
+Then step 4 — **give Matan the Google Sheet** — whenever you like.
 
 ---
 
-## Step 1 — Web3Forms (already done, but here's how to verify / redo it)
+## 1. ⚠️ Cloudinary: allow PDF delivery
 
-This is what emails every lead. **The access key is tied to one email address** — whichever address
-you sign up with is where all the leads land. There is no way to change the destination without
-making a new key.
+**Do this one first, or the test in step 3 will look like it worked when it didn't.**
 
-1. Open <https://web3forms.com>.
-2. In the **"Create Access Key"** box, type **`matan@abirlev.com`**.
-   ⚠️ It must be this address. Leads go wherever this key was registered.
-3. Click **Create Access Key**.
-4. Open the inbox of `matan@abirlev.com` and click the confirmation link Web3Forms sends.
-5. Copy the access key (it looks like `a1b2c3d4-e5f6-...`).
-6. Open the file **`.env`** in the project root and put it on the `WEB3FORMS_ACCESS_KEY` line:
-
-   ```
-   WEB3FORMS_ACCESS_KEY=paste-the-key-here
-   ```
-
-**Check it worked:** run `npm run dev`, open <http://localhost:4321/contact>, send yourself a test
-message through the form. An email should arrive at `matan@abirlev.com` within a minute. If you get
-the message *"טופס הפנייה יופעל עם השלמת הגדרת האתר"* instead of a form, the key is missing or
-misspelled.
-
----
-
-## Step 2 — Cloudinary (⚠️ THIS IS THE MISSING ONE)
-
-This is where the uploaded tax-assessment files get stored. It is free and needs no credit card.
-
-1. Open <https://cloudinary.com/users/register_free> and sign up.
-2. Once you're in, look at the **Dashboard**. Near the top you'll see **Cloud name** — a short
-   string like `dxy12abcd`. **Copy it.**
-3. Click the **gear icon** (Settings) in the left sidebar.
-4. Click **Upload** in the settings menu.
-5. Scroll down to **Upload presets** and click **Add upload preset**.
-6. Set these two things, and *only* these two:
-   - **Upload preset name** → type `abirlev_shuma` (or anything; just remember it)
-   - **Signing Mode** → change from `Signed` to **`Unsigned`**
-     ⚠️ This is the important one. If it stays `Signed`, uploads from the browser will be
-     rejected and the file will silently fail to save.
-7. Click **Save**.
-8. Open **`.env`** and fill in the two lines:
-
-   ```
-   CLOUDINARY_CLOUD_NAME=dxy12abcd
-   CLOUDINARY_UPLOAD_PRESET=abirlev_shuma
-   ```
-
-**Check it worked:**
-1. `npm run dev`
-2. Go to <http://localhost:4321/calculator>, answer **כן** to the consent question, click through.
-3. On step 3 ("פרטי מס הרכישה"), type any amount and choose **כן** for
-   *"האם יש ברשותך עותק של שומת מס הרכישה?"*.
-4. The upload field appears. Pick any PDF.
-5. Finish the wizard.
-6. In the lead email that arrives, `האם הועלתה שומה` must now say **כן**, and
-   `קישור ישיר לקובץ השומה` must be a clickable `https://res.cloudinary.com/...` link that opens
-   the file. **If it still says `לא הועלה`, the preset is not Unsigned — go back to step 6.**
-
----
-
-## Step 3 — Google Sheet log (optional)
-
-Every lead already arrives by email. This step *additionally* drops each one as a row in a
-spreadsheet, which is easier to scan and to sort than an inbox.
-
-1. Go to <https://sheets.new> to make a new spreadsheet. Name it e.g. `לידים - אביר לב`.
-2. In the menu: **Extensions → Apps Script**.
-3. Delete whatever code is in the editor and paste this in:
-
-   ```js
-   function doPost(e) {
-     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-     const data = e.parameter;
-
-     // first run: write the header row from the field names
-     if (sheet.getLastRow() === 0) {
-       sheet.appendRow(Object.keys(data));
-     }
-     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-     sheet.appendRow(headers.map((h) => data[h] || ''));
-
-     return ContentService.createTextOutput('ok');
-   }
-   ```
-
-4. Click **Deploy → New deployment**.
-5. Click the **gear icon** next to "Select type" and choose **Web app**.
-6. Set:
-   - **Execute as** → `Me`
-   - **Who has access** → **`Anyone`** ⚠️ (it must be `Anyone`, not `Anyone with Google account`,
-     or the site cannot post to it)
-7. Click **Deploy**, then **Authorize access** and approve the permission screens.
-8. Copy the **Web app URL** (`https://script.google.com/macros/s/..../exec`).
-9. Put it in **`.env`**:
-
-   ```
-   SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/..../exec
-   ```
-
-**Check it worked:** complete the calculator once. A new row should appear in the sheet within a few
-seconds. (The site posts to Apps Script "fire and forget" — if the sheet is down, the lead email
-still goes out regardless. The email is the source of truth; the sheet is a convenience.)
-
----
-
-## Step 4 — Go live on Vercel
-
-1. In a terminal, in the project folder:
-
-   ```bash
-   npx vercel login
-   npx vercel
-   ```
-   Accept every default it offers. This gives you a preview URL you can already share.
-
-2. Now give Vercel the same secrets that are in your `.env` — the deployed site cannot read your
-   local file. Run each of these and paste the value when prompted:
-
-   ```bash
-   npx vercel env add WEB3FORMS_ACCESS_KEY production
-   npx vercel env add CLOUDINARY_CLOUD_NAME production
-   npx vercel env add CLOUDINARY_UPLOAD_PRESET production
-   npx vercel env add SHEETS_WEBHOOK_URL production      # only if you did Step 3
-   ```
-
-3. Deploy for real:
-
-   ```bash
-   npx vercel --prod
-   ```
-
-4. **Attach the domain.** In the Vercel dashboard: your project → **Settings → Domains → Add**,
-   type the domain, and follow the DNS instructions it prints.
-
-5. **Last thing, and it's easy to forget:** open `src/data/site-details.json` and change
-
-   ```json
-   "domain": "PLACEHOLDER_DOMAIN"
-   ```
-   to the real address, e.g.
-
-   ```json
-   "domain": "https://www.abirlev.com"
-   ```
-   Then run `npx vercel --prod` once more.
-
-   Until you do this, the `<link rel="canonical">` tags and the sitemap point at the Vercel preview
-   URL instead of the real domain, which is bad for Google.
-
-**Check it worked:** open the live domain, submit the contact form, and confirm the email arrives.
-Then open `https://<your-domain>/sitemap-index.xml` and confirm the URLs inside start with your real
-domain and not `vercel.app`.
-
----
-
-## The `.env` file, finished
-
-When all four steps are done, `.env` looks like this:
+New Cloudinary accounts block PDFs from being *delivered*, as a security default. So the file
+uploads fine and its link gets written into the lead email — but when Matan clicks that link he gets
+a **401 and a blank page**. I confirmed this on your actual account:
 
 ```
-WEB3FORMS_ACCESS_KEY=a1b2c3d4-e5f6-7890-abcd-ef1234567890
-SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/AKfy..../exec
-CLOUDINARY_CLOUD_NAME=dxy12abcd
-CLOUDINARY_UPLOAD_PRESET=abirlev_shuma
+upload the PDF  → HTTP 200 ✅
+open the link   → HTTP 401 ❌  blocked
 ```
 
-Never commit `.env` to git — it is already in `.gitignore`.
+Images (JPG/PNG) are unaffected. But most tax assessments are PDFs, so this is not optional.
+
+1. Go to <https://console.cloudinary.com/settings/security>
+2. Find the checkbox **"PDF and ZIP files delivery"**.
+3. It is currently **checked** (= blocked). **Uncheck it.**
+4. **Save.**
+
+**Confirm it worked** — paste this into your browser. Before the fix it errors; after it, the PDF
+opens:
+
+```
+https://res.cloudinary.com/shs8xqfv/image/upload/v1783957945/vrb9zxtzwjqujzvnkwxu.pdf
+```
+
+---
+
+## 2. Namecheap: the two DNS records
+
+Vercel says **"Invalid Configuration"** next to both domains. **This is not a Vercel problem, and the
+domains are already added correctly.** Vercel is just looking for its records at Namecheap and
+finding nothing. I checked the live DNS:
+
+```
+nameservers        → dns1/dns2.registrar-servers.com   ✅ Namecheap's own DNS, correct
+abirlev.com    A   → (no record)                        ❌ doesn't exist yet
+www.abirlev.com    → NXDOMAIN                           ❌ doesn't exist yet
+```
+
+So there is nothing to fix in Vercel. You need to **create the records at Namecheap.**
+
+Namecheap → **Domain List** → **Manage** (next to `abirlev.com`) → **Advanced DNS** tab.
+
+**First delete what's already there.** Namecheap ships every new domain with parking records that
+will fight yours:
+
+- a `CNAME Record` with Host `@` pointing at `parkingpage.namecheap.com` → **delete**
+- any `URL Redirect Record` → **delete**
+
+**Then add exactly these two:**
+
+| Type | Host | Value | TTL |
+|---|---|---|---|
+| `A Record` | `@` | `216.198.79.1` | Automatic |
+| `CNAME Record` | `www` | `b193ff1177742e78.vercel-dns-017.com` | Automatic |
+
+Save each row with the green checkmark.
+
+Two things that trip people here:
+
+- **Host is `@` and `www` — nothing more.** Not `abirlev.com`, not `www.abirlev.com`. Namecheap
+  appends the domain itself, so typing the full name gives you `www.abirlev.com.abirlev.com`.
+- If Namecheap rejects the CNAME value, **drop the trailing dot.**
+
+Wait 10–30 minutes, then hit **Refresh** on both domains in Vercel. Both badges should go green.
+
+> **`www` is the primary.** `site-details.json` says `https://www.abirlev.com`, so that's what every
+> canonical tag, the sitemap and the form redirects point at, and Vercel should redirect the bare
+> `abirlev.com` → `www.abirlev.com`. If you'd rather it were the other way round, tell me and I'll
+> flip it **in code** — don't just change it in Vercel, or Google will index two copies of every page.
+
+---
+
+## 3. Deploy, then send one real lead
+
+```bash
+npx vercel --prod
+```
+
+Then open `https://www.abirlev.com/calculator` and click all the way through. On step 3, answer
+**כן** to *"האם יש ברשותך עותק של שומת מס הרכישה?"* and **upload a real PDF.**
+
+I verified the lead email builds correctly with all 24 fields by intercepting the request — but I
+can't see Matan's inbox, so this is the one test only you can run.
+
+**In the email that lands at `matan@abirlev.com`, check these three lines:**
+
+| Field | Must say | If it doesn't |
+|---|---|---|
+| `האם הועלתה שומה` | **כן** | Cloudinary isn't reaching Vercel — re-check the env vars |
+| `קישור ישיר לקובץ השומה` | a `res.cloudinary.com/…` link — **click it, the PDF must open** | it 401s → you skipped **step 1** |
+| `סטטוס הליד` | one of `פוטנציאל להחזר` / `לא נמצאה חריגה משמעותית` / `נדרשת בדיקה ידנית` | — |
+
+Then, on the result screen, type something into **"נשמח לשמוע מה דעתכם על המחשבון"** and send it. A
+**second, separate** email should arrive, titled *"משוב על המחשבון"*. That's by design: the lead goes
+out the moment the calculator finishes, and the feedback is collected after that, so it cannot ride
+inside the first email.
+
+Finally, send one message through `/contact` and one through the English investors page, and confirm
+both land.
+
+---
+
+## 4. Giving Matan the Google Sheet
+
+Every lead is mirrored into a Google Sheet (the tab is called **CRM**) by the Apps Script webhook
+you set up. The Sheet lives in **your** Google Drive, so Matan can't see it until you share it.
+
+1. Open the Sheet.
+2. Top right → **Share**.
+3. In *"Add people and groups"*, type **`matan@abirlev.com`**.
+4. Set the role to **Editor** — so he can sort, filter and mark leads as handled — and press **Send**.
+5. He gets an email with a link. That link is his permanent way in; he does not need a password from
+   you and you do not need to send him the URL separately.
+
+**Do NOT use "Anyone with the link".** That Sheet holds people's full names, phone numbers, email
+addresses and their tax figures. A public link means anyone who ever sees it — forwarded, pasted into
+a WhatsApp group, indexed — has the lot. It would also directly contradict the privacy policy on the
+site. Share it to his account by name, and only to his account.
+
+Two things worth knowing so nothing surprises you:
+
+- **`matan@abirlev.com` must be attached to a Google account** for Google to accept it as a named
+  collaborator. If it's a Workspace address, it already is. If Google says it can't find the account,
+  either have him create a free Google account on that address, or share it to a Gmail address he
+  already uses — the Sheet doesn't care which.
+- **Sharing the Sheet does not touch the webhook.** The Apps Script stays deployed as *Execute as:
+  Me / Who has access: Anyone*, which is what lets the website POST to it anonymously. Don't change
+  that while you're in there.
+
+---
+
+## Not setup — decisions still waiting on Matan
+
+- **Ramat Yishai plot 112** — the tender booklet contradicts itself. It's flagged `needsManualFill`
+  in `plots.json`, so anyone who picks it is routed to manual review rather than shown a wrong
+  number. It stays that way until RMI confirms the figure.
+- **Legal pages** (`/privacy`, `/terms`, `/accessibility`) still carry `REVIEW BY LAWYER` comments in
+  the source, as do the 7 calculator disclaimers. All need his sign-off before launch.
+- **WhatsApp number** — WhatsApp points at the mobile `972504009594` while the displayed office line
+  is `03-5607010`. That's deliberate (a landline can't receive WhatsApp) — just confirm it's the
+  number he wants.
+- **Social links** — `linkedinUrl` / `facebookUrl` / `instagramUrl` in `site-details.json` are empty,
+  so no social rows render in the footer. Fill any in and they appear on their own.
 
 ---
 
@@ -206,30 +168,20 @@ Never commit `.env` to git — it is already in `.gitignore`.
 
 | I want to change… | Edit this |
 |---|---|
-| Phone, email, address, office hours, social links, domain | `src/data/site-details.json` |
-| The logo | replace `public/logo.png` |
+| Phone, email, address, hours, socials, domain | `src/data/site-details.json` |
+| The logo | replace `public/logo.png` (if its proportions change a lot, update the `width`/`height` on the `<img>` in `Header.astro` + `Footer.astro`) |
 | Matan's photo | replace `public/images/matan.webp` |
-| The practice areas (name, order, dropdown text, card image) | `src/data/practice-areas.ts` |
-| Text in the header / footer / accessibility widget, in both languages | `src/i18n/ui.ts` |
-| Tender and plot data used by the calculator | `src/data/plots.json` |
+| Practice areas — name, dropdown text, card image | `src/data/practice-areas.ts` |
+| Header / footer / accessibility-widget text, both languages | `src/i18n/ui.ts` |
+| Tender and plot data | `src/data/plots.json` |
 | The field names in the lead email | `buildLeadFields()` in `src/components/calculator/leads.ts` |
 | Colours, fonts, spacing | `src/styles/tokens.css` |
+| How every button looks and behaves | the `============ buttons ============` block in `src/styles/global.css` |
 
-⚠️ **About the practice-area cards:** the home-page grid is 3 columns, and a `wide` card spans 2 of
-them while a `small` card spans 1. The order in `practice-areas.ts` is therefore load-bearing —
-right now it goes wide, small, small, wide, wide, small, small, wide, which tiles into 4 clean rows.
-If you add or remove an area, re-check that each row still adds up to 3, or you'll get a hole in the
-grid.
-
----
-
-## Still outstanding (not setup — decisions for Matan)
-
-- **Ramat Yishai plot 112** — the tender booklet contradicts itself on this plot. It is flagged
-  `needsManualFill` in `plots.json`, so anyone selecting it is routed to a manual review instead of
-  getting a wrong number. It stays that way until RMI confirms the correct figure.
-- **The legal pages** (`/privacy`, `/terms`, `/accessibility`) still carry `REVIEW BY LAWYER`
-  comments in the source. They need Matan's sign-off before launch.
-- **The WhatsApp number** is the mobile (`972504009594`) while the displayed office line is
-  `03-5607010`. That is deliberate — a landline cannot receive WhatsApp — but confirm it's the number
-  he wants people messaging.
+⚠️ **The practice-area tiles.** The home-page grid is six columns: a `wide` tile spans two, a `small`
+square spans one, and they alternate `small, wide, small, wide` / `wide, small, wide, small` so each
+row totals six. That order lives in **`GRID_ORDER`** at the bottom of `practice-areas.ts` and is
+separate from the reading order above it (which drives the header dropdown). Add or remove an area
+and each row must still total six, or the grid grows a hole. There's a guard in the file that throws
+at build time if `GRID_ORDER` names an id that doesn't exist — but it cannot know if your rows still
+add up, so check them yourself.

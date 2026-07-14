@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ContactForm from '../components/ContactForm.astro';
 import site from '../data/site-details.json';
-import { practiceAreas } from '../data/practice-areas';
+import { practiceAreasGrid } from '../data/practice-areas';
 
 const filled = (v: string | undefined | null): v is string =>
   Boolean(v && !v.includes('PLACEHOLDER'));
@@ -70,23 +70,12 @@ const approach = [
       </div>
       <ul class="areas-grid">
         {
-          practiceAreas.map((area, i) => (
+          practiceAreasGrid.map((area, i) => (
             <li
               class:list={['area', area.size === 'wide' && 'area--wide']}
               style={`--area-image:url('${area.image}'); --reveal-delay:${Math.min(i, 5) * 70}ms`}
               data-reveal
             >
-              <span class="area-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d={area.icon}
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
               <span class="area-label">{area.label}</span>
             </li>
           ))
@@ -295,9 +284,19 @@ const approach = [
     justify-content: center;
   }
 
-  /* ===== practice areas - a 3-column layout grid of glass tiles =====
-     Four wide tiles (2 columns each) and four squares (1 column) tile into four
-     clean rows. The order lives in src/data/practice-areas.ts and is load-bearing. */
+  /* ===== practice areas - interlocking glass tiles =====
+     Six columns. A `wide` tile spans two, a `small` square spans one, and the
+     order in practiceAreasGrid alternates them:
+
+         small  wide   small  wide      (1+2+1+2 = 6)
+         wide   small  wide   small     (2+1+2+1 = 6)
+
+     - four tiles per row, long and short taking turns, and the second row
+     mirroring the first. The tiles carry nothing but their label, set large
+     enough to nearly fill the frame. They are not links, so there is no hover.
+
+     The same eight tiles also tile without a hole at 4 columns and at 2, which is
+     what the breakpoints below rely on. */
   .areas-head {
     text-align: center;
     margin-inline: auto;
@@ -307,8 +306,8 @@ const approach = [
     list-style: none;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--sp-5);
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-4);
   }
 
   .area--wide {
@@ -319,19 +318,18 @@ const approach = [
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--sp-4);
-    min-block-size: 16rem;
-    padding: var(--sp-6);
+    display: grid;
+    place-items: center;
+    min-block-size: 11rem;
+    padding: var(--sp-4);
     text-align: center;
     color: #fff;
     background: var(--c-navy-deep);
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-l);
     box-shadow: var(--shadow-lift);
+    /* the label is sized off the tile, not the viewport - see .area-label */
+    container-type: inline-size;
     /* these tiles are not links - nothing to hover */
   }
 
@@ -365,40 +363,43 @@ const approach = [
       );
   }
 
-  .area-icon {
-    display: grid;
-    place-items: center;
-    inline-size: 3.5rem;
-    block-size: 3.5rem;
-    border-radius: var(--radius-m);
-    color: #fff;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(4px);
-  }
-
+  /* The label IS the tile, so it is sized in cqw - a share of the TILE's width,
+     not the viewport's. That is the only unit that keeps the text pressed out to
+     the edges of its own frame: the container caps at 76rem, so a vw-based size
+     would keep growing on a wide monitor while the tile it sits in did not.
+     The plain rem above it is the fallback for anything without container
+     queries. `balance` evens the lines instead of leaving an orphan word. */
   .area-label {
     font-family: var(--ff-body);
-    font-size: var(--fs-ui); /* 18px */
     font-weight: var(--fw-bold);
-    line-height: 1.5;
-    max-width: 22rem;
+    font-size: 1.5rem;
+    /* NB: 1cqw is 1% of the container's CONTENT box, i.e. inside the tile's
+       padding - so these percentages are of ~149px on a square, not ~181px. */
+    font-size: clamp(1.25rem, 17.5cqw, 1.75rem);
+    line-height: 1.25;
+    text-wrap: balance;
     text-shadow: 0 1px 12px rgba(6, 25, 34, 0.6);
   }
 
-  @media (max-width: 64rem) {
-    .areas-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .area--wide .area-label {
+    font-size: 2rem;
+    font-size: clamp(1.5rem, 10cqw, 2.25rem);
+  }
 
-    .area--wide {
-      grid-column: span 2;
+  /* below the six-column width the squares get too narrow to hold a word, so the
+     grid drops to four columns: rows become [S W S] [W W] [S W S] - still no hole.
+     The type needs no adjustment here; it follows the tiles on its own. */
+  @media (max-width: 68rem) {
+    .areas-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
+  /* phones: every tile becomes one column of two, so the wide labels get room */
   @media (max-width: 44rem) {
     .areas-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
     }
 
     .area--wide {
@@ -406,7 +407,16 @@ const approach = [
     }
 
     .area {
-      min-block-size: 13rem;
+      min-block-size: 9.5rem;
+      padding: var(--sp-3);
+    }
+
+    /* every tile is one column wide now, so both sizes converge. 1rem floor -
+       nothing on this site goes below 16px. */
+    .area-label,
+    .area--wide .area-label {
+      font-size: 1.125rem;
+      font-size: clamp(1rem, 14cqw, 1.375rem);
     }
   }
 

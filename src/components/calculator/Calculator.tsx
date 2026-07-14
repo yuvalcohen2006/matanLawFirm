@@ -468,15 +468,14 @@ export default function Calculator() {
               {callback !== 'sent' ? (
                 <button
                   type="button"
-                  className="btn btn--primary"
+                  className={`btn btn--primary${callback === 'sending' ? ' is-loading' : ''}`}
                   onClick={() =>
                     requestCallback('המשתמש ביקש חזרה טלפונית לבדיקה נוספת ולהחזרת המס')
                   }
                   disabled={callback === 'sending'}
+                  aria-busy={callback === 'sending'}
                 >
-                  {callback === 'sending'
-                    ? 'שולח…'
-                    : 'אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות ולהחזרת המס'}
+                  אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות ולהחזרת המס
                 </button>
               ) : null}
             </>
@@ -495,15 +494,16 @@ export default function Calculator() {
               {callback !== 'sent' ? (
                 <button
                   type="button"
-                  className="btn btn--secondary"
+                  className={`btn btn--secondary${callback === 'sending' ? ' is-loading' : ''}`}
                   onClick={() =>
                     requestCallback(
                       'המשתמש ביקש בדיקה משפטית אף שלא נמצאה חריגה משמעותית (עדיפות נמוכה)',
                     )
                   }
                   disabled={callback === 'sending'}
+                  aria-busy={callback === 'sending'}
                 >
-                  {callback === 'sending' ? 'שולח…' : 'אני עדיין מעוניין בבדיקה משפטית'}
+                  אני עדיין מעוניין בבדיקה משפטית
                 </button>
               ) : null}
             </>
@@ -522,13 +522,12 @@ export default function Calculator() {
               {callback !== 'sent' ? (
                 <button
                   type="button"
-                  className="btn btn--primary"
+                  className={`btn btn--primary${callback === 'sending' ? ' is-loading' : ''}`}
                   onClick={() => requestCallback('המשתמש ביקש חזרה טלפונית לבדיקה פרטנית')}
                   disabled={callback === 'sending'}
+                  aria-busy={callback === 'sending'}
                 >
-                  {callback === 'sending'
-                    ? 'שולח…'
-                    : 'אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות'}
+                  אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות
                 </button>
               ) : null}
             </>
@@ -572,10 +571,11 @@ export default function Calculator() {
               </div>
               <button
                 type="submit"
-                className="btn btn--secondary"
+                className={`btn btn--secondary${feedbackState === 'sending' ? ' is-loading' : ''}`}
                 disabled={!feedback.trim() || feedbackState === 'sending'}
+                aria-busy={feedbackState === 'sending'}
               >
-                {feedbackState === 'sending' ? 'שולח…' : 'שליחת המשוב'}
+                שליחת המשוב
               </button>
               {feedbackState === 'failed' && (
                 <p role="alert" className="error-text">

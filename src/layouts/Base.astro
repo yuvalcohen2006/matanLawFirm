@@ -145,6 +145,61 @@ const pixel = filled(site.metaPixelId) ? site.metaPixelId : null;
           window.addEventListener('scroll', onScroll, { passive: true });
         }
       })();
+
+      // Busy buttons.
+      //
+      // A spinner is a promise that something is in flight, so it only goes on
+      // buttons where something really is: a form being POSTed, or a link that is
+      // actually leaving this page. It deliberately does NOT go on #anchors, new
+      // tabs, tel:/mailto:/WhatsApp links, or the calculator's step buttons -
+      // those resolve instantly or are driven by React, and a spinner that never
+      // resolves is worse than no spinner at all.
+      (() => {
+        const busy = (btn) => {
+          if (!btn || btn.classList.contains('is-loading')) return;
+          btn.classList.add('is-loading');
+          btn.setAttribute('aria-busy', 'true');
+        };
+
+        // Forms: both the contact form and the investor form POST to Web3Forms and
+        // then redirect, so the spinner runs until the browser leaves the page.
+        document.addEventListener(
+          'submit',
+          (e) => {
+            const form = e.target;
+            if (!(form instanceof HTMLFormElement) || e.defaultPrevented) return;
+            // a form with no action is handled in JS - not ours to spin
+            if (!form.getAttribute('action')) return;
+            busy(e.submitter || form.querySelector('button[type="submit"], .btn[type="submit"]'));
+          },
+          true,
+        );
+
+        document.addEventListener('click', (e) => {
+          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+            return;
+          const link = e.target.closest && e.target.closest('a.btn');
+          if (!link) return;
+          if (link.target === '_blank' || link.hasAttribute('download')) return;
+
+          const url = new URL(link.href, location.href);
+          if (url.protocol !== 'http:' && url.protocol !== 'https:') return; // tel:, mailto:
+          if (url.origin !== location.origin) return; // WhatsApp, Google Maps
+          // same page, different hash → the browser just scrolls; nothing loads
+          if (url.pathname === location.pathname && url.search === location.search) return;
+
+          busy(link);
+        });
+
+        // Coming Back from a page restored out of the bfcache, the spinner would
+        // otherwise still be turning on the button that took you away.
+        window.addEventListener('pageshow', () => {
+          document.querySelectorAll('.btn.is-loading').forEach((btn) => {
+            btn.classList.remove('is-loading');
+            btn.removeAttribute('aria-busy');
+          });
+        });
+      })();
     </script>
   </body>
 </html>

@@ -147,7 +147,11 @@ a {
     text-decoration-color var(--dur-fast) var(--ease-out);
 }
 
-a:hover {
+/* :not(.btn) is load-bearing. `a:hover` (0,1,1) outranks `.btn` (0,1,0), so
+   without it every link styled as a button had its label repainted teal on hover -
+   which on the filled teal button meant white text turning dark teal on a teal
+   plate, i.e. vanishing. Buttons own their label colour; see --btn-ink. */
+a:not(.btn):hover {
   color: var(--c-teal-text);
   text-decoration-color: var(--c-teal-text);
 }
@@ -258,11 +262,21 @@ bdi,
 }
 
 /* ============ buttons ============
-   One design for every button on the site: a white plate with a teal hairline,
-   a teal label, a shine that sweeps across on hover and a short shake. The two
-   modifiers only swap the fill - geometry and motion are identical.
+   One design for every button on the site. The fill and the label NEVER change -
+   not on hover, not on press. All the feedback is motion:
+
+     hover  → the plate lifts, and a diagonal shine sweeps across it
+     press  → it drops back down onto the page
+     busy   → the label gives way to a spinner (see .is-loading, driven by
+              Base.astro for real navigations and form posts, and by the
+              calculator for its own in-flight requests)
+
+   The two modifiers only swap the fill; geometry and motion are identical.
+   --btn-ink is the label colour, and the spinner reads it - so it stays legible
+   on both the white plate and the teal one.
    ============================================================================ */
 .btn {
+  --btn-ink: var(--c-teal-text);
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -282,9 +296,13 @@ bdi,
   background: var(--c-surface);
   border: 1px solid var(--c-teal-60);
   border-radius: var(--radius-m);
-  color: var(--c-teal-text);
+  color: var(--btn-ink);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+  /* explicit properties, not `all`: the fill and the label must be excluded, or
+     a stray :hover rule anywhere could animate them and undo the point of this. */
+  transition: transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
 }
 
 /* the shine: a tilted bar that travels across the plate on hover.
@@ -307,40 +325,25 @@ bdi,
   inset-inline-start: 120%;
 }
 
+/* lift, not shake: the plate rises off the page and casts a longer shadow */
 .btn:hover {
+  transform: translateY(-3px);
   border-color: var(--c-teal);
-  box-shadow: var(--shadow-btn);
-  animation: btn-shake 0.7s ease-in-out both;
+  box-shadow: var(--shadow-btn-hover);
 }
 
-@keyframes btn-shake {
-  0% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
-  }
-  25% {
-    transform: rotate(3deg) translate3d(0, 0, 0);
-  }
-  50% {
-    transform: rotate(-3deg) translate3d(0, 0, 0);
-  }
-  75% {
-    transform: rotate(1deg) translate3d(0, 0, 0);
-  }
-  100% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
-  }
-}
-
+/* and drops back onto it when pressed */
 .btn:active {
-  transform: scale(0.985);
+  transform: translateY(0);
+  box-shadow: var(--shadow-btn);
   transition-duration: var(--dur-fast);
 }
 
 /* filled: the same plate, inked in the brand teal */
 .btn--primary {
+  --btn-ink: #fff;
   background: var(--c-teal);
   border-color: var(--c-teal);
-  color: #fff;
   box-shadow: var(--shadow-btn);
 }
 
@@ -349,21 +352,63 @@ bdi,
   opacity: 0.3;
 }
 
-.btn--primary:hover {
-  background: var(--c-teal-text);
-  border-color: var(--c-teal-text);
-  box-shadow: var(--shadow-btn-hover);
-}
-
 /* outline: the base plate, named so call sites read clearly */
 .btn--secondary {
   background: var(--c-surface);
-  color: var(--c-teal-text);
 }
 
 .btn--small {
   min-block-size: 2.875rem; /* 46px - header density, still above the target floor */
-  padding: 10px 22px;
+  padding: 10px 20px;
+  /* Header buttons must never wrap onto two lines. The wordmark is a wide 3.3:1
+     lockup, so the bar is tight; the calculator's long-label buttons opt back out
+     of this with white-space: normal. */
+  white-space: nowrap;
+}
+
+/* ---- busy ----
+   The label is made invisible in place rather than removed, so the button keeps
+   its exact width and the row doesn't reflow underneath the user's cursor. */
+.btn.is-loading {
+  color: transparent;
+  pointer-events: none;
+  transform: translateY(0);
+}
+
+.btn.is-loading > * {
+  visibility: hidden;
+}
+
+.btn.is-loading::before {
+  content: '';
+  position: absolute;
+  /* inset:0 + margin:auto centres a fixed-size absolute box without transforms,
+     which keeps it dead-centre in both RTL and LTR */
+  inset: 0;
+  margin: auto;
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+  border-radius: 50%;
+  /* two solid sides, two transparent: the classic half-ring. Written out in
+     longhand rather than with a conic-gradient + mask, which still needs vendor
+     prefixes in older Safari. */
+  border: 2px solid transparent;
+  border-block-start-color: var(--btn-ink);
+  border-inline-end-color: var(--btn-ink);
+  animation: btn-spin 700ms linear infinite;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* a loading button is disabled, but it must not also look greyed out - the
+   spinner is the message */
+.btn.is-loading:disabled,
+.btn.is-loading[aria-disabled='true'] {
+  opacity: 1;
 }
 
 .btn:disabled,
@@ -371,12 +416,30 @@ bdi,
   opacity: 0.45;
   cursor: not-allowed;
   box-shadow: none;
-  animation: none;
+  transform: none;
 }
 
 .btn:disabled::after,
 .btn[aria-disabled='true']::after {
   display: none;
+}
+
+/* Motion off → no lift, no sweep. But the spinner must keep spinning: it is the
+   only signal that anything is happening, and a frozen one reads as a broken
+   button. Both the blanket `animation: none` in the a11y-motion block and the
+   `animation-duration: .01ms / iteration-count: 1` in the reduced-motion block
+   above would stop it, so each is opted back out of here - slower, in the second
+   case, because a lazy rotation is far easier on a motion-sensitive reader than
+   a fast one. */
+html.a11y-motion .btn.is-loading::before {
+  animation: btn-spin 1s linear infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn.is-loading::before {
+    animation: btn-spin 1s linear infinite !important;
+    animation-iteration-count: infinite !important;
+  }
 }
 
 .on-dark h1,
@@ -583,6 +646,11 @@ fieldset {
   border-color: var(--c-teal);
   background: var(--c-teal-tint);
   transform: translateY(-2px);
+}
+
+/* same language as the buttons: lifts on hover, drops back when pressed */
+.radio-pill:active {
+  transform: translateY(0);
 }
 
 .radio-pill:has(input:checked) {

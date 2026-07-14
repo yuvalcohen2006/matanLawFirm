@@ -34,7 +34,7 @@ const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
 <header class="site-header">
   <div class="container header-inner">
     <a href={homeHref} class="brand" aria-label={s.homeAria}>
-      <img src={site.logoPath} alt={s.logoAlt} width="1041" height="512" />
+      <img src={site.logoPath} alt={s.logoAlt} width="1836" height="552" />
     </a>
 
     <nav class="nav" aria-label={s.navMain}>
@@ -140,7 +140,7 @@ const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
 <div class="sheet-overlay" hidden></div>
 <aside class="sheet" id="mobile-sheet" aria-label={s.navMain} hidden>
   <div class="sheet-head">
-    <img class="sheet-logo" src={site.logoPath} alt={s.logoAlt} width="1041" height="512" />
+    <img class="sheet-logo" src={site.logoPath} alt={s.logoAlt} width="1836" height="552" />
     <button type="button" class="sheet-close" aria-label={s.closeMenu}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -307,7 +307,9 @@ const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
   }
 
   .brand img {
-    block-size: 3.5rem; /* 56px - the logo already contains the firm's name */
+    /* The wordmark is a wide 3.3:1 lockup that already carries the firm's name,
+       so it reads big at a shorter height than a square mark would need. */
+    block-size: 3rem; /* 48px -> ~160px wide */
     inline-size: auto;
   }
 

@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import site from '../../data/site-details.json';
-import { practiceAreas } from '../../data/practice-areas';
+import { practiceAreasGrid } from '../../data/practice-areas';
 
 const filled = (v: string | undefined | null): v is string =>
   Boolean(v && !v.includes('PLACEHOLDER'));
@@ -72,23 +72,12 @@ const approach = [
       </div>
       <ul class="areas-grid">
         {
-          practiceAreas.map((area, i) => (
+          practiceAreasGrid.map((area, i) => (
             <li
               class:list={['area', area.size === 'wide' && 'area--wide']}
               style={`--area-image:url('${area.image}'); --reveal-delay:${Math.min(i, 5) * 70}ms`}
               data-reveal
             >
-              <span class="area-icon" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d={area.icon}
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
               <span class="area-label">{area.labelEn}</span>
             </li>
           ))
@@ -297,7 +286,9 @@ const approach = [
     justify-content: center;
   }
 
-  /* ===== practice areas - same glass grid as the Hebrew home ===== */
+  /* ===== practice areas - same interlocking glass grid as the Hebrew home.
+     Six columns; wide tiles span two, squares span one, alternating so each row
+     holds four tiles and the second row mirrors the first. See index.astro. ===== */
   .areas-head {
     text-align: center;
     margin-inline: auto;
@@ -307,8 +298,8 @@ const approach = [
     list-style: none;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--sp-5);
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-4);
   }
 
   .area--wide {
@@ -319,19 +310,17 @@ const approach = [
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--sp-4);
-    min-block-size: 16rem;
-    padding: var(--sp-6);
+    display: grid;
+    place-items: center;
+    min-block-size: 11rem;
+    padding: var(--sp-4);
     text-align: center;
     color: #fff;
     background: var(--c-navy-deep);
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: var(--radius-l);
     box-shadow: var(--shadow-lift);
+    container-type: inline-size;
   }
 
   .area::before {
@@ -360,40 +349,42 @@ const approach = [
       );
   }
 
-  .area-icon {
-    display: grid;
-    place-items: center;
-    inline-size: 3.5rem;
-    block-size: 3.5rem;
-    border-radius: var(--radius-m);
-    color: #fff;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(4px);
-  }
-
+  /* Sized off the tile in cqw, exactly as on the Hebrew home - but a notch
+     smaller, because English runs longer and carries unbreakable words like
+     "Representation". `hyphens` lets the browser split those, and `break-word`
+     guarantees nothing can spill past the frame even where hyphenation is
+     unavailable. The plain rem is the no-container-queries fallback. */
   .area-label {
     font-family: var(--ff-body);
-    font-size: var(--fs-ui);
     font-weight: var(--fw-bold);
-    line-height: 1.5;
-    max-width: 22rem;
+    font-size: 1.25rem;
+    /* 1cqw is 1% of the tile's CONTENT box, inside its padding - see index.astro */
+    font-size: clamp(1.125rem, 15cqw, 1.5rem);
+    line-height: 1.25;
+    text-wrap: balance;
+    hyphens: auto;
+    /* `anywhere`, not `break-word`: break-word does not shrink the min-content
+       size, so a long English word could still push past the tile and get clipped
+       by its overflow:hidden. This is the guarantee that never happens. */
+    overflow-wrap: anywhere;
     text-shadow: 0 1px 12px rgba(6, 25, 34, 0.6);
   }
 
-  @media (max-width: 64rem) {
-    .areas-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .area--wide .area-label {
+    font-size: 1.75rem;
+    font-size: clamp(1.375rem, 8cqw, 1.875rem);
+  }
 
-    .area--wide {
-      grid-column: span 2;
+  @media (max-width: 68rem) {
+    .areas-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
   @media (max-width: 44rem) {
     .areas-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
     }
 
     .area--wide {
@@ -401,7 +392,15 @@ const approach = [
     }
 
     .area {
-      min-block-size: 13rem;
+      min-block-size: 9.5rem;
+      padding: var(--sp-3);
+    }
+
+    /* 1rem floor - nothing on this site goes below 16px */
+    .area-label,
+    .area--wide .area-label {
+      font-size: 1.0625rem;
+      font-size: clamp(1rem, 12.5cqw, 1.25rem);
     }
   }
 
