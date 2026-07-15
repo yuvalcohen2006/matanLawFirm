@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import site from '../../data/site-details.json';
 import { practiceAreasGrid } from '../../data/practice-areas';
+import { INVESTORS_PAGE } from '../../i18n/ui';
 
 const filled = (v: string | undefined | null): v is string =>
   Boolean(v && !v.includes('PLACEHOLDER'));
@@ -35,7 +36,7 @@ const approach = [
 
 <Base
   title="Adv. Matan Abir Lev - Real Estate, Property and Real Estate Taxation"
-  description="The law offices of Matan Abir Lev provide precise, strategic and personal legal representation in Israeli real estate transactions: purchase and sale, buying from developers, land deals, real estate taxation, Israel Land Authority matters, urban renewal and foreign investors."
+  description="The law offices of Matan Abir Lev provide precise, strategic and personal legal representation in Israeli real estate transactions: purchase and sale, buying from developers, land deals, real estate taxation, Israel Land Authority matters, urban renewal and international investors."
   preloadImage="/images/hero-building.webp"
   lang="en"
   altHref="/"
@@ -86,18 +87,18 @@ const approach = [
     </div>
   </section>
 
-  <!-- ===== Foreign investors teaser ===== -->
+  <!-- ===== Invest in Israel teaser ===== -->
   <section class="section invest-teaser-section" aria-labelledby="invest-teaser-title">
     <div class="container">
       <div class="invest-teaser on-dark" data-reveal>
         <div class="invest-teaser-copy">
           <h2 id="invest-teaser-title">Buying or investing in Israeli real estate from abroad?</h2>
           <p>
-            We give foreign buyers and investors end-to-end legal, commercial and strategic
-            guidance - from sourcing the opportunity through to closing.
+            End-to-end legal and strategic representation for overseas buyers and investors
+            purchasing property or investing in Israeli real estate.
           </p>
         </div>
-        <a class="btn btn--primary" href="/en/foreign-investors">Foreign Investors</a>
+        <a class="btn btn--primary" href={INVESTORS_PAGE}>Invest in Israel</a>
       </div>
     </div>
   </section>
@@ -119,7 +120,7 @@ const approach = [
         <p class="sub">
           An Israeli attorney practising across every corner of real estate, who trained at one of
           Israel's leading real estate law firms. He represents buyers, sellers, investors and
-          foreign residents in property transactions and development projects - personally,
+          overseas residents in property transactions and development projects - personally,
           responsively and transparently throughout.
         </p>
         <a class="btn btn--secondary" href="/en/about">More about Adv. Matan Abir Lev</a>
@@ -404,7 +405,7 @@ const approach = [
     }
   }
 
-  /* ===== foreign investors teaser ===== */
+  /* ===== invest in israel teaser ===== */
   .invest-teaser-section {
     padding-block-start: 0;
   }

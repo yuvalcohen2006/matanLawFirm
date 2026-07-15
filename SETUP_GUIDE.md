@@ -1,166 +1,184 @@
-# What's left to do
+# Deploying this update to abirlev.com
 
-Everything in code is done, built and verified. `.env` is filled in, the domain is wired through
-the site, and Vercel has the environment variables.
+Everything in code is done, built, and verified in a real browser. What's left is the handful of
+steps that can only happen on **your** accounts — pushing to GitHub, and confirming Vercel and the
+live site look right afterwards. This guide is click-by-click.
 
-**Three things stand between you and a live site**, and they must happen in this order:
+Do them in order:
 
-| # | Step | Roughly |
-|---|------|---------|
-| 1 | ⚠️ **Cloudinary: allow PDF delivery** | 2 min |
-| 2 | **Namecheap: create the two DNS records** | 5 min + waiting |
-| 3 | **Deploy, then send one real test lead** | 10 min |
+| # | Step | Where | Roughly |
+|---|------|-------|---------|
+| 1 | **Push the code to GitHub** | your terminal | 3 min |
+| 2 | **Watch Vercel build and go live** | vercel.com | 2 min + build |
+| 3 | **Confirm the lead-form env var is set** | vercel.com | 2 min |
+| 4 | **Verify the changes on the live site** | your browser | 5 min |
 
-Then step 4 — **give Matan the Google Sheet** — whenever you like.
-
----
-
-## 1. ⚠️ Cloudinary: allow PDF delivery
-
-**Do this one first, or the test in step 3 will look like it worked when it didn't.**
-
-New Cloudinary accounts block PDFs from being *delivered*, as a security default. So the file
-uploads fine and its link gets written into the lead email — but when Matan clicks that link he gets
-a **401 and a blank page**. I confirmed this on your actual account:
-
-```
-upload the PDF  → HTTP 200 ✅
-open the link   → HTTP 401 ❌  blocked
-```
-
-Images (JPG/PNG) are unaffected. But most tax assessments are PDFs, so this is not optional.
-
-1. Go to <https://console.cloudinary.com/settings/security>
-2. Find the checkbox **"PDF and ZIP files delivery"**.
-3. It is currently **checked** (= blocked). **Uncheck it.**
-4. **Save.**
-
-**Confirm it worked** — paste this into your browser. Before the fix it errors; after it, the PDF
-opens:
-
-```
-https://res.cloudinary.com/shs8xqfv/image/upload/v1783957945/vrb9zxtzwjqujzvnkwxu.pdf
-```
+> **Why can't Claude just push it?** The repo is **private**, and the terminal Claude ran in has no
+> login for your GitHub account. Claude committed everything locally and set the remote — but the
+> final push has to come from your machine, where you're signed in. That's the one step below.
 
 ---
 
-## 2. Namecheap: the two DNS records
+## 1. Push the code to GitHub
 
-Vercel says **"Invalid Configuration"** next to both domains. **This is not a Vercel problem, and the
-domains are already added correctly.** Vercel is just looking for its records at Namecheap and
-finding nothing. I checked the live DNS:
+Your local folder already has the commit ready on `main`, with the remote pointed at
+`github.com/yuvalcohen2006/matanLawFirm`. One catch: this folder was a **ZIP download**, not a
+`git clone`, so its history isn't connected to the repo's. A plain `git push` would be rejected.
+The steps below replay the change as **one clean commit on top of your current remote `main`**, which
+avoids that entirely and keeps a proper, revertible history.
 
-```
-nameservers        → dns1/dns2.registrar-servers.com   ✅ Namecheap's own DNS, correct
-abirlev.com    A   → (no record)                        ❌ doesn't exist yet
-www.abirlev.com    → NXDOMAIN                           ❌ doesn't exist yet
-```
-
-So there is nothing to fix in Vercel. You need to **create the records at Namecheap.**
-
-Namecheap → **Domain List** → **Manage** (next to `abirlev.com`) → **Advanced DNS** tab.
-
-**First delete what's already there.** Namecheap ships every new domain with parking records that
-will fight yours:
-
-- a `CNAME Record` with Host `@` pointing at `parkingpage.namecheap.com` → **delete**
-- any `URL Redirect Record` → **delete**
-
-**Then add exactly these two:**
-
-| Type | Host | Value | TTL |
-|---|---|---|---|
-| `A Record` | `@` | `216.198.79.1` | Automatic |
-| `CNAME Record` | `www` | `b193ff1177742e78.vercel-dns-017.com` | Automatic |
-
-Save each row with the green checkmark.
-
-Two things that trip people here:
-
-- **Host is `@` and `www` — nothing more.** Not `abirlev.com`, not `www.abirlev.com`. Namecheap
-  appends the domain itself, so typing the full name gives you `www.abirlev.com.abirlev.com`.
-- If Namecheap rejects the CNAME value, **drop the trailing dot.**
-
-Wait 10–30 minutes, then hit **Refresh** on both domains in Vercel. Both badges should go green.
-
-> **`www` is the primary.** `site-details.json` says `https://www.abirlev.com`, so that's what every
-> canonical tag, the sitemap and the form redirects point at, and Vercel should redirect the bare
-> `abirlev.com` → `www.abirlev.com`. If you'd rather it were the other way round, tell me and I'll
-> flip it **in code** — don't just change it in Vercel, or Google will index two copies of every page.
-
----
-
-## 3. Deploy, then send one real lead
+Open a terminal in the project folder and run these one at a time:
 
 ```bash
-npx vercel --prod
+cd "c:/Yuvalco/private-projects/matanLawFirm/matanLawFirm-main"
+
+# a) Make sure you're signed in to GitHub.
+#    The simplest way: the first push (step e) pops up a browser login via Git
+#    Credential Manager. If you have the GitHub CLI instead, run:  gh auth login
+
+# b) Fetch the repo's real history (now that you're authenticated, this succeeds):
+git fetch origin
+
+# c) Put Claude's change on top of the latest remote main, as a single commit:
+git reset --soft origin/main
+git commit -C ORIG_HEAD          # reuses the full commit message Claude wrote
+
+# d) Look at exactly what will change before you push — sanity check:
+git diff --cached --stat HEAD~1
+#    You should see the invest-in-israel page added, foreign-investors deleted,
+#    the favicons, the calculator/leads files, vercel.json, and the nav/i18n edits.
+#    If you see files you don't recognise being changed, STOP and tell Claude.
+
+# e) Push. This is what triggers Vercel.
+git push origin main
 ```
 
-Then open `https://www.abirlev.com/calculator` and click all the way through. On step 3, answer
-**כן** to *"האם יש ברשותך עותק של שומת מס הרכישה?"* and **upload a real PDF.**
-
-I verified the lead email builds correctly with all 24 fields by intercepting the request — but I
-can't see Matan's inbox, so this is the one test only you can run.
-
-**In the email that lands at `matan@abirlev.com`, check these three lines:**
-
-| Field | Must say | If it doesn't |
-|---|---|---|
-| `האם הועלתה שומה` | **כן** | Cloudinary isn't reaching Vercel — re-check the env vars |
-| `קישור ישיר לקובץ השומה` | a `res.cloudinary.com/…` link — **click it, the PDF must open** | it 401s → you skipped **step 1** |
-| `סטטוס הליד` | one of `פוטנציאל להחזר` / `לא נמצאה חריגה משמעותית` / `נדרשת בדיקה ידנית` | — |
-
-Then, on the result screen, type something into **"נשמח לשמוע מה דעתכם על המחשבון"** and send it. A
-**second, separate** email should arrive, titled *"משוב על המחשבון"*. That's by design: the lead goes
-out the moment the calculator finishes, and the feedback is collected after that, so it cannot ride
-inside the first email.
-
-Finally, send one message through `/contact` and one through the English investors page, and confirm
-both land.
+If step (b) fails with **"Repository not found"**, you're not authenticated — GitHub hides private
+repos from anonymous users. Sign in (`gh auth login`, or let the browser prompt appear) and retry.
 
 ---
 
-## 4. Giving Matan the Google Sheet
+## 2. Watch Vercel build and go live
 
-Every lead is mirrored into a Google Sheet (the tab is called **CRM**) by the Apps Script webhook
-you set up. The Sheet lives in **your** Google Drive, so Matan can't see it until you share it.
+The moment your push lands, Vercel starts building — you don't click "deploy" anywhere.
 
-1. Open the Sheet.
-2. Top right → **Share**.
-3. In *"Add people and groups"*, type **`matan@abirlev.com`**.
-4. Set the role to **Editor** — so he can sort, filter and mark leads as handled — and press **Send**.
-5. He gets an email with a link. That link is his permanent way in; he does not need a password from
-   you and you do not need to send him the URL separately.
+1. Go to **<https://vercel.com>** and sign in.
+2. On the dashboard, click the project for **abirlev.com** (its name may be `matan-law-firm`,
+   `matanlawfirm`, or similar).
+3. Open the **Deployments** tab (top of the project page).
+4. The **top row** is your new deployment. Watch its status:
+   - **Building** (yellow) → give it 1–2 minutes.
+   - **Ready** (green) → it's live.
+   - **Error** (red) → open it, click the **Build Logs**, and send Claude the red lines.
+5. Confirm it's the right one: the row shows the commit message
+   *"Invest in Israel page overhaul…"* and is labelled **Production** (not "Preview").
 
-**Do NOT use "Anyone with the link".** That Sheet holds people's full names, phone numbers, email
-addresses and their tax figures. A public link means anyone who ever sees it — forwarded, pasted into
-a WhatsApp group, indexed — has the lot. It would also directly contradict the privacy policy on the
-site. Share it to his account by name, and only to his account.
-
-Two things worth knowing so nothing surprises you:
-
-- **`matan@abirlev.com` must be attached to a Google account** for Google to accept it as a named
-  collaborator. If it's a Workspace address, it already is. If Google says it can't find the account,
-  either have him create a free Google account on that address, or share it to a Gmail address he
-  already uses — the Sheet doesn't care which.
-- **Sharing the Sheet does not touch the webhook.** The Apps Script stays deployed as *Execute as:
-  Me / Who has access: Anyone*, which is what lets the website POST to it anonymously. Don't change
-  that while you're in there.
+When the top row is a green **Production / Ready**, `www.abirlev.com` is serving the new code.
 
 ---
 
-## Not setup — decisions still waiting on Matan
+## 3. Confirm the lead-form env var is set
 
-- **Ramat Yishai plot 112** — the tender booklet contradicts itself. It's flagged `needsManualFill`
-  in `plots.json`, so anyone who picks it is routed to manual review rather than shown a wrong
-  number. It stays that way until RMI confirms the figure.
-- **Legal pages** (`/privacy`, `/terms`, `/accessibility`) still carry `REVIEW BY LAWYER` comments in
-  the source, as do the 7 calculator disclaimers. All need his sign-off before launch.
-- **WhatsApp number** — WhatsApp points at the mobile `972504009594` while the displayed office line
-  is `03-5607010`. That's deliberate (a landline can't receive WhatsApp) — just confirm it's the
-  number he wants.
+The lead emails only work if **`WEB3FORMS_ACCESS_KEY`** is present in Vercel's environment. The site
+is already live with working forms, so it's almost certainly there — but a five-second check now
+saves a silent "no leads arriving" later.
+
+1. Still in the Vercel project → **Settings** (top nav) → **Environment Variables** (left sidebar).
+2. In the list, confirm a row named **`WEB3FORMS_ACCESS_KEY`** exists, with **Production** among its
+   environments. (The value is hidden — that's fine, you don't need to see it.)
+3. These three are **optional** — present if the matching feature is in use, absent is OK:
+   - `SHEETS_WEBHOOK_URL` — mirrors leads into the Google Sheet.
+   - `CLOUDINARY_CLOUD_NAME` and `CLOUDINARY_UPLOAD_PRESET` — the tax-assessment file upload.
+
+> **If you just added or changed a variable here, it does NOT apply to the site until you redeploy.**
+> Go to **Deployments**, open the top row's **⋯** menu, and click **Redeploy**. Variables are baked in
+> at build time — an existing live deployment keeps its old values.
+
+---
+
+## 4. Verify the changes on the live site
+
+Do these in your browser against the **live** site. A couple of them are things Claude literally
+cannot see (your inbox), so they're the important ones.
+
+### 4a. The renamed page and its redirect
+
+- Open **<https://www.abirlev.com/en/invest-in-israel>** → you should land on the new page, headline
+  **"Bringing You Home"**, with the in-page bar (ABOUT US · WHY CHOOSE US · OUR SERVICES · HOW IT
+  WORKS · CONTACT) sticking below the header as you scroll.
+- Open the **old** URL **<https://www.abirlev.com/en/foreign-investors>** → it must **redirect** to
+  `/en/invest-in-israel`. This preserves any existing Google ranking and bookmarks.
+- In the top nav, the English tab now reads **INVEST IN ISRAEL** (not "Foreign Investors").
+
+### 4b. The favicon (your logo emblem)
+
+- Look at the **browser tab** — the little icon should be the firm's **building emblem** (teal on
+  navy), not a blank page and not the old gold squares.
+- Favicons are cached hard by browsers. If you still see the old one, do a hard refresh
+  (**Ctrl+Shift+R**), or check in a private/incognito window.
+- Optional deeper check: open **<https://www.abirlev.com/favicon.ico>** directly — it should show the
+  emblem.
+
+### 4c. The calculator lead — one email, and it actually arrives
+
+This is the fix you reported, and the one test only you can run (Claude can't see Matan's inbox).
+
+**Test A — the "have a lawyer call me" click (this was the bug):**
+1. Open **<https://www.abirlev.com/calculator>**, accept the consent, and fill the wizard so it
+   produces the **"שילמת יותר…"** (overpayment) result. A combination that works: settlement
+   **בית שאן**, plot **252**, tax paid **50000**, no relief, land component **250000**.
+2. On the result screen, click **"אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי…"**.
+3. You should see the green **"הפרטים התקבלו בהצלחה"** confirmation.
+4. **Check `matan@abirlev.com`:** exactly **one** email should arrive, titled
+   **"בקשת יצירת קשר מפונה…"**, containing the name/phone/email you typed. Before this fix, that
+   click sent nothing at all.
+
+**Test B — completing the wizard without clicking the button:**
+1. Run the wizard again to any result, but this time **don't** click the callback button — just
+   leave the page (close the tab or navigate away).
+2. **Check the inbox:** exactly **one** email should arrive, titled **"ליד חדש…"**.
+
+> **Why "exactly one" matters:** the automatic lead is now held for a short grace window so that
+> clicking the callback button *replaces* it rather than adding a second email. Click → you get the
+> "בקשת יצירת קשר" email. Don't click → you get the plain "ליד חדש" email. Never both. If you ever see
+> **two** emails for one visitor, tell Claude — that's the exact thing this change prevents.
+
+The **feedback box** ("נשמח לשמוע מה דעתכם") on the result screen is separate and unchanged: typing
+there and sending produces its own **"משוב על המחשבון"** email, which is intentional and is *not* a
+duplicate lead.
+
+### 4d. The other forms
+
+- Send one message through **<https://www.abirlev.com/contact>** and confirm it lands.
+- Send one through the **Contact** section of the invest-in-israel page and confirm it lands.
+
+---
+
+## If something's wrong
+
+- **Site didn't change / still shows the old page** → the deploy hasn't finished or didn't trigger.
+  Re-check step 2; make sure the top Deployments row is green **Production**.
+- **The redirect (4a) 404s instead of redirecting** → the deploy is from before this change, or
+  `vercel.json` didn't ship. Confirm the pushed commit is the one that built.
+- **No lead email arrives (4c)** → re-check step 3 (`WEB3FORMS_ACCESS_KEY`), and remember a
+  newly-added variable needs a **redeploy** to take effect.
+- **Favicon still old (4b)** → almost always browser cache; hard-refresh or use incognito before
+  assuming it's broken.
+
+---
+
+## Decisions still waiting on Matan (unchanged by this update)
+
+- **Ramat Yishai plot 112** — the tender booklet contradicts itself, so it's flagged
+  `needsManualFill` in `plots.json`: anyone who picks it is routed to manual review rather than shown
+  a wrong number. Stays that way until RMI confirms the figure.
+- **Legal pages** (`/privacy`, `/terms`, `/accessibility`) and the 7 calculator disclaimers still
+  need his lawyer sign-off before you consider the site formally launched.
+- **WhatsApp vs. office line** — WhatsApp points at the mobile `972504009594` while the displayed
+  office number is `03-5607010` (a landline can't receive WhatsApp). Deliberate; just confirm it's
+  the number he wants.
 - **Social links** — `linkedinUrl` / `facebookUrl` / `instagramUrl` in `site-details.json` are empty,
-  so no social rows render in the footer. Fill any in and they appear on their own.
+  so no social icons render in the footer. Fill any in and they appear.
 
 ---
 
@@ -169,19 +187,19 @@ Two things worth knowing so nothing surprises you:
 | I want to change… | Edit this |
 |---|---|
 | Phone, email, address, hours, socials, domain | `src/data/site-details.json` |
-| The logo | replace `public/logo.png` (if its proportions change a lot, update the `width`/`height` on the `<img>` in `Header.astro` + `Footer.astro`) |
+| The logo | replace `public/logo.png`, then **re-run `node scripts/make-favicons.mjs`** so the favicons regenerate from the new logo |
 | Matan's photo | replace `public/images/matan.webp` |
 | Practice areas — name, dropdown text, card image | `src/data/practice-areas.ts` |
+| The Invest in Israel page copy | `src/pages/en/invest-in-israel.astro` (the arrays near the top: `whyUs`, `services`, `steps`, `areas`) |
 | Header / footer / accessibility-widget text, both languages | `src/i18n/ui.ts` |
 | Tender and plot data | `src/data/plots.json` |
 | The field names in the lead email | `buildLeadFields()` in `src/components/calculator/leads.ts` |
+| How long the auto-lead waits before sending (the dedup grace) | `LEAD_GRACE_MS` in `src/components/calculator/Calculator.tsx` |
+| The security headers (CSP etc.) | the `headers` block in `vercel.json` — if you add a new third-party service, its origin must be added to the CSP or the browser will block it |
 | Colours, fonts, spacing | `src/styles/tokens.css` |
-| How every button looks and behaves | the `============ buttons ============` block in `src/styles/global.css` |
 
 ⚠️ **The practice-area tiles.** The home-page grid is six columns: a `wide` tile spans two, a `small`
-square spans one, and they alternate `small, wide, small, wide` / `wide, small, wide, small` so each
-row totals six. That order lives in **`GRID_ORDER`** at the bottom of `practice-areas.ts` and is
-separate from the reading order above it (which drives the header dropdown). Add or remove an area
-and each row must still total six, or the grid grows a hole. There's a guard in the file that throws
-at build time if `GRID_ORDER` names an id that doesn't exist — but it cannot know if your rows still
-add up, so check them yourself.
+square spans one, alternating so each row totals six. That order lives in **`GRID_ORDER`** at the
+bottom of `practice-areas.ts`, separate from the reading order above it. Add or remove an area and
+each row must still total six, or the grid grows a hole. A build-time guard throws if `GRID_ORDER`
+names an unknown id, but it can't tell whether your rows still add up — check them yourself.

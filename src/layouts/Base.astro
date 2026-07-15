@@ -55,7 +55,20 @@ const pixel = filled(site.metaPixelId) ? site.metaPixelId : null;
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={lang === 'he' ? 'en' : 'he'} href={alternate} />
     <link rel="alternate" hreflang={lang} href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/*
+      The firm's logo EMBLEM is the site icon - tab, bookmark, search result and
+      phone shortcut. The wordmark is deliberately left out: at 16px the Hebrew
+      lettering is an unreadable smudge. All of these are built from public/logo.png
+      by scripts/make-favicons.mjs - re-run it if the logo changes.
+      favicon.ico stays because crawlers still request /favicon.ico by hard-coded path.
+    */}
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#061922" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content="website" />
@@ -143,6 +156,16 @@ const pixel = filled(site.metaPixelId) ? site.metaPixelId : null;
           const onScroll = () => header.classList.toggle('is-stuck', window.scrollY > 12);
           onScroll();
           window.addEventListener('scroll', onScroll, { passive: true });
+
+          // Publish the header's height so anything that has to sit below it - a
+          // page's own sticky sub-nav, the scroll-margin on anchor targets - can
+          // line up with it. It is not a constant: the header condenses on scroll
+          // and rewraps at narrow widths, so measure it rather than guess.
+          const root = document.documentElement;
+          const publish = () => root.style.setProperty('--header-h', header.offsetHeight + 'px');
+          publish();
+          if ('ResizeObserver' in window) new ResizeObserver(publish).observe(header);
+          else window.addEventListener('resize', publish, { passive: true });
         }
       })();
 

@@ -1,0 +1,1008 @@
+---
+/**
+ * INVEST IN ISRAEL - the standalone English home for overseas buyers and investors.
+ *
+ * Copy is the client's revision document, reproduced verbatim. Two vocabulary rules
+ * from that document are load-bearing and easy to undo by accident:
+ *   - the tab is INVEST IN ISRAEL, never FOREIGN INVESTORS;
+ *   - people are OVERSEAS buyers/investors, never FOREIGN ones.
+ * The practice-area service that points here is called INTERNATIONAL INVESTORS.
+ *
+ * Imagery: Tel Aviv, Jerusalem, the coastline, modern architecture. No handshakes,
+ * keys, scales, gavels, law books or smiling suits.
+ */
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site-details.json';
+
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+const sheetsUrl = import.meta.env.PUBLIC_SHEETS_WEBHOOK_URL || '';
+const redirectUrl = new URL('/en/thanks', Astro.site).href;
+
+const waHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'Hello, I am interested in buying or investing in real estate in Israel.',
+    )}`
+  : null;
+
+/** §4 - the in-page jump nav. Each entry must match a section id below. */
+const pageNav = [
+  { label: 'About Us', href: '#about' },
+  { label: 'Why Choose Us', href: '#why' },
+  { label: 'Our Services', href: '#services' },
+  { label: 'How It Works', href: '#how' },
+  { label: 'Contact', href: '#contact' },
+];
+
+/** §6 */
+const whyUs = [
+  {
+    title: 'Local Market Knowledge',
+    body: 'Extensive familiarity with the real estate markets in Central Israel and Jerusalem, including residential projects, development opportunities and key investment areas.',
+  },
+  {
+    title: 'Direct Access to Developers',
+    body: 'Strong relationships with developers and market professionals provide exposure to selected projects, pricing information and potential investment opportunities.',
+  },
+  {
+    title: 'Legal and Commercial Perspective',
+    body: 'Each transaction is reviewed from both a legal and commercial perspective, including its financial structure, risks, long-term implications and potential opportunities.',
+  },
+  {
+    title: 'Personal Representation',
+    body: 'Each client receives direct, personal and ongoing representation by Adv. Matan Abir Lev throughout the entire process.',
+  },
+  {
+    title: 'International Experience',
+    body: 'Fluent English, extensive public-speaking experience and ongoing work with international Jewish and pro-Israel communities.',
+  },
+];
+
+/** §7 */
+const services = [
+  {
+    title: 'Property Search and Opportunity Sourcing',
+    body: "Identifying suitable residential and investment opportunities based on the client's objectives, budget, preferred location and investment strategy.",
+  },
+  {
+    title: 'Access to Developers and Selected Opportunities',
+    body: 'Providing exposure to selected projects, early-stage opportunities, pre-sale transactions and relevant pricing opportunities.',
+  },
+  {
+    title: 'Legal Due Diligence',
+    body: 'Comprehensive legal review of ownership rights, agreements, planning information, registrations, restrictions and relevant transaction documents.',
+  },
+  {
+    title: 'Negotiation and Transaction Structuring',
+    body: "Managing negotiations, reviewing commercial terms and structuring transactions in accordance with the client's legal and financial interests.",
+  },
+  {
+    title: 'Israeli Real Estate Taxation',
+    body: 'Reviewing purchase tax, applicable benefits, tax implications and relevant considerations for overseas buyers.',
+  },
+  {
+    title: 'Financing and Mortgage Coordination',
+    body: 'Assistance in coordinating with banks, mortgage advisers and financial professionals regarding available financing options.',
+  },
+  {
+    title: 'Purchases from Developers',
+    body: 'Legal representation in new-construction transactions, including review of developer agreements, payment schedules, guarantees, delivery provisions and buyer protections.',
+  },
+  {
+    title: 'Professional Coordination',
+    body: 'Coordination with relevant professionals, including mortgage advisers, appraisers, engineers, inspectors, accountants, notaries and property-management providers.',
+  },
+  {
+    title: 'Closing and Post-Purchase Support',
+    body: 'Ongoing guidance through execution, registration, transfer of rights, possession and completion of the transaction.',
+  },
+];
+
+/** §8 */
+const steps = [
+  {
+    title: 'Introductory Consultation',
+    body: "Understanding the client's objectives, budget, preferred locations, intended use of the property and investment strategy.",
+  },
+  {
+    title: 'Opportunity Identification',
+    body: 'Identifying and presenting suitable properties, projects and investment opportunities.',
+  },
+  {
+    title: 'Legal and Commercial Review',
+    body: 'Reviewing the transaction, legal documentation, taxation, financing considerations and material risks.',
+  },
+  {
+    title: 'Negotiation and Execution',
+    body: 'Managing negotiations, reviewing and preparing agreements and coordinating the execution process.',
+  },
+  {
+    title: 'Closing and Ongoing Support',
+    body: 'Supporting the client through payments, registration, possession and post-purchase matters.',
+  },
+];
+
+/** §9 */
+const areas = [
+  {
+    title: 'Tel Aviv and Central Israel',
+    body: 'Residential properties, development projects, investment opportunities and selected urban markets.',
+    image: '/images/invest-telaviv.webp',
+    alt: 'A penthouse terrace overlooking the Tel Aviv skyline and the Mediterranean',
+  },
+  {
+    title: 'Jerusalem',
+    body: 'Residential purchases, investment properties, new projects and opportunities tailored to overseas buyers.',
+    image: '/images/invest-jerusalem.webp',
+    alt: 'Jerusalem limestone architecture and the Old City walls at golden hour',
+  },
+  {
+    title: 'Herzliya and the Coastal Region',
+    body: 'Premium residential opportunities, investment properties and selected development projects.',
+    image: '/images/invest-coastal.webp',
+    alt: 'The Herzliya marina and seafront residential towers at blue hour',
+  },
+  {
+    title: 'Additional Opportunities Across Israel',
+    body: "Selected opportunities based on the client's objectives, investment strategy and preferred level of involvement.",
+    image: '/images/invest-modern.webp',
+    alt: 'A modern Israeli residential tower seen from below',
+  },
+];
+
+/** §10 - the enquiry form's two select fields */
+const investmentAreas = [
+  'Tel Aviv and Central Israel',
+  'Jerusalem',
+  'Herzliya and the coastal region',
+  'Open to opportunities across Israel',
+];
+
+const propertyTypes = [
+  'Residential apartment',
+  'New-build / off-plan from a developer',
+  'Penthouse or premium residence',
+  'Investment / rental property',
+  'Land or development plot',
+  'Commercial property',
+  'Not sure yet',
+];
+---
+
+<Base
+  title="Invest in Israel | Adv. Matan Abir Lev - Israeli Real Estate Law"
+  description="End-to-end legal and strategic representation for overseas buyers and investors purchasing property or investing in Israeli real estate: sourcing, due diligence, negotiation, taxation, financing and closing."
+  lang="en"
+  altHref="/"
+  preloadImage="/images/invest-hero.webp"
+>
+  <!-- ===== §3 hero ===== -->
+  <section class="hero on-dark">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="hero-kicker">Invest in Israel</p>
+      <h1>Bringing You Home</h1>
+      <p class="hero-sub">
+        Legal, strategic and personal guidance for buying and investing in Israel.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary" href="#services">Explore Our Services</a>
+        <a class="btn btn--secondary" href="#contact">Schedule a Consultation</a>
+        {
+          waHref && (
+            <a class="btn btn--whatsapp" href={waHref} target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-1 1.2-.4.2-.7 0a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4A3.4 3.4 0 0 0 5.9 9c0 1.5 1.1 3 1.2 3.2a12 12 0 0 0 4.7 4.1c.6.3 1.1.4 1.5.5.7.2 1.2.2 1.7.1.5-.1 1.6-.7 1.8-1.3.3-.7.3-1.2.2-1.3l-.5-.2ZM12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.3a8.3 8.3 0 0 1-4.2-1.2l-.3-.2-3 .8.8-3-.2-.3A8.3 8.3 0 1 1 12 20.3Z" />
+              </svg>
+              Contact Us on WhatsApp
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== §4 in-page navigation ===== -->
+  <nav class="pagenav" aria-label="Sections of this page">
+    <div class="container pagenav-inner">
+      {pageNav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </div>
+  </nav>
+
+  <!-- ===== §5 about us ===== -->
+  <section class="section about" id="about" aria-labelledby="about-title">
+    <div class="container about-inner">
+      <div class="about-photo" data-reveal>
+        <img
+          src={site.portraitPath}
+          alt="Adv. Matan Abir Lev"
+          width="560"
+          height="700"
+          loading="lazy"
+        />
+      </div>
+      <div class="about-copy" data-reveal style="--reveal-delay:120ms">
+        <h2 id="about-title">About Us</h2>
+        <p>
+          Adv. Matan Abir Lev is an Israeli real estate attorney providing personal legal and
+          strategic guidance to overseas buyers and investors seeking opportunities in Israel.
+        </p>
+        <p>
+          He completed his legal internship at one of Israel's leading real estate law firms and
+          brings practical experience in real estate transactions, negotiations, development
+          projects and investment opportunities.
+        </p>
+        <p>
+          Matan is also a combat officer in the IDF Combat Engineering Corps and an experienced
+          speaker for leading pro-Israel organizations, including <bdi>FIDF</bdi> and
+          <bdi>CAMERA</bdi>. His work with international audiences gives him a strong understanding
+          of the needs, concerns and expectations of clients purchasing property in Israel from
+          abroad.
+        </p>
+        <p>
+          The firm combines local market knowledge, direct access to developers and opportunities,
+          legal protection and personal guidance throughout the entire process.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== §6 why choose us ===== -->
+  <section class="section why on-dark" id="why" aria-labelledby="why-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="why-title">Why Choose Us</h2>
+      </div>
+      <ul class="why-grid">
+        {
+          whyUs.map((item, i) => (
+            <li class="why-item" data-reveal style={`--reveal-delay:${Math.min(i, 5) * 60}ms`}>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §7 our services ===== -->
+  <section class="section services" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="services-title">Our Services</h2>
+        <p class="sub">
+          End-to-end legal and strategic representation for overseas buyers and investors purchasing
+          property or investing in Israeli real estate.
+        </p>
+      </div>
+      <ul class="services-grid">
+        {
+          services.map((item, i) => (
+            <li class="card service" data-reveal style={`--reveal-delay:${Math.min(i, 5) * 60}ms`}>
+              <span class="service-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §8 how it works ===== -->
+  <section class="section process" id="how" aria-labelledby="process-title">
+    <div class="container process-inner">
+      <div class="section-head centered" data-reveal>
+        <h2 id="process-title">How It Works</h2>
+      </div>
+      <ol class="process-list">
+        {
+          steps.map((step, i) => (
+            /* The <ol> already numbers these for a screen reader, so the numeral is
+               decorative. "Step" and the digits are split because the body font is a
+               Hebrew face whose Latin digits render undersized - the numeral needs the
+               title font, the word does not. */
+            <li data-reveal style={`--reveal-delay:${i * 70}ms`}>
+              <span class="process-num" aria-hidden="true">
+                <span class="process-num-label">Step</span>
+                <span class="process-num-digits">{String(i + 1).padStart(2, '0')}</span>
+              </span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== §9 key areas of focus ===== -->
+  <section class="section areas" id="areas" aria-labelledby="areas-title">
+    <div class="container">
+      <div class="section-head centered" data-reveal>
+        <h2 id="areas-title">Key Areas of Focus</h2>
+      </div>
+      <ul class="areas-grid">
+        {
+          areas.map((area, i) => (
+            <li class="area-card" data-reveal style={`--reveal-delay:${Math.min(i, 3) * 80}ms`}>
+              <figure>
+                <img src={area.image} alt={area.alt} width="900" height="675" loading="lazy" />
+              </figure>
+              <div class="area-body">
+                <h3>{area.title}</h3>
+                <p>{area.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== §10 contact ===== -->
+  <section class="section inquiry" id="contact" aria-labelledby="inquiry-title">
+    <div class="container inquiry-inner">
+      <div class="inquiry-copy" data-reveal>
+        <h2 id="inquiry-title">Looking to Buy or Invest in Israel?</h2>
+        <p class="sub">
+          Our firm provides overseas buyers and investors with direct, personal and comprehensive
+          guidance throughout the entire process.
+        </p>
+        <div class="inquiry-ctas">
+          <a class="btn btn--primary" href="#inquiry-form">Schedule an Introductory Call</a>
+          {
+            waHref && (
+              <a class="btn btn--whatsapp" href={waHref} target="_blank" rel="noopener noreferrer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-1 1.2-.4.2-.7 0a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4A3.4 3.4 0 0 0 5.9 9c0 1.5 1.1 3 1.2 3.2a12 12 0 0 0 4.7 4.1c.6.3 1.1.4 1.5.5.7.2 1.2.2 1.7.1.5-.1 1.6-.7 1.8-1.3.3-.7.3-1.2.2-1.3l-.5-.2ZM12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.3a8.3 8.3 0 0 1-4.2-1.2l-.3-.2-3 .8.8-3-.2-.3A8.3 8.3 0 1 1 12 20.3Z" />
+                </svg>
+                Contact Us on WhatsApp
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        accessKey ? (
+          <form
+            class="card inquiry-form"
+            id="inquiry-form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+            data-investor-form
+          >
+            <input type="hidden" name="access_key" value={accessKey} />
+            <input
+              type="hidden"
+              name="subject"
+              value="New overseas-investor enquiry - Adv. Matan Abir Lev"
+            />
+            <input type="hidden" name="from_name" value="Invest in Israel page - abirlev.com" />
+            <input type="hidden" name="redirect" value={redirectUrl} />
+            {/* Honeypot. Deliberately NOT named after a real autofill field (company,
+                organization, …): Chrome fills those even with autocomplete="off", which
+                would flag a genuine enquiry as spam and silently bin it. */}
+            <input
+              type="checkbox"
+              name="botcheck"
+              class="hp-field"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
+
+            <div class="field">
+              <label for="inv-name">Full Name</label>
+              <input
+                id="inv-name"
+                name="Full Name"
+                type="text"
+                required
+                maxlength="120"
+                autocomplete="name"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-email">Email</label>
+              <input
+                id="inv-email"
+                name="Email"
+                type="email"
+                required
+                maxlength="180"
+                autocomplete="email"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-phone">Phone Number</label>
+              <input
+                id="inv-phone"
+                name="Phone Number"
+                type="tel"
+                required
+                maxlength="40"
+                autocomplete="tel"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-country">Country of Residence</label>
+              <input
+                id="inv-country"
+                name="Country of Residence"
+                type="text"
+                required
+                maxlength="80"
+                autocomplete="country-name"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-area">Preferred Investment Area</label>
+              <select id="inv-area" name="Preferred Investment Area" required>
+                <option value="">Choose an area…</option>
+                {investmentAreas.map((a) => (
+                  <option>{a}</option>
+                ))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="inv-budget">Estimated Budget</label>
+              <input
+                id="inv-budget"
+                name="Estimated Budget"
+                type="text"
+                placeholder="e.g. $1.5M - $2M"
+                required
+                maxlength="60"
+              />
+            </div>
+            <div class="field">
+              <label for="inv-type">Type of Property</label>
+              <select id="inv-type" name="Type of Property" required>
+                <option value="">Choose a property type…</option>
+                {propertyTypes.map((p) => (
+                  <option>{p}</option>
+                ))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="inv-message">Message</label>
+              <textarea id="inv-message" name="Message" rows="4" required maxlength="2000" />
+            </div>
+            <div class="field checkbox-row">
+              <input id="inv-consent" type="checkbox" name="Consent" value="Given" required />
+              <label for="inv-consent">
+                I consent to my details being passed to Adv. Matan Abir Lev so that he may review my
+                enquiry and contact me about it.{' '}
+                <a href="/privacy" lang="he">
+                  Privacy Policy
+                </a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Submit Inquiry</button>
+          </form>
+        ) : (
+          <div class="card" id="inquiry-form">
+            <p class="sub">The enquiry form will go live once site setup is complete.</p>
+            <p>In the meantime, please reach us on WhatsApp or by email.</p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<script is:inline define:vars={{ sheetsUrl }}>
+  /**
+   * The enquiry must reach the mailbox AND the CRM sheet.
+   *
+   * The form itself is a plain HTML POST to Web3Forms - no JS needed, which is what
+   * makes it work even if this script never runs. The sheet mirror rides along via
+   * sendBeacon, the one API guaranteed to survive the page unloading as the browser
+   * navigates to the thank-you page; a normal fetch() would be cancelled.
+   *
+   * With no SHEETS_WEBHOOK_URL configured this is a no-op and the email still goes.
+   */
+  (() => {
+    const form = document.querySelector('[data-investor-form]');
+    if (!form || !sheetsUrl || !navigator.sendBeacon) return;
+
+    form.addEventListener('submit', () => {
+      try {
+        const data = new FormData(form);
+        if (String(data.get('botcheck') ?? '') !== '') return;
+
+        const params = new URLSearchParams();
+        params.set('סוג רשומה', 'ליד משקיע מחו"ל');
+        for (const [k, v] of data.entries()) {
+          if (k === 'access_key' || k === 'botcheck' || k === 'redirect') continue;
+          params.set(k, String(v));
+        }
+        params.set('תאריך יצירת ליד', new Date().toISOString());
+        navigator.sendBeacon(
+          sheetsUrl,
+          new Blob([params.toString()], {
+            type: 'application/x-www-form-urlencoded;charset=UTF-8',
+          }),
+        );
+      } catch {
+        /* the sheet is a convenience; never block the email on it */
+      }
+    });
+  })();
+
+  /**
+   * §4 - highlight the in-page nav entry for the section you are looking at.
+   * Progressive enhancement: without JS the links still jump correctly.
+   */
+  (() => {
+    const links = Array.from(document.querySelectorAll('.pagenav a'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+
+    const byId = new Map();
+    const sections = [];
+    for (const link of links) {
+      const id = link.getAttribute('href')?.slice(1);
+      const section = id && document.getElementById(id);
+      if (!section) continue;
+      byId.set(section, link);
+      sections.push(section);
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((l) => l.removeAttribute('aria-current'));
+          byId.get(entry.target)?.setAttribute('aria-current', 'true');
+        }
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    sections.forEach((s) => io.observe(s));
+  })();
+</script>
+
+<style>
+  /* ===== hero ===== */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    min-block-size: clamp(32rem, 78vh, 46rem);
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+    padding-block: var(--sp-9);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* LTR page: the copy sits on the left, so the scrim is heaviest there */
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(6, 25, 34, 0.94) 0%,
+        rgba(6, 25, 34, 0.84) 40%,
+        rgba(6, 25, 34, 0.5) 75%,
+        rgba(6, 25, 34, 0.35) 100%
+      ),
+      url('/images/invest-hero.webp');
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  @media (max-width: 48rem) {
+    .hero-bg {
+      background-image:
+        linear-gradient(to top, rgba(6, 25, 34, 0.95) 40%, rgba(6, 25, 34, 0.78) 100%),
+        url('/images/invest-hero-sm.webp');
+    }
+  }
+
+  .hero-inner {
+    max-width: 52rem;
+  }
+
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-teal-bright);
+    margin-block-end: var(--sp-4);
+  }
+
+  .hero-kicker::before {
+    content: '';
+    inline-size: 2.25rem;
+    block-size: 2px;
+    background: var(--c-teal-bright);
+    border-radius: 2px;
+  }
+
+  .hero h1 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-5);
+    letter-spacing: 0.01em;
+  }
+
+  .hero-sub {
+    font-size: var(--fs-lead);
+    font-weight: 400;
+    line-height: 1.65;
+    color: rgba(251, 252, 253, 0.88);
+    margin-block-end: var(--sp-7);
+    max-width: 38rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  /* WhatsApp is a brand action, so it carries the brand colour rather than
+     pretending to be a third neutral button. */
+  .btn--whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    background: #25d366;
+    color: #04331a;
+    border: 1px solid #25d366;
+  }
+
+  .btn--whatsapp:hover,
+  .btn--whatsapp:focus-visible {
+    background: #1fbe5a;
+    border-color: #1fbe5a;
+    color: #04331a;
+  }
+
+  /*
+    ===== §4 in-page nav =====
+    Sticks directly BELOW the site header, which is itself sticky at the top of the
+    viewport. --header-h is measured and published by the layout script (the header
+    condenses as you scroll, so its height is not a constant); the fallback keeps
+    this usable if that script never runs.
+  */
+  .pagenav {
+    position: sticky;
+    inset-block-start: var(--header-h, 4.6rem);
+    z-index: 20;
+    background: var(--c-surface);
+    border-block-end: 1px solid var(--c-navy-08);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .pagenav-inner {
+    display: flex;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-block: var(--sp-2);
+  }
+
+  .pagenav-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pagenav a {
+    flex: 0 0 auto;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-m, 8px);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--c-steel);
+    white-space: nowrap;
+    transition:
+      color 200ms var(--ease-out),
+      background-color 200ms var(--ease-out);
+  }
+
+  .pagenav a:hover,
+  .pagenav a:focus-visible {
+    color: var(--c-navy-deep);
+    background: var(--c-navy-08);
+  }
+
+  .pagenav a[aria-current='true'] {
+    color: var(--c-teal);
+    background: var(--c-navy-08);
+  }
+
+  /* Anchor targets have to clear BOTH sticky bars: the header and this nav. */
+  :global(#about),
+  :global(#why),
+  :global(#services),
+  :global(#how),
+  :global(#areas),
+  :global(#contact),
+  :global(#inquiry-form) {
+    scroll-margin-block-start: calc(var(--header-h, 4.6rem) + 5rem);
+  }
+
+  .section-head.centered {
+    text-align: center;
+    margin-inline: auto;
+    max-width: 46rem;
+  }
+
+  /* ===== about ===== */
+  .about-inner {
+    display: grid;
+    grid-template-columns: minmax(15rem, 21rem) 1fr;
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .about-photo {
+    position: relative;
+    position: sticky;
+    inset-block-start: var(--sp-8);
+  }
+
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(14px, 14px);
+    border: 2px solid var(--c-teal);
+    border-radius: var(--radius-l);
+  }
+
+  .about-photo img {
+    position: relative;
+    inline-size: 100%;
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .about-copy {
+    max-width: var(--text-max);
+  }
+
+  .about-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .about-copy p {
+    color: var(--c-steel);
+    margin-block-end: var(--sp-5);
+  }
+
+  /* ===== why ===== */
+  .why {
+    background: var(--c-navy-deep);
+    color: var(--c-paper);
+  }
+
+  .why-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--sp-6) var(--sp-7);
+  }
+
+  .why-item {
+    padding-inline-start: var(--sp-5);
+    border-inline-start: 3px solid var(--c-teal);
+  }
+
+  .why-item h3 {
+    color: var(--c-paper);
+    margin-block-end: var(--sp-3);
+  }
+
+  .why-item p {
+    color: rgba(251, 252, 253, 0.78);
+    line-height: 1.7;
+  }
+
+  /* ===== services ===== */
+  .services-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .service {
+    display: grid;
+    gap: var(--sp-3);
+    align-content: start;
+  }
+
+  .service-num {
+    font-family: var(--ff-title);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--c-teal);
+  }
+
+  .service h3 {
+    line-height: 1.3;
+  }
+
+  .service p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== how it works ===== */
+  .process-inner {
+    max-width: 56rem;
+  }
+
+  .process-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-6);
+  }
+
+  .process-list li {
+    display: flex;
+    gap: var(--sp-5);
+    align-items: flex-start;
+    padding-block-end: var(--sp-6);
+    border-block-end: 1px solid var(--c-navy-08);
+  }
+
+  .process-list li:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+
+  .process-num {
+    flex-shrink: 0;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    inline-size: 4.5rem;
+    color: var(--c-teal);
+  }
+
+  .process-num-label {
+    font-size: 0.6875rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .process-num-digits {
+    font-family: var(--ff-title);
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+
+  .process-list h3 {
+    margin-block-end: var(--sp-2);
+  }
+
+  .process-list p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== key areas ===== */
+  .areas-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: var(--sp-6);
+  }
+
+  .area-card {
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    background: var(--c-surface);
+    border: 1px solid var(--c-navy-08);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .area-card figure {
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .area-card img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .area-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .area-body {
+    padding: var(--sp-5) var(--sp-6) var(--sp-6);
+  }
+
+  .area-body h3 {
+    margin-block-end: var(--sp-3);
+  }
+
+  .area-body p {
+    color: var(--c-steel);
+    line-height: 1.7;
+  }
+
+  /* ===== contact ===== */
+  .inquiry-inner {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 1.25fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .inquiry-copy h2 {
+    margin-block-end: var(--sp-5);
+  }
+
+  .inquiry-copy .sub {
+    margin-block-end: var(--sp-6);
+  }
+
+  .inquiry-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .inquiry-form .btn {
+    inline-size: 100%;
+  }
+
+  /* The honeypot must be unreachable for people and invisible to assistive tech,
+     while still being a real field a scripted bot will happily tick. */
+  .hp-field {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+    pointer-events: none;
+    inset-inline-start: -9999px;
+  }
+
+  @media (max-width: 62rem) {
+    .about-inner,
+    .inquiry-inner {
+      grid-template-columns: 1fr;
+      gap: var(--sp-7);
+    }
+
+    .about-photo {
+      position: static;
+      max-width: 20rem;
+    }
+  }
+</style>

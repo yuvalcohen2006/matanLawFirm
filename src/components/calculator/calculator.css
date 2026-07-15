@@ -299,6 +299,32 @@
   color: var(--c-navy) !important;
 }
 
+/* A failed send must not be a dead end: the phone and WhatsApp sit right there. */
+.calc-callback-failed {
+  margin-block-start: var(--sp-4);
+}
+
+.calc-callback-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-block-start: var(--sp-2);
+  font-weight: 700;
+}
+
+/*
+  Spam trap. Off-screen rather than display:none, because a bot that skips hidden
+  fields walks straight past a trap it cannot see. Never focusable, never announced.
+*/
+.calc-hp {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+  pointer-events: none;
+  inset-inline-start: -9999px;
+}
+
 /* ---------- disclaimers ---------- */
 .calc-disclaimers {
   margin-block: var(--sp-7);

@@ -20,14 +20,33 @@ import {
 } from './logic';
 import {
   sendLead,
+  sendLeadOnExit,
+  sendCallbackRequest,
   sendFeedback,
   uploadAssessmentFile,
   uploadConfigured,
   validateAssessmentFile,
   ACCEPTED_FILE_TYPES,
   MAX_FILE_MB,
+  type LeadContext,
 } from './leads';
+import site from '../../data/site-details.json';
 import './calculator.css';
+
+/**
+ * אם השליחה נכשלה - הפונה חייב דרך אחרת להגיע אלינו, ולא רק הודעת שגיאה.
+ * filled() הוא אותו שומר שבו משתמש שאר האתר: שדה שנותר PLACEHOLDER אינו מוצג,
+ * אחרת נציג קישור חיוג שבור בדיוק ברגע שבו הפונה כבר נכשל פעם אחת.
+ */
+const filled = (v: string | undefined | null): v is string =>
+  Boolean(v && !v.includes('PLACEHOLDER'));
+
+const phoneHref = filled(site.phone) ? `tel:${site.phone.replace(/[^\d+]/g, '')}` : null;
+const whatsappHref = filled(site.whatsappNumber)
+  ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(
+      'שלום, ביצעתי בדיקה במחשבון החזר מס הרכישה ואשמח שעו״ד ייצור איתי קשר.',
+    )}`
+  : null;
 
 type Screen = 'intro' | 1 | 2 | 3 | 4 | 5 | 'loading' | 'result';
 
@@ -76,6 +95,18 @@ const LOADING_STEP_MS = 900;
 
 const CONFIRMATION_TEXT = 'הפרטים התקבלו בהצלחה. נציג משרדנו ייצור איתך קשר לצורך בדיקה נוספת.';
 
+/**
+ * כמה זמן הליד האוטומטי ממתין לפני שהוא יוצא לדרך.
+ *
+ * זהו חלון ההזדמנות שבו לחיצה על "אני רוצה שעו״ד ייצור איתי קשר" עוד יכולה לתפוס
+ * את מקומו, כך שמתן יקבל מייל אחד ולא שניים. הכפתור יושב מיד מתחת לתוצאה, ומי
+ * שלוחץ עליו לוחץ תוך שניות ספורות - 90 שניות הן מרווח נדיב.
+ *
+ * ארוך מדי = מתן ממתין ללא צורך לליד של מי שלא ילחץ לעולם.
+ * קצר מדי  = לחיצה מאוחרת תגיע אחרי שהליד הרגיל כבר יצא, ואז יישלחו שני מיילים.
+ */
+const LEAD_GRACE_MS = 90_000;
+
 /** §1.1 - העלאת שומת מס הרכישה. הניסוח כלשונו מהלקוח. */
 const UPLOAD_LABEL = 'העלאת שומת מס הרכישה';
 const UPLOAD_HELP = 'ניתן להעלות את שומת מס הרכישה לצורך בדיקה מקצועית ומדויקת יותר.';
@@ -122,6 +153,21 @@ export default function Calculator() {
   const callbackSentRef = useRef(false);
   const [callback, setCallback] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
+  /**
+   * מתן מקבל מייל אחד לכל פונה - לא שניים.
+   *
+   * הליד האוטומטי אינו נשלח ברגע שהתוצאה מוצגת, אלא מוחזק בהמתנה קצרה. אם הפונה
+   * לוחץ "אני רוצה שעו״ד ייצור איתי קשר", הלחיצה *מבטלת* את הליד הממתין ותופסת
+   * את מקומו - מייל אחד, עם הסטטוס הנכון. אם הפונה אינו לוחץ, הליד הרגיל יוצא
+   * בתום ההמתנה, או מוקדם מכך אם הוא עוזב את הדף.
+   *
+   * leadSentRef הוא השומר היחיד: ברגע שיצא מייל ליד כלשהו, אף מסלול אחר לא ישלח
+   * מייל שני.
+   */
+  const pendingLeadRef = useRef<LeadContext | null>(null);
+  const leadSentRef = useRef(false);
+  const graceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // --- feedback, collected on the result screen only (§1.2) ---
   const [feedback, setFeedback] = useState('');
   const [feedbackState, setFeedbackState] = useState<'idle' | 'sending' | 'sent' | 'failed'>(
@@ -130,6 +176,46 @@ export default function Calculator() {
 
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
+
+  function cancelGraceTimer() {
+    if (graceTimerRef.current !== null) {
+      clearTimeout(graceTimerRef.current);
+      graceTimerRef.current = null;
+    }
+  }
+
+  /** שולח את הליד הממתין - פעם אחת בלבד, לא משנה מי קרא. */
+  function flushPendingLead(onExit: boolean) {
+    if (leadSentRef.current) return;
+    const ctx = pendingLeadRef.current;
+    if (!ctx) return;
+
+    leadSentRef.current = true;
+    pendingLeadRef.current = null;
+    cancelGraceTimer();
+
+    if (onExit) sendLeadOnExit(ctx);
+    else void sendLead(ctx);
+  }
+
+  /**
+   * הפונה עוזב את הדף בלי ללחוץ - הליד הממתין חייב לצאת עכשיו, אחרת הוא אבד.
+   *
+   * event.persisted מבדיל בין השניים: true אומר שהדף נכנס ל-bfcache, כלומר
+   * המשתמש רק העביר אפליקציה/לשונית ועוד עשוי לחזור וללחוץ - ואז אסור לשלוח,
+   * אחרת נקבל בדיוק את המייל הכפול שניסינו למנוע. false אומר שהדף באמת נסגר.
+   */
+  useEffect(() => {
+    const onPageHide = (e: PageTransitionEvent) => {
+      if (e.persisted) return;
+      flushPendingLead(true);
+    };
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+      cancelGraceTimer();
+    };
+  }, []);
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -260,19 +346,28 @@ export default function Calculator() {
     setOutcome(result);
     setScreen('result');
 
-    // §16 - כל בדיקה שהושלמה נשלחת כליד, כולל "לא נמצאה חריגה משמעותית"
-    if (honeypot === '') {
-      const note =
-        assessmentFile && !fileUrl
-          ? `לפונה יש קובץ שומה (${assessmentFile.name}) אך הוא לא נשמר - העלאת הקבצים אינה מוגדרת או נכשלה. יש לבקש את הקובץ מהפונה.`
-          : undefined;
-      void sendLead({ input, outcome: result, note });
-    }
+    // §16 - כל בדיקה שהושלמה נשלחת כליד, כולל "לא נמצאה חריגה משמעותית".
+    // הפעלת מלכודת הספאם מסמנת את הליד אך אינה מבטלת אותו (ראו leads.ts).
+    const note =
+      assessmentFile && !fileUrl
+        ? `לפונה יש קובץ שומה (${assessmentFile.name}) אך הוא לא נשמר - העלאת הקבצים אינה מוגדרת או נכשלה. יש לבקש את הקובץ מהפונה.`
+        : undefined;
+
+    // הליד מוחזק, לא נשלח - כדי שלחיצה על "שעו״ד יחזור אליי" תוכל לתפוס את מקומו
+    // ומתן יקבל מייל אחד במקום שניים. אם לא תהיה לחיצה, הוא ייצא מעצמו.
+    pendingLeadRef.current = {
+      input,
+      outcome: result,
+      note,
+      suspectedBot: honeypot !== '',
+    };
+    cancelGraceTimer();
+    graceTimerRef.current = setTimeout(() => flushPendingLead(false), LEAD_GRACE_MS);
   }
 
   /** §1.2 - המשוב נשלח כהודעה נפרדת, אחרי שהליד המלא כבר יצא. */
   async function submitFeedback() {
-    if (!inputRef.current || !outcome || honeypot !== '') return;
+    if (!inputRef.current || !outcome) return;
     if (!feedback.trim() || feedbackState === 'sending') return;
 
     setFeedbackState('sending');
@@ -280,14 +375,52 @@ export default function Calculator() {
     setFeedbackState(ok ? 'sent' : 'failed');
   }
 
+  /**
+   * לחיצה על "אני רוצה שעו״ד ייצור איתי קשר" - הדרישה המפורשת של הלקוח:
+   * הלחיצה חייבת לשלוח את הליד, ובדיוק מייל אחד.
+   *
+   * כל יציאה מוקדמת ששתקה כאן הוסרה. קודם לכן, אם מלכודת הספאם הופעלה או שחסר
+   * מידע, הפונקציה קפצה ל-setCallback('sent') - כלומר הציגה לפונה "הפרטים
+   * התקבלו בהצלחה" בזמן שדבר לא נשלח, וזו בדיוק התקלה שדווחה. עכשיו:
+   *   - מלכודת ספאם → הליד נשלח ומסומן, לא נזרק;
+   *   - חסר קלט/תוצאה → מדווח על כישלון, לא על הצלחה מדומה;
+   *   - הלחיצה מבטלת את הליד הממתין ותופסת את מקומו → מייל אחד, לא שניים;
+   *   - אם השליחה נכשלה, הליד הממתין מוחזר להמתנה - כדי שכישלון לא יבלע אותו.
+   */
   async function requestCallback(note: string) {
-    if (!inputRef.current || !outcome || honeypot !== '' || callbackSentRef.current) {
+    if (callbackSentRef.current) {
       setCallback('sent');
       return;
     }
+    const input = inputRef.current;
+    if (!input || !outcome) {
+      setCallback('failed');
+      return;
+    }
+
+    // הלחיצה גוברת על הליד הממתין: מבטלים את השליחה האוטומטית ותופסים את מקומה.
+    const held = pendingLeadRef.current;
+    cancelGraceTimer();
+    pendingLeadRef.current = null;
+    const leadAlreadyOut = leadSentRef.current;
+    leadSentRef.current = true;
+
     setCallback('sending');
-    const ok = await sendLead({ input: inputRef.current, outcome, note });
-    if (ok) callbackSentRef.current = true;
+    const ok = await sendCallbackRequest(
+      { input, outcome, suspectedBot: honeypot !== '' },
+      leadAlreadyOut
+        ? `${note}. שימו לב: הליד הרגיל של הפונה כבר נשלח קודם לכן - זו אותה פנייה, לא פנייה חדשה.`
+        : note,
+    );
+
+    if (!ok) {
+      // השליחה נכשלה. הליד הממתין חוזר להמתנה כדי שלפחות הוא ייצא ביציאה מהדף -
+      // עדיף ליד רגיל מאשר שום ליד. הפונה יכול גם ללחוץ שוב.
+      pendingLeadRef.current = held;
+      leadSentRef.current = leadAlreadyOut;
+    }
+
+    callbackSentRef.current = ok;
     setCallback(ok ? 'sent' : 'failed');
   }
 
@@ -536,10 +669,26 @@ export default function Calculator() {
           <p aria-live="polite" className={callback === 'sent' ? 'calc-confirm' : 'visually-hidden'}>
             {callback === 'sent' ? CONFIRMATION_TEXT : ''}
           </p>
+          {/* הכפתור נשאר על המסך כל עוד לא הצלחנו, כך שהלחיצה החוזרת אפשרית -
+              ולצידה דרך אנושית להשלים את הפנייה גם אם השליחה ממשיכה להיכשל. */}
           {callback === 'failed' && (
-            <p role="alert" className="error-text">
-              השליחה נכשלה. אפשר לנסות שוב, או לפנות למשרדנו ישירות בטלפון או בוואטסאפ.
-            </p>
+            <div role="alert" className="calc-callback-failed">
+              <p className="error-text">
+                השליחה נכשלה. אפשר ללחוץ שוב על הכפתור, או לפנות למשרדנו ישירות:
+              </p>
+              <p className="calc-callback-links">
+                {phoneHref && (
+                  <a href={phoneHref} dir="ltr">
+                    {site.phone}
+                  </a>
+                )}
+                {whatsappHref && (
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    וואטסאפ
+                  </a>
+                )}
+              </p>
+            </div>
           )}
         </div>
 
@@ -618,13 +767,21 @@ export default function Calculator() {
               {PILOT_NOTICE}
             </p>
 
-            {/* honeypot - מוסתר ממשתמשים אמיתיים */}
+            {/*
+              מלכודת ספאם - מוסתרת ממשתמשים אמיתיים.
+
+              השם כאן חשוב: קודם לכן השדה נקרא "company", וזהו שם שהמילוי האוטומטי
+              של Chrome מזהה כשדה ארגון וממלא - גם כש-autocomplete="off" - במיוחד
+              בטופס שיש בו שם, טלפון ודוא"ל. פונה אמיתי שהשתמש במילוי אוטומטי סומן
+              כבוט, והליד שלו נזרק בשקט. שם חסר משמעות אינו תואם לאף היוריסטיקה.
+            */}
             <input
               type="text"
-              name="company"
+              id="calc-ref-code"
+              name="calc_reference_code"
               value={honeypot}
               onChange={(e) => setHoneypot(e.target.value)}
-              className="visually-hidden"
+              className="calc-hp"
               tabIndex={-1}
               autoComplete="off"
               aria-hidden="true"

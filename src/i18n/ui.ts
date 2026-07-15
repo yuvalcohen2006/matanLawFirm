@@ -31,9 +31,9 @@ export const ui = {
     navHome: 'ראשי',
     navAbout: 'אודות',
     navAreas: 'תחומי פעילות',
-    navInvestors: 'FOREIGN INVESTORS',
+    navInvestors: 'INVEST IN ISRAEL',
     navContact: 'יצירת קשר',
-    navCalculator: 'בדיקת החזר מס',
+    navCalculator: 'מחשבון החזר מס רכישה למכרזי רמ״י',
 
     openMenu: 'פתיחת תפריט',
     closeMenu: 'סגירת התפריט',
@@ -92,7 +92,7 @@ export const ui = {
     navHome: 'Home',
     navAbout: 'About',
     navAreas: 'Practice Areas',
-    navInvestors: 'FOREIGN INVESTORS',
+    navInvestors: 'INVEST IN ISRAEL',
     navContact: 'Contact Us',
     navCalculator: 'Contact Us',
 
@@ -144,4 +144,11 @@ export const t = (lang: Lang) => ui[lang];
 /** Where the language switch points from each page. */
 export const HE_HOME = '/';
 export const EN_HOME = '/en/';
-export const INVESTORS_PAGE = '/en/foreign-investors';
+/**
+ * The client's naming rules for this page, in one place because they are easy to
+ * undo by accident: the tab is INVEST IN ISRAEL, the audience is OVERSEAS
+ * investors, and the practice-area service that leads here is INTERNATIONAL
+ * INVESTORS. The phrase "foreign investors" must not appear anywhere.
+ * The old /en/foreign-investors URL is 308-redirected here in vercel.json.
+ */
+export const INVESTORS_PAGE = '/en/invest-in-israel';

@@ -22,8 +22,9 @@ const switchHref = altHref ?? (he ? EN_HOME : HE_HOME);
 const current = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => current === href.replace(/\/$/, '');
 
-// §7 - the FOREIGN INVESTORS tab sits beside ראשי / אודות / תחומי פעילות and leads
-// to the standalone English page. Spelling is load-bearing: FOREIGN, not FORIGN.
+// The INVEST IN ISRAEL tab sits beside ראשי / אודות / תחומי פעילות and leads to the
+// standalone English page. The label is fixed by the client: INVEST IN ISRAEL, never
+// FOREIGN INVESTORS.
 const investorsHref = INVESTORS_PAGE;
 
 // The logo carries the firm's name inside the artwork, so it stands alone.
@@ -109,12 +110,12 @@ const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
             stroke-linejoin="round"
           />
         </svg>
-        {s.otherLangName}
+        <span class="lang-name">{s.otherLangName}</span>
       </a>
 
       {
         he && (
-          <a class="btn btn--secondary btn--small" href="/calculator">
+          <a class="btn btn--secondary btn--small btn--calc" href="/calculator">
             {s.navCalculator}
           </a>
         )
@@ -649,6 +650,43 @@ const blurb = (a: (typeof practiceAreas)[number]) => (he ? a.blurb : a.blurbEn);
     margin-block-start: auto;
     padding-block-start: var(--sp-5);
     border-block-start: 1px solid var(--c-navy-08);
+  }
+
+  /*
+    The calculator button carries the tool's full name - "מחשבון החזר מס רכישה למכרזי
+    רמ״י" - 336px of unbreakable label on a bar that already holds the logo, four
+    links, a language switch and the contact button. At full size that row needs
+    1327px, and .container is capped at 1216px at EVERY viewport, so it never fitted:
+    on a 1280px laptop it overflowed into a horizontal page scrollbar, and on a wide
+    screen it merely hid the problem by spilling into the gutters.
+
+    So this is not a narrow-screen tweak and must not be bounded by a max-width - the
+    bar is over budget at any desktop size. The chrome buys the ~110px back from
+    padding, which keeps every item (including the language label, the one affordance
+    an English-speaking investor needs to find) and lands at ~1175px with room to spare.
+  */
+  @media (min-width: 78.0625rem) {
+    .header-inner {
+      gap: var(--sp-4);
+    }
+
+    .nav-link {
+      padding-inline: var(--sp-3);
+    }
+
+    .header-actions {
+      gap: var(--sp-2);
+    }
+
+    .lang-switch {
+      padding-inline: var(--sp-3);
+    }
+
+    /* a step below --fs-small, earned by the length of the label it has to carry */
+    .btn--calc {
+      font-size: 0.9375rem;
+      padding-inline: var(--sp-3);
+    }
   }
 
   /* the bar carries a logo, four links, a language switch and two buttons -

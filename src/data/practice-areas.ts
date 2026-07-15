@@ -85,17 +85,18 @@ export const practiceAreas: PracticeArea[] = [
     icon: 'M4 20h16M6.5 20v-9l4-3 4 3v9M16.5 20v-5l2-1.5 2 1.5v5',
   },
   {
-    // §2.3 - שירות חדש לבקשת הלקוח
-    id: 'foreign',
-    label: 'ייצוג וליווי משקיעי חוץ',
-    // Deliberately short. This sits on a small square tile on the English home
-    // page, and "Representation" is a 14-character unbreakable word that will not
-    // fit one - it overflowed and was clipped. The blurb carries the detail.
-    labelEn: 'Foreign Investors',
+    // The client renamed this service: INTERNATIONAL INVESTORS, and its audience is
+    // OVERSEAS buyers - the phrase "foreign investors" is not to be used anywhere.
+    id: 'international',
+    label: 'ייצוג וליווי משקיעים בינלאומיים',
+    // Deliberately short. This sits on a small square tile on the English home page,
+    // and a long unbreakable word overflows and gets clipped there. The blurb carries
+    // the detail.
+    labelEn: 'International Investors',
     blurb:
-      'ליווי משפטי ועסקי למשקיעים ולתושבי חוץ ברכישת נכסים ובהשקעות נדל״ן בישראל - מאיתור ההזדמנות ועד השלמת העסקה.',
+      'ייצוג וליווי משפטי ואסטרטגי מלא לרוכשים ולמשקיעים מחו״ל ברכישת נכסים ובהשקעות נדל״ן בישראל.',
     blurbEn:
-      'Legal and commercial guidance for foreign buyers and investors, from sourcing the opportunity to closing.',
+      'End-to-end legal and strategic representation for overseas buyers and investors purchasing property or investing in Israeli real estate.',
     size: 'small',
     image: '/images/area-foreign.webp',
     icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm-9-9h18M12 3c-2.5 2.6-4 5.6-4 9s1.5 6.4 4 9c2.5-2.6 4-5.6 4-9s-1.5-6.4-4-9Z',
@@ -137,7 +138,7 @@ const GRID_ORDER: readonly string[] = [
   'land',          // wide
   'renewal',       // small
   'entrepreneurs', // wide
-  'foreign',       // small
+  'international', // small
 ];
 
 export const practiceAreasGrid: PracticeArea[] = GRID_ORDER.map((id) => {

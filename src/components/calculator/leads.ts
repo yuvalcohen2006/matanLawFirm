@@ -17,10 +17,16 @@ const CLOUDINARY_PRESET = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET || '';
 export const uploadConfigured = Boolean(CLOUDINARY_CLOUD && CLOUDINARY_PRESET);
 export const leadsConfigured = Boolean(WEB3FORMS_KEY);
 
-/** נושא המייל הנשלח על כל ליד מהמחשבון */
-export const LEAD_SUBJECT = 'ליד חדש - מחשבון החזר מס רכישה רמ״י';
+/** נושא המייל הנשלח אוטומטית על כל בדיקה שהושלמה */
+export const LEAD_SUBJECT = 'ליד חדש - מחשבון החזר מס רכישה למכרזי רמ״י';
+/**
+ * נושא נפרד ובולט לבקשה מפורשת של הפונה שעו״ד ייצור איתו קשר.
+ * זהו הליד ה"חם" ביותר, והוא חייב להיבדל מהליד האוטומטי - אחרת Gmail משרשר את
+ * שני המיילים לשיחה אחת והבקשה נבלעת בתוך ההודעה הקודמת.
+ */
+export const CALLBACK_SUBJECT = 'בקשת יצירת קשר מפונה - מחשבון החזר מס רכישה למכרזי רמ״י';
 /** נושא נפרד למשוב, כדי שלא ייראה כליד כפול בתיבה */
-export const FEEDBACK_SUBJECT = 'משוב על המחשבון - מחשבון החזר מס רכישה רמ״י';
+export const FEEDBACK_SUBJECT = 'משוב על המחשבון - מחשבון החזר מס רכישה למכרזי רמ״י';
 
 const FROM_NAME = 'מחשבון החזר מס רכישה - אתר עו"ד מתן אביר לב';
 
@@ -83,16 +89,29 @@ export interface LeadContext {
   outcome: CalcOutcome;
   /** הערה חופשית על ההקשר, למשל "המשתמש ביקש חזרה טלפונית" */
   note?: string;
+  /**
+   * מלכודת הספאם הופעלה. הליד עדיין נשלח - הוא רק מסומן.
+   *
+   * בעבר פנייה כזו נזרקה בשקט, וזה היה באג: המחשבון הוא אשף בן חמישה שלבים
+   * ב-React ללא טופס HTML שניתן להזרקה, כך שבוט כמעט אינו יכול להגיע לכאן,
+   * בעוד שהשדה החבוי כן נתפס למילוי אוטומטי של הדפדפן. כלומר כמעט כל הפעלה
+   * של המלכודת כאן היא חיובית-שגויה - ולקוח אמיתי שאבד יקר בהרבה מספאם בתיבה.
+   */
+  suspectedBot?: boolean;
 }
 
 /** שדות הליד המלאים, בסדר ובשמות שהלקוח ביקש (§1.3). */
-function buildLeadFields({ input, outcome, note }: LeadContext): Record<string, string> {
+function buildLeadFields({ input, outcome, note, suspectedBot }: LeadContext): Record<string, string> {
   const i = outcome.internal;
   const reliefMarked = isReliefMarked(input.reliefs);
 
   return {
     // הסטטוס פותח את גוף המייל, כדי שיהיה קריא כבר בתצוגה המקדימה של התיבה
     'סטטוס הליד': outcome.status,
+
+    ...(suspectedBot
+      ? { '⚠ סינון אוטומטי': 'מלכודת הספאם הופעלה. ייתכן שזו פנייה אוטומטית - ואולי מילוי אוטומטי של הדפדפן.' }
+      : {}),
 
     'שם מלא': input.fullName,
     'מספר טלפון': input.phone,
@@ -134,19 +153,22 @@ function buildLeadFields({ input, outcome, note }: LeadContext): Record<string, 
   };
 }
 
-async function postToWeb3Forms(subject: string, fields: Record<string, string>): Promise<boolean> {
-  if (!WEB3FORMS_KEY) return false;
+function leadBody(subject: string, fields: Record<string, string>): string {
+  return JSON.stringify({
+    access_key: WEB3FORMS_KEY,
+    subject,
+    from_name: FROM_NAME,
+    botcheck: '',
+    ...fields,
+  });
+}
+
+async function postOnce(subject: string, fields: Record<string, string>): Promise<boolean> {
   try {
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        subject,
-        from_name: FROM_NAME,
-        botcheck: '',
-        ...fields,
-      }),
+      body: leadBody(subject, fields),
     });
     const data = await res.json().catch(() => null);
     return res.ok && Boolean(data?.success);
@@ -155,8 +177,51 @@ async function postToWeb3Forms(subject: string, fields: Record<string, string>):
   }
 }
 
+/**
+ * שליחה שנשארת בחיים גם כשהדף נסגר.
+ *
+ * משמשת רק ביציאה מהדף: fetch רגיל מבוטל ברגע שהדפדפן עוזב, ו-keepalive הוא
+ * הדגל שמורה לו להשלים את הבקשה ברקע בכל זאת. אין כאן ניסיונות חוזרים ואין
+ * המתנה לתשובה - הדף כבר לא יהיה כאן כדי לקרוא אותה.
+ */
+function postOnExit(subject: string, fields: Record<string, string>): void {
+  if (!WEB3FORMS_KEY) return;
+  try {
+    void fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: leadBody(subject, fields),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    /* אין למי לדווח - הדף נסגר */
+  }
+}
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * שליחה עם ניסיונות חוזרים. הפונה כבר מסר שם, טלפון ודוא"ל וסיים אשף בן חמישה
+ * שלבים - הפסד הליד בגלל רשת סלולרית שנפלה לרגע הוא הכישלון היקר ביותר כאן,
+ * ולכן שווה להמתין עוד כמה שניות לפני שמכריזים על כישלון.
+ */
+async function postToWeb3Forms(
+  subject: string,
+  fields: Record<string, string>,
+  attempts = 3,
+): Promise<boolean> {
+  if (!WEB3FORMS_KEY) return false;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    if (await postOnce(subject, fields)) return true;
+    if (attempt < attempts) await wait(attempt * 800);
+  }
+  return false;
+}
+
+type SheetRecordKind = 'ליד' | 'בקשת יצירת קשר' | 'משוב';
+
 /** שיקוף לגיליון Google Sheets - אם הוגדר; נכשל/לא הוגדר → מדלגים בשקט. */
-function mirrorToSheet(ctx: LeadContext, kind: 'ליד' | 'משוב'): void {
+function mirrorToSheet(ctx: LeadContext, kind: SheetRecordKind): void {
   if (!SHEETS_URL) return;
   const i = ctx.outcome.internal;
   const params = new URLSearchParams({
@@ -187,6 +252,32 @@ function mirrorToSheet(ctx: LeadContext, kind: 'ליד' | 'משוב'): void {
 export async function sendLead(ctx: LeadContext): Promise<boolean> {
   const ok = await postToWeb3Forms(LEAD_SUBJECT, buildLeadFields(ctx));
   if (ok) mirrorToSheet(ctx, 'ליד');
+  return ok;
+}
+
+/**
+ * אותו ליד בדיוק, אך נשלח תוך כדי סגירת הדף (ראו postOnExit).
+ * fire-and-forget: אי אפשר לחכות לתשובה מדף שכבר איננו.
+ */
+export function sendLeadOnExit(ctx: LeadContext): void {
+  postOnExit(LEAD_SUBJECT, buildLeadFields(ctx));
+  mirrorToSheet(ctx, 'ליד');
+}
+
+/**
+ * הפונה לחץ "אני רוצה שעו״ד ייצור איתי קשר" - הליד החם ביותר במחשבון.
+ *
+ * זהו ליד *במקום* הליד הרגיל, לא בנוסף אליו: המחשבון מחזיק את הליד האוטומטי
+ * בהמתנה קצרה בדיוק כדי שהלחיצה הזו תוכל לתפוס את מקומו (ראו LEAD_GRACE_MS
+ * ב-Calculator.tsx). התוצאה היא מייל אחד לכל פונה - עם הסטטוס הנכון.
+ */
+export async function sendCallbackRequest(ctx: LeadContext, note: string): Promise<boolean> {
+  const fields = buildLeadFields({ ...ctx, note });
+  const ok = await postToWeb3Forms(CALLBACK_SUBJECT, {
+    'סוג הפנייה': 'הפונה ביקש במפורש שעו״ד מיסוי מקרקעין ייצור איתו קשר',
+    ...fields,
+  });
+  if (ok) mirrorToSheet({ ...ctx, note }, 'בקשת יצירת קשר');
   return ok;
 }
 
