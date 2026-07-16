@@ -7,7 +7,7 @@
  * ומופיעים באותו סדר. Web3Forms מרנדר כל מפתח כתווית בגוף המייל, ולכן
  * שינוי שם מפתח כאן = שינוי התווית שמתן רואה בתיבה.
  */
-import { isReliefMarked, type CalcOutcome, type WizardInput } from './logic';
+import { DEVELOPMENT_TOLERANCE, isReliefMarked, type CalcOutcome, type WizardInput } from './logic';
 
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || '';
 const SHEETS_URL = import.meta.env.PUBLIC_SHEETS_WEBHOOK_URL || '';
@@ -15,16 +15,16 @@ const CLOUDINARY_CLOUD = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME || '';
 const CLOUDINARY_PRESET = import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET || '';
 
 export const uploadConfigured = Boolean(CLOUDINARY_CLOUD && CLOUDINARY_PRESET);
-export const leadsConfigured = Boolean(WEB3FORMS_KEY);
 
-/** נושא המייל הנשלח אוטומטית על כל בדיקה שהושלמה */
-export const LEAD_SUBJECT = 'ליד חדש - מחשבון החזר מס רכישה למכרזי רמ״י';
 /**
- * נושא נפרד ובולט לבקשה מפורשת של הפונה שעו״ד ייצור איתו קשר.
- * זהו הליד ה"חם" ביותר, והוא חייב להיבדל מהליד האוטומטי - אחרת Gmail משרשר את
- * שני המיילים לשיחה אחת והבקשה נבלעת בתוך ההודעה הקודמת.
+ * נושא הליד. יש נושא אחד בלבד, ובכוונה.
+ *
+ * §1 - פרטי הקשר נמסרים כעת רק במסך התוצאה, אחרי שהפונה כבר ראה את האינדיקציה.
+ * המשמעות היא שכל ליד שמגיע לתיבה הוא ליד שמישהו טרח למסור עבורו שם, טלפון
+ * ודוא"ל אחרי שראה מה יצא לו - כלומר כל הלידים "חמים". קודם לכן היו שני נושאים
+ * שנועדו להבדיל בין ליד אוטומטי לבין בקשה מפורשת; ההבחנה הזו כבר לא קיימת.
  */
-export const CALLBACK_SUBJECT = 'בקשת יצירת קשר מפונה - מחשבון החזר מס רכישה למכרזי רמ״י';
+export const LEAD_SUBJECT = 'ליד חדש - מחשבון החזר מס רכישה למכרזי רמ״י';
 /** נושא נפרד למשוב, כדי שלא ייראה כליד כפול בתיבה */
 export const FEEDBACK_SUBJECT = 'משוב על המחשבון - מחשבון החזר מס רכישה למכרזי רמ״י';
 
@@ -127,6 +127,19 @@ function buildLeadFields({ input, outcome, note, suspectedBot }: LeadContext): R
     'עלות הקרקע שהמשתמש הזין': i.landCostEntered !== null ? ils(i.landCostEntered) : 'הוזן 0',
     'עלות הפיתוח מתוך נתוני המכרז': ils(i.developmentCostFull),
     'עלות הפיתוח לאחר התאמה למספר היחידות': ils(i.adjustedDevelopmentCost),
+
+    // §3 - הצלבת הפיתוח. מתן צריך את שני הסכומים ואת הפער ביניהם כדי לדעת אם
+    // מדובר בהצמדה למדד או בנתון שגוי, ולכן שלושתם מופיעים זה לצד זה.
+    'סכום הפיתוח שהמשתמש הזין':
+      i.developmentCostEntered !== null ? ils(i.developmentCostEntered) : 'לא הוזן',
+    'סטיית הפיתוח מול חוברת המכרז': ils(i.developmentDeviation),
+    'האם סטיית הפיתוח בתחום הסביר':
+      i.developmentWithinTolerance === null
+        ? 'לא ניתן להצליב'
+        : i.developmentWithinTolerance
+          ? `כן (עד ${DEVELOPMENT_TOLERANCE.toLocaleString('he-IL')} ש"ח)`
+          : `לא - חריגה מעל ${DEVELOPMENT_TOLERANCE.toLocaleString('he-IL')} ש"ח`,
+
     'אחוז הפיתוח המשוקלל':
       i.developmentPercentage !== null
         ? (i.developmentPercentage * 100).toFixed(2) + '%'
@@ -177,27 +190,6 @@ async function postOnce(subject: string, fields: Record<string, string>): Promis
   }
 }
 
-/**
- * שליחה שנשארת בחיים גם כשהדף נסגר.
- *
- * משמשת רק ביציאה מהדף: fetch רגיל מבוטל ברגע שהדפדפן עוזב, ו-keepalive הוא
- * הדגל שמורה לו להשלים את הבקשה ברקע בכל זאת. אין כאן ניסיונות חוזרים ואין
- * המתנה לתשובה - הדף כבר לא יהיה כאן כדי לקרוא אותה.
- */
-function postOnExit(subject: string, fields: Record<string, string>): void {
-  if (!WEB3FORMS_KEY) return;
-  try {
-    void fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: leadBody(subject, fields),
-      keepalive: true,
-    }).catch(() => {});
-  } catch {
-    /* אין למי לדווח - הדף נסגר */
-  }
-}
-
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
@@ -218,7 +210,7 @@ async function postToWeb3Forms(
   return false;
 }
 
-type SheetRecordKind = 'ליד' | 'בקשת יצירת קשר' | 'משוב';
+type SheetRecordKind = 'ליד' | 'משוב';
 
 /** שיקוף לגיליון Google Sheets - אם הוגדר; נכשל/לא הוגדר → מדלגים בשקט. */
 function mirrorToSheet(ctx: LeadContext, kind: SheetRecordKind): void {
@@ -248,36 +240,16 @@ function mirrorToSheet(ctx: LeadContext, kind: SheetRecordKind): void {
   fetch(SHEETS_URL, { method: 'POST', mode: 'no-cors', body: params }).catch(() => {});
 }
 
-/** שליחת ליד מלא. מחזיר האם הדוא"ל נשלח בהצלחה. */
+/**
+ * שליחת הליד. זהו המסלול היחיד שבו יוצא ליד מהמחשבון.
+ *
+ * §1 - הליד יוצא רק כשהפונה מסר את פרטיו במסך התוצאה ולחץ שליחה, ולכן אין כאן
+ * עוד שליחה אוטומטית, שליחה ביציאה מהדף, או מנגנון שמונע כפילות בין השתיים:
+ * לחיצה אחת = מייל אחד.
+ */
 export async function sendLead(ctx: LeadContext): Promise<boolean> {
   const ok = await postToWeb3Forms(LEAD_SUBJECT, buildLeadFields(ctx));
   if (ok) mirrorToSheet(ctx, 'ליד');
-  return ok;
-}
-
-/**
- * אותו ליד בדיוק, אך נשלח תוך כדי סגירת הדף (ראו postOnExit).
- * fire-and-forget: אי אפשר לחכות לתשובה מדף שכבר איננו.
- */
-export function sendLeadOnExit(ctx: LeadContext): void {
-  postOnExit(LEAD_SUBJECT, buildLeadFields(ctx));
-  mirrorToSheet(ctx, 'ליד');
-}
-
-/**
- * הפונה לחץ "אני רוצה שעו״ד ייצור איתי קשר" - הליד החם ביותר במחשבון.
- *
- * זהו ליד *במקום* הליד הרגיל, לא בנוסף אליו: המחשבון מחזיק את הליד האוטומטי
- * בהמתנה קצרה בדיוק כדי שהלחיצה הזו תוכל לתפוס את מקומו (ראו LEAD_GRACE_MS
- * ב-Calculator.tsx). התוצאה היא מייל אחד לכל פונה - עם הסטטוס הנכון.
- */
-export async function sendCallbackRequest(ctx: LeadContext, note: string): Promise<boolean> {
-  const fields = buildLeadFields({ ...ctx, note });
-  const ok = await postToWeb3Forms(CALLBACK_SUBJECT, {
-    'סוג הפנייה': 'הפונה ביקש במפורש שעו״ד מיסוי מקרקעין ייצור איתו קשר',
-    ...fields,
-  });
-  if (ok) mirrorToSheet({ ...ctx, note }, 'בקשת יצירת קשר');
   return ok;
 }
 

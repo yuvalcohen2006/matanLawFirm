@@ -3,6 +3,8 @@
   "generatedFrom": "tender booklets in /assets",
   "purchaseTaxRate": 0.06,
   "overpaymentThresholdILS": 1500,
+  "developmentToleranceILS": 12000,
+  "developmentToleranceNote": "סטייה מותרת בין הוצאות הפיתוח שהמשתמש דיווח ששילם לבין חלקו בהוצאות הפיתוח לפי החוברת (developmentCostFullPlot חלקי unitCount). עד לסכום זה - פער סביר, בעיקר בשל הצמדת הוצאות הפיתוח למדד; מעליו - התיק מנותב לבדיקה פרטנית.",
   "settlements": [
     {
       "id": "arad",

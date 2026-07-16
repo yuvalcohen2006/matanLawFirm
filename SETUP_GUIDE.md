@@ -121,31 +121,29 @@ cannot see (your inbox), so they're the important ones.
 
 ### 4c. The calculator lead — one email, and it actually arrives
 
-This is the fix you reported, and the one test only you can run (Claude can't see Matan's inbox).
+This is the one test only you can run (Claude can't see Matan's inbox).
 
-**Test A — the "have a lawyer call me" click (this was the bug):**
-1. Open **<https://www.abirlev.com/calculator>**, accept the consent, and fill the wizard so it
+**Contact details are now asked for last**, on the result screen, after the visitor has already seen
+their indication. So a lead is only created when someone chooses to leave their details — which also
+means every lead in the inbox is a warm one.
+
+**Test — the wizard through to a lead:**
+1. Open **<https://www.abirlev.com/calculator>**, accept the consent, and fill the four steps so it
    produces the **"שילמת יותר…"** (overpayment) result. A combination that works: settlement
-   **בית שאן**, plot **252**, tax paid **50000**, no relief, land component **250000**.
-2. On the result screen, click **"אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי…"**.
+   **בית שאן**, plot **252**, tax paid **50000**, no relief, land **250000**, development **0**.
+2. The result appears **first**, with no request for your details. Below it, fill in
+   **"פרטים ליצירת קשר"** and click the button.
 3. You should see the green **"הפרטים התקבלו בהצלחה"** confirmation.
-4. **Check `matan@abirlev.com`:** exactly **one** email should arrive, titled
-   **"בקשת יצירת קשר מפונה…"**, containing the name/phone/email you typed. Before this fix, that
-   click sent nothing at all.
+4. **Check `matan@abirlev.com`:** exactly **one** email should arrive, titled **"ליד חדש…"**,
+   containing the name/phone/email you typed.
 
-**Test B — completing the wizard without clicking the button:**
-1. Run the wizard again to any result, but this time **don't** click the callback button — just
-   leave the page (close the tab or navigate away).
-2. **Check the inbox:** exactly **one** email should arrive, titled **"ליד חדש…"**.
+> **If you abandon the page without filling in your details, no email arrives — that is intended.**
+> There is nothing to send: the whole point of the new order is that we ask for details only after
+> giving the visitor something. If you ever see **two** emails for one visitor, tell Claude.
 
-> **Why "exactly one" matters:** the automatic lead is now held for a short grace window so that
-> clicking the callback button *replaces* it rather than adding a second email. Click → you get the
-> "בקשת יצירת קשר" email. Don't click → you get the plain "ליד חדש" email. Never both. If you ever see
-> **two** emails for one visitor, tell Claude — that's the exact thing this change prevents.
-
-The **feedback box** ("נשמח לשמוע מה דעתכם") on the result screen is separate and unchanged: typing
-there and sending produces its own **"משוב על המחשבון"** email, which is intentional and is *not* a
-duplicate lead.
+The **feedback box** ("נשמח לשמוע מה דעתכם") on the result screen is separate: typing there and
+sending produces its own **"משוב על המחשבון"** email, which is intentional and is *not* a duplicate
+lead.
 
 ### 4d. The other forms
 
@@ -188,13 +186,13 @@ duplicate lead.
 |---|---|
 | Phone, email, address, hours, socials, domain | `src/data/site-details.json` |
 | The logo | replace `public/logo.png`, then **re-run `node scripts/make-favicons.mjs`** so the favicons regenerate from the new logo |
-| Matan's photo | replace `public/images/matan.webp` |
+| Matan's photo | replace `public/images/matan.webp`. It sits in a **4:5** frame (the current file is 560×700) and is never stretched — a photo of another shape is cropped to fit, keeping the middle and slightly favouring the top, so the face survives. For an unusual crop, adjust `object-position` in the `.portrait-frame` block in `src/styles/global.css` |
 | Practice areas — name, dropdown text, card image | `src/data/practice-areas.ts` |
 | The Invest in Israel page copy | `src/pages/en/invest-in-israel.astro` (the arrays near the top: `whyUs`, `services`, `steps`, `areas`) |
 | Header / footer / accessibility-widget text, both languages | `src/i18n/ui.ts` |
 | Tender and plot data | `src/data/plots.json` |
 | The field names in the lead email | `buildLeadFields()` in `src/components/calculator/leads.ts` |
-| How long the auto-lead waits before sending (the dedup grace) | `LEAD_GRACE_MS` in `src/components/calculator/Calculator.tsx` |
+| The purchase-tax rate, the 1,500 ₪ overpayment threshold, and the 12,000 ₪ development tolerance | the top of `src/data/plots.json` |
 | The security headers (CSP etc.) | the `headers` block in `vercel.json` — if you add a new third-party service, its origin must be added to the CSP or the browser will block it |
 | Colours, fonts, spacing | `src/styles/tokens.css` |
 

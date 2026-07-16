@@ -686,3 +686,46 @@ fieldset {
   flex-shrink: 0;
   cursor: pointer;
 }
+
+/* ============ portrait frame ============
+   The teal frame around a portrait, in one place.
+
+   It used to be four hand-written copies - he/en × home/about - each with its
+   own `transform: translate(±14px, 14px)`, mirrored by hand for LTR. That is
+   why the frame sat off to one side of the photo instead of around it: an
+   offset box, not a frame. Here the gap is even on all four sides, so the
+   portrait sits inside it and the whole thing is direction-agnostic - nothing
+   to mirror, nothing to keep in sync.
+
+   The <img> carries `aspect-ratio` and `object-fit: cover` rather than relying
+   on the file happening to be 4:5. That is what guarantees the two things the
+   frame cannot: the ratio can never stretch, and if the box is ever given a
+   different shape the crop keeps the face - `object-position` sits above centre
+   because a head sits above the middle of a portrait. */
+.portrait-frame {
+  position: relative;
+  --portrait-gap: 14px;
+}
+
+.portrait-frame::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--portrait-gap));
+  border: 2px solid var(--c-teal);
+  border-radius: calc(var(--radius-l) + var(--portrait-gap));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.portrait-frame img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 22%;
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-lift);
+}

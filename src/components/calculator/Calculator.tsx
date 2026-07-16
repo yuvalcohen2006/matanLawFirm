@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   settlements,
+  checkDevelopmentPayment,
   evaluate,
   isReliefMarked,
   parseMoney,
@@ -14,21 +15,19 @@ import {
   PLOT_NOT_FOUND,
   RELIEF_OPTIONS,
   type CalcOutcome,
+  type DevelopmentCheck,
   type ReliefOption,
   type WizardInput,
   type YesNoUnsure,
 } from './logic';
 import {
   sendLead,
-  sendLeadOnExit,
-  sendCallbackRequest,
   sendFeedback,
   uploadAssessmentFile,
   uploadConfigured,
   validateAssessmentFile,
   ACCEPTED_FILE_TYPES,
   MAX_FILE_MB,
-  type LeadContext,
 } from './leads';
 import site from '../../data/site-details.json';
 import './calculator.css';
@@ -48,23 +47,31 @@ const whatsappHref = filled(site.whatsappNumber)
     )}`
   : null;
 
-type Screen = 'intro' | 1 | 2 | 3 | 4 | 5 | 'loading' | 'result';
+type Screen = 'intro' | 1 | 2 | 3 | 4 | 'loading' | 'result';
 
-const STEP_TITLES: Record<1 | 2 | 3 | 4 | 5, string> = {
-  1: 'נתחיל בכמה פרטים',
-  2: 'פרטי המכרז והמגרש',
-  3: 'פרטי מס הרכישה',
-  4: 'הקלות או הטבות במס',
-  5: 'עלות רכיב הקרקע',
+/**
+ * §1 - סדר השלבים: קודם ערך, אחר כך פרטים.
+ *
+ * ארבעת השלבים אוספים נתוני עסקה בלבד. פרטי הקשר אינם שלב באשף - הם יושבים
+ * במסך התוצאה, אחרי שהפונה כבר ראה את האינדיקציה שלו. פונה שאינו רוצה להשאיר
+ * פרטים מקבל את התוצאה ממילא.
+ */
+const STEP_TITLES: Record<1 | 2 | 3 | 4, string> = {
+  1: 'פרטי המכרז והמגרש',
+  2: 'פרטי מס הרכישה',
+  3: 'הקלות או הטבות במס',
+  4: 'עלות הקרקע והפיתוח',
 };
 
-const STEP_SHORT: Record<1 | 2 | 3 | 4 | 5, string> = {
-  1: 'פרטים',
-  2: 'מכרז ומגרש',
-  3: 'מס הרכישה',
-  4: 'הקלות במס',
-  5: 'רכיב הקרקע',
+const STEP_SHORT: Record<1 | 2 | 3 | 4, string> = {
+  1: 'מכרז ומגרש',
+  2: 'מס הרכישה',
+  3: 'הקלות במס',
+  4: 'קרקע ופיתוח',
 };
+
+const STEPS = [1, 2, 3, 4] as const;
+const LAST_STEP = 4;
 
 /** §17 - הבהרות משפטיות בתחתית המחשבון */
 const DISCLAIMERS = [
@@ -95,18 +102,6 @@ const LOADING_STEP_MS = 900;
 
 const CONFIRMATION_TEXT = 'הפרטים התקבלו בהצלחה. נציג משרדנו ייצור איתך קשר לצורך בדיקה נוספת.';
 
-/**
- * כמה זמן הליד האוטומטי ממתין לפני שהוא יוצא לדרך.
- *
- * זהו חלון ההזדמנות שבו לחיצה על "אני רוצה שעו״ד ייצור איתי קשר" עוד יכולה לתפוס
- * את מקומו, כך שמתן יקבל מייל אחד ולא שניים. הכפתור יושב מיד מתחת לתוצאה, ומי
- * שלוחץ עליו לוחץ תוך שניות ספורות - 90 שניות הן מרווח נדיב.
- *
- * ארוך מדי = מתן ממתין ללא צורך לליד של מי שלא ילחץ לעולם.
- * קצר מדי  = לחיצה מאוחרת תגיע אחרי שהליד הרגיל כבר יצא, ואז יישלחו שני מיילים.
- */
-const LEAD_GRACE_MS = 90_000;
-
 /** §1.1 - העלאת שומת מס הרכישה. הניסוח כלשונו מהלקוח. */
 const UPLOAD_LABEL = 'העלאת שומת מס הרכישה';
 const UPLOAD_HELP = 'ניתן להעלות את שומת מס הרכישה לצורך בדיקה מקצועית ומדויקת יותר.';
@@ -117,6 +112,25 @@ const FEEDBACK_INTRO =
   'המחשבון נמצא בשלב פיילוט. נשמח לקבל הערות, הצעות או מידע נוסף שיסייע לנו לשפר את הבדיקה.';
 const FEEDBACK_LABEL = 'הערות או משוב';
 
+/** §2 - השורה המודגשת מתחת לשאלת הקרקע. הניסוח כלשונו מהלקוח. */
+const LAND_EMPHASIS =
+  'עבור הקרקע בלבד - ללא רכיב הפיתוח. אם במכרז שלך הקרקע ניתנה ללא תמורה / במתנה, יש לרשום 0. הנתון מופיע באישור הזכייה.';
+
+/**
+ * §3 - תוצאת ההצלבה כפי שהפונה רואה אותה.
+ *
+ * מילולית בלבד: הצגת הפער עצמו תחשוף את עלות הפיתוח שבחוברת, וכל הערכים
+ * המחושבים אמורים להישאר פנימיים (§14).
+ */
+const DEV_CHECK_MESSAGES: Record<Exclude<DevelopmentCheck, 'unknown'>, string> = {
+  within:
+    'הסכום שהזנת קרוב לנתון שבחוברת המכרז. ייתכן פער סביר הנובע מהצמדה למדד או ממועד התשלום, ולא בהכרח מטעות מהותית.',
+  over: 'קיים פער בין הסכום שהזנת לבין נתוני חוברת המכרז. הפנייה תועבר לבדיקה פרטנית של עו״ד מיסוי מקרקעין.',
+};
+
+/** §1 - הכותרת שמעל טופס פרטי הקשר במסך התוצאה */
+const CONTACT_TITLE = 'פרטים ליצירת קשר';
+
 export default function Calculator() {
   const [screen, setScreen] = useState<Screen>('intro');
 
@@ -124,49 +138,36 @@ export default function Calculator() {
   const [consent, setConsent] = useState<'כן' | 'לא' | ''>('');
 
   // --- step 1 ---
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [boughtFromRmi, setBoughtFromRmi] = useState<YesNoUnsure | ''>('');
-  const [honeypot, setHoneypot] = useState('');
-
-  // --- step 2 ---
   const [settlementId, setSettlementId] = useState('');
   const [plotNumber, setPlotNumber] = useState('');
 
-  // --- step 3 ---
+  // --- step 2 ---
   const [taxPaidRaw, setTaxPaidRaw] = useState('');
   const [hasAssessment, setHasAssessment] = useState<YesNoUnsure | ''>('');
   const [assessmentFile, setAssessmentFile] = useState<File | null>(null);
 
-  // --- step 4 ---
+  // --- step 3 ---
   const [reliefs, setReliefs] = useState<ReliefOption[]>([]);
 
-  // --- step 5 ---
+  // --- step 4 ---
   const [landCostRaw, setLandCostRaw] = useState('');
+  const [devCostRaw, setDevCostRaw] = useState('');
+
+  // --- §1 - נאסף במסך התוצאה בלבד, אחרי שהאינדיקציה כבר הוצגה ---
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const [contactState, setContactState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loadingStep, setLoadingStep] = useState(0);
 
   const [outcome, setOutcome] = useState<CalcOutcome | null>(null);
+  /** קלט העסקה כפי שחושב, ללא פרטי הקשר - אלה נמזגים פנימה רק בשליחה. */
   const inputRef = useRef<WizardInput | null>(null);
-  const callbackSentRef = useRef(false);
-  const [callback, setCallback] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
-
-  /**
-   * מתן מקבל מייל אחד לכל פונה - לא שניים.
-   *
-   * הליד האוטומטי אינו נשלח ברגע שהתוצאה מוצגת, אלא מוחזק בהמתנה קצרה. אם הפונה
-   * לוחץ "אני רוצה שעו״ד ייצור איתי קשר", הלחיצה *מבטלת* את הליד הממתין ותופסת
-   * את מקומו - מייל אחד, עם הסטטוס הנכון. אם הפונה אינו לוחץ, הליד הרגיל יוצא
-   * בתום ההמתנה, או מוקדם מכך אם הוא עוזב את הדף.
-   *
-   * leadSentRef הוא השומר היחיד: ברגע שיצא מייל ליד כלשהו, אף מסלול אחר לא ישלח
-   * מייל שני.
-   */
-  const pendingLeadRef = useRef<LeadContext | null>(null);
-  const leadSentRef = useRef(false);
-  const graceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const uploadNoteRef = useRef<string | undefined>(undefined);
 
   // --- feedback, collected on the result screen only (§1.2) ---
   const [feedback, setFeedback] = useState('');
@@ -176,46 +177,6 @@ export default function Calculator() {
 
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
-
-  function cancelGraceTimer() {
-    if (graceTimerRef.current !== null) {
-      clearTimeout(graceTimerRef.current);
-      graceTimerRef.current = null;
-    }
-  }
-
-  /** שולח את הליד הממתין - פעם אחת בלבד, לא משנה מי קרא. */
-  function flushPendingLead(onExit: boolean) {
-    if (leadSentRef.current) return;
-    const ctx = pendingLeadRef.current;
-    if (!ctx) return;
-
-    leadSentRef.current = true;
-    pendingLeadRef.current = null;
-    cancelGraceTimer();
-
-    if (onExit) sendLeadOnExit(ctx);
-    else void sendLead(ctx);
-  }
-
-  /**
-   * הפונה עוזב את הדף בלי ללחוץ - הליד הממתין חייב לצאת עכשיו, אחרת הוא אבד.
-   *
-   * event.persisted מבדיל בין השניים: true אומר שהדף נכנס ל-bfcache, כלומר
-   * המשתמש רק העביר אפליקציה/לשונית ועוד עשוי לחזור וללחוץ - ואז אסור לשלוח,
-   * אחרת נקבל בדיוק את המייל הכפול שניסינו למנוע. false אומר שהדף באמת נסגר.
-   */
-  useEffect(() => {
-    const onPageHide = (e: PageTransitionEvent) => {
-      if (e.persisted) return;
-      flushPendingLead(true);
-    };
-    window.addEventListener('pagehide', onPageHide);
-    return () => {
-      window.removeEventListener('pagehide', onPageHide);
-      cancelGraceTimer();
-    };
-  }, []);
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -228,6 +189,13 @@ export default function Calculator() {
   const plot = settlement?.plots.find((p) => p.plotNumber === plotNumber) ?? null;
   const reliefMarked = isReliefMarked(reliefs);
 
+  /** §3 - ההצלבה רצה בזמן ההקלדה, ברגע שיש סכום תקין להצליב. */
+  const devCheck: DevelopmentCheck = checkDevelopmentPayment(
+    settlementId,
+    plotNumber,
+    parseMoney(devCostRaw),
+  );
+
   function setError(key: string, msg: string | null) {
     setErrors((prev) => {
       const next = { ...prev };
@@ -237,30 +205,37 @@ export default function Calculator() {
     });
   }
 
-  function validateStep(step: 1 | 2 | 3 | 4 | 5): boolean {
+  function validateStep(step: 1 | 2 | 3 | 4): boolean {
     const next: Record<string, string> = {};
     if (step === 1) {
-      if (fullName.trim().length < 2) next.fullName = 'יש להזין שם מלא';
-      if (!isValidIsraeliPhone(phone)) next.phone = 'יש להזין מספר טלפון ישראלי תקין';
-      if (!isValidEmail(email)) next.email = 'יש להזין כתובת דוא״ל תקינה';
       if (!boughtFromRmi) next.boughtFromRmi = 'יש לבחור תשובה';
-    }
-    if (step === 2) {
       if (!settlementId) next.settlementId = 'יש לבחור יישוב';
       if (!plotNumber) next.plotNumber = 'יש לבחור מספר מגרש';
     }
-    if (step === 3) {
+    if (step === 2) {
       const tax = parseMoney(taxPaidRaw);
       if (tax === null || tax <= 0) next.taxPaid = 'יש להזין סכום בש״ח, בספרות בלבד';
       if (!hasAssessment) next.hasAssessment = 'יש לבחור תשובה';
     }
-    if (step === 4) {
+    if (step === 3) {
       if (reliefs.length === 0) next.reliefs = 'יש לבחור לפחות אפשרות אחת';
     }
-    if (step === 5) {
+    if (step === 4) {
       const land = parseMoney(landCostRaw);
       if (land === null) next.landCost = 'יש להזין סכום בש״ח (אפשר לרשום 0), בספרות בלבד';
+      const dev = parseMoney(devCostRaw);
+      if (dev === null) next.devCost = 'יש להזין סכום בש״ח (אפשר לרשום 0), בספרות בלבד';
     }
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
+
+  /** §1 - פרטי הקשר נבדקים במסך התוצאה, בנפרד משלבי האשף. */
+  function validateContact(): boolean {
+    const next: Record<string, string> = {};
+    if (fullName.trim().length < 2) next.fullName = 'יש להזין שם מלא';
+    if (!isValidIsraeliPhone(phone)) next.phone = 'יש להזין מספר טלפון ישראלי תקין';
+    if (!isValidEmail(email)) next.email = 'יש להזין כתובת דוא״ל תקינה';
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -301,7 +276,7 @@ export default function Calculator() {
 
   /** §11.7 - מסך הטעינה רץ במקביל להעלאת הקובץ ולחישוב, ואז נחשפת התוצאה. */
   async function showResult() {
-    if (!validateStep(5)) return;
+    if (!validateStep(LAST_STEP)) return;
 
     setLoadingStep(0);
     setScreen('loading');
@@ -324,10 +299,12 @@ export default function Calculator() {
 
     const [fileUrl] = await Promise.all([uploadPromise, minimumWait]);
 
+    // §1 - פרטי הקשר עדיין אינם ידועים בשלב זה, והחישוב אינו נזקק להם.
+    // הם נמזגים אל הקלט רק כשהפונה בוחר למסור אותם (ראו submitContact).
     const input: WizardInput = {
-      fullName: fullName.trim(),
-      phone: phone.trim(),
-      email: email.trim(),
+      fullName: '',
+      phone: '',
+      email: '',
       boughtFromRmi: boughtFromRmi as YesNoUnsure,
       settlementId,
       plotNumber,
@@ -337,32 +314,19 @@ export default function Calculator() {
       assessmentFileName: assessmentFile?.name ?? null,
       reliefs,
       userLandCost: parseMoney(landCostRaw) ?? 0,
+      userDevelopmentCost: parseMoney(devCostRaw) ?? NaN,
       // המשוב נאסף במסך התוצאה ונשלח בנפרד (§1.2), ולכן הליד יוצא בלעדיו
       feedback: '',
     };
     inputRef.current = input;
 
-    const result = evaluate(input);
-    setOutcome(result);
-    setScreen('result');
-
-    // §16 - כל בדיקה שהושלמה נשלחת כליד, כולל "לא נמצאה חריגה משמעותית".
-    // הפעלת מלכודת הספאם מסמנת את הליד אך אינה מבטלת אותו (ראו leads.ts).
-    const note =
+    uploadNoteRef.current =
       assessmentFile && !fileUrl
         ? `לפונה יש קובץ שומה (${assessmentFile.name}) אך הוא לא נשמר - העלאת הקבצים אינה מוגדרת או נכשלה. יש לבקש את הקובץ מהפונה.`
         : undefined;
 
-    // הליד מוחזק, לא נשלח - כדי שלחיצה על "שעו״ד יחזור אליי" תוכל לתפוס את מקומו
-    // ומתן יקבל מייל אחד במקום שניים. אם לא תהיה לחיצה, הוא ייצא מעצמו.
-    pendingLeadRef.current = {
-      input,
-      outcome: result,
-      note,
-      suspectedBot: honeypot !== '',
-    };
-    cancelGraceTimer();
-    graceTimerRef.current = setTimeout(() => flushPendingLead(false), LEAD_GRACE_MS);
+    setOutcome(evaluate(input));
+    setScreen('result');
   }
 
   /** §1.2 - המשוב נשלח כהודעה נפרדת, אחרי שהליד המלא כבר יצא. */
@@ -371,57 +335,37 @@ export default function Calculator() {
     if (!feedback.trim() || feedbackState === 'sending') return;
 
     setFeedbackState('sending');
-    const ok = await sendFeedback({ input: inputRef.current, outcome }, feedback);
+    const ok = await sendFeedback(
+      { input: { ...inputRef.current, fullName, phone, email }, outcome },
+      feedback,
+    );
     setFeedbackState(ok ? 'sent' : 'failed');
   }
 
   /**
-   * לחיצה על "אני רוצה שעו״ד ייצור איתי קשר" - הדרישה המפורשת של הלקוח:
-   * הלחיצה חייבת לשלוח את הליד, ובדיוק מייל אחד.
+   * §1 - הפונה ראה את התוצאה ובחר להשאיר פרטים. זהו המסלול היחיד ששולח ליד.
    *
-   * כל יציאה מוקדמת ששתקה כאן הוסרה. קודם לכן, אם מלכודת הספאם הופעלה או שחסר
-   * מידע, הפונקציה קפצה ל-setCallback('sent') - כלומר הציגה לפונה "הפרטים
-   * התקבלו בהצלחה" בזמן שדבר לא נשלח, וזו בדיוק התקלה שדווחה. עכשיו:
-   *   - מלכודת ספאם → הליד נשלח ומסומן, לא נזרק;
-   *   - חסר קלט/תוצאה → מדווח על כישלון, לא על הצלחה מדומה;
-   *   - הלחיצה מבטלת את הליד הממתין ותופסת את מקומו → מייל אחד, לא שניים;
-   *   - אם השליחה נכשלה, הליד הממתין מוחזר להמתנה - כדי שכישלון לא יבלע אותו.
+   * הפעלת מלכודת הספאם מסמנת את הליד אך אינה מבטלת אותו (ראו leads.ts): כמעט כל
+   * הפעלה שלה כאן היא חיובית-שגויה של מילוי אוטומטי, ולקוח אמיתי שנזרק בשקט
+   * יקר בהרבה מספאם בתיבה.
    */
-  async function requestCallback(note: string) {
-    if (callbackSentRef.current) {
-      setCallback('sent');
+  async function submitContact() {
+    if (contactState === 'sending' || contactState === 'sent') return;
+    const base = inputRef.current;
+    if (!base || !outcome) {
+      setContactState('failed');
       return;
     }
-    const input = inputRef.current;
-    if (!input || !outcome) {
-      setCallback('failed');
-      return;
-    }
+    if (!validateContact()) return;
 
-    // הלחיצה גוברת על הליד הממתין: מבטלים את השליחה האוטומטית ותופסים את מקומה.
-    const held = pendingLeadRef.current;
-    cancelGraceTimer();
-    pendingLeadRef.current = null;
-    const leadAlreadyOut = leadSentRef.current;
-    leadSentRef.current = true;
-
-    setCallback('sending');
-    const ok = await sendCallbackRequest(
-      { input, outcome, suspectedBot: honeypot !== '' },
-      leadAlreadyOut
-        ? `${note}. שימו לב: הליד הרגיל של הפונה כבר נשלח קודם לכן - זו אותה פנייה, לא פנייה חדשה.`
-        : note,
-    );
-
-    if (!ok) {
-      // השליחה נכשלה. הליד הממתין חוזר להמתנה כדי שלפחות הוא ייצא ביציאה מהדף -
-      // עדיף ליד רגיל מאשר שום ליד. הפונה יכול גם ללחוץ שוב.
-      pendingLeadRef.current = held;
-      leadSentRef.current = leadAlreadyOut;
-    }
-
-    callbackSentRef.current = ok;
-    setCallback(ok ? 'sent' : 'failed');
+    setContactState('sending');
+    const ok = await sendLead({
+      input: { ...base, fullName: fullName.trim(), phone: phone.trim(), email: email.trim() },
+      outcome,
+      note: uploadNoteRef.current,
+      suspectedBot: honeypot !== '',
+    });
+    setContactState(ok ? 'sent' : 'failed');
   }
 
   /* ============================ UI helpers ============================ */
@@ -457,11 +401,11 @@ export default function Calculator() {
     );
   }
 
-  function Stepper({ current }: { current: 1 | 2 | 3 | 4 | 5 }) {
+  function Stepper({ current }: { current: 1 | 2 | 3 | 4 }) {
     return (
       <nav aria-label="שלבי הבדיקה">
         <ol className="calc-stepper">
-          {([1, 2, 3, 4, 5] as const).map((n) => (
+          {STEPS.map((n) => (
             <li
               key={n}
               aria-current={n === current ? 'step' : undefined}
@@ -589,6 +533,15 @@ export default function Calculator() {
   // ---------- result (§14) ----------
   if (screen === 'result' && outcome) {
     const { kind, reliefUsedTrigger } = outcome;
+
+    /* §1 - תווית הכפתור נושאת את הניסוח שהלקוח ביקש לכל תוצאה. */
+    const submitLabel =
+      kind === 'overpayment'
+        ? 'אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות ולהחזרת המס'
+        : kind === 'manual'
+          ? 'אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות'
+          : 'אני עדיין מעוניין בבדיקה משפטית';
+
     return (
       <div className="calc-root" ref={rootRef}>
         <div className="card calc-card calc-result" data-kind={kind}>
@@ -598,19 +551,6 @@ export default function Calculator() {
                 אופס… נראה ששילמת יותר ממה שהיית אמור לשלם
               </h1>
               <p className="sub">זוהתה חריגה של מעל ל־1,500 ₪</p>
-              {callback !== 'sent' ? (
-                <button
-                  type="button"
-                  className={`btn btn--primary${callback === 'sending' ? ' is-loading' : ''}`}
-                  onClick={() =>
-                    requestCallback('המשתמש ביקש חזרה טלפונית לבדיקה נוספת ולהחזרת המס')
-                  }
-                  disabled={callback === 'sending'}
-                  aria-busy={callback === 'sending'}
-                >
-                  אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות ולהחזרת המס
-                </button>
-              ) : null}
             </>
           )}
 
@@ -624,21 +564,6 @@ export default function Calculator() {
                 הבדיקה מבוססת על הנתונים שהוזנו ועל נתוני חוברת המכרז בלבד ואינה מחליפה בדיקה
                 מקצועית של השומה.
               </p>
-              {callback !== 'sent' ? (
-                <button
-                  type="button"
-                  className={`btn btn--secondary${callback === 'sending' ? ' is-loading' : ''}`}
-                  onClick={() =>
-                    requestCallback(
-                      'המשתמש ביקש בדיקה משפטית אף שלא נמצאה חריגה משמעותית (עדיפות נמוכה)',
-                    )
-                  }
-                  disabled={callback === 'sending'}
-                  aria-busy={callback === 'sending'}
-                >
-                  אני עדיין מעוניין בבדיקה משפטית
-                </button>
-              ) : null}
             </>
           )}
 
@@ -652,45 +577,143 @@ export default function Calculator() {
                   ? 'מאחר שסומן שימוש בהקלה או בהטבה במסגרת שומת מס הרכישה, לא ניתן להסתמך על חישוב אוטומטי בלבד. משרדנו ממליץ להעביר את השומה לבדיקה פרטנית.'
                   : 'לא ניתן להגיע למסקנה מהימנה באמצעות החישוב האוטומטי בלבד. משרדנו ממליץ להעביר את השומה לבדיקה פרטנית.'}
               </p>
-              {callback !== 'sent' ? (
-                <button
-                  type="button"
-                  className={`btn btn--primary${callback === 'sending' ? ' is-loading' : ''}`}
-                  onClick={() => requestCallback('המשתמש ביקש חזרה טלפונית לבדיקה פרטנית')}
-                  disabled={callback === 'sending'}
-                  aria-busy={callback === 'sending'}
-                >
-                  אני רוצה שעו״ד מיסוי מקרקעין יחזור אליי לבדיקה נוספת ללא עלות
-                </button>
-              ) : null}
             </>
           )}
-
-          <p aria-live="polite" className={callback === 'sent' ? 'calc-confirm' : 'visually-hidden'}>
-            {callback === 'sent' ? CONFIRMATION_TEXT : ''}
-          </p>
-          {/* הכפתור נשאר על המסך כל עוד לא הצלחנו, כך שהלחיצה החוזרת אפשרית -
-              ולצידה דרך אנושית להשלים את הפנייה גם אם השליחה ממשיכה להיכשל. */}
-          {callback === 'failed' && (
-            <div role="alert" className="calc-callback-failed">
-              <p className="error-text">
-                השליחה נכשלה. אפשר ללחוץ שוב על הכפתור, או לפנות למשרדנו ישירות:
-              </p>
-              <p className="calc-callback-links">
-                {phoneHref && (
-                  <a href={phoneHref} dir="ltr">
-                    {site.phone}
-                  </a>
-                )}
-                {whatsappHref && (
-                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                    וואטסאפ
-                  </a>
-                )}
-              </p>
-            </div>
-          )}
         </div>
+
+        {/*
+          §1 - פרטי הקשר נמצאים כאן, ורק כאן: אחרי שהפונה קיבל את האינדיקציה
+          שלו. קודם ערך, אחר כך בקשה.
+        */}
+        <section className="card calc-card calc-contact" aria-labelledby="calc-contact-title">
+          {contactState === 'sent' ? (
+            <p className="calc-confirm" role="status">
+              {CONFIRMATION_TEXT}
+            </p>
+          ) : (
+            <form
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+                void submitContact();
+              }}
+            >
+              <h2 id="calc-contact-title">{CONTACT_TITLE}</h2>
+              <p>
+                {kind === 'overpayment'
+                  ? 'השאירו פרטים ועו״ד מיסוי מקרקעין יחזור אליכם לבדיקה נוספת של השומה, ללא עלות.'
+                  : 'השאירו פרטים ונחזור אליכם לבדיקה נוספת של השומה, ללא עלות.'}
+              </p>
+
+              {/*
+                מלכודת ספאם - מוסתרת ממשתמשים אמיתיים.
+
+                השם כאן חשוב: קודם לכן השדה נקרא "company", וזהו שם שהמילוי האוטומטי
+                של Chrome מזהה כשדה ארגון וממלא - גם כש-autocomplete="off" - במיוחד
+                בטופס שיש בו שם, טלפון ודוא"ל. פונה אמיתי שהשתמש במילוי אוטומטי סומן
+                כבוט, והליד שלו נזרק בשקט. שם חסר משמעות אינו תואם לאף היוריסטיקה.
+              */}
+              <input
+                type="text"
+                id="calc-ref-code"
+                name="calc_reference_code"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                className="calc-hp"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
+              <div className="field">
+                <label htmlFor="calc-name">שם מלא</label>
+                <input
+                  id="calc-name"
+                  type="text"
+                  value={fullName}
+                  autoComplete="name"
+                  required
+                  aria-invalid={Boolean(errors.fullName)}
+                  aria-describedby={errors.fullName ? 'calc-name-err' : undefined}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setError('fullName', null);
+                  }}
+                />
+                {fieldError('fullName', 'calc-name-err')}
+              </div>
+              <div className="field">
+                <label htmlFor="calc-phone">מספר טלפון</label>
+                <input
+                  id="calc-phone"
+                  type="tel"
+                  dir="ltr"
+                  value={phone}
+                  autoComplete="tel"
+                  required
+                  aria-invalid={Boolean(errors.phone)}
+                  aria-describedby={errors.phone ? 'calc-phone-err' : undefined}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setError('phone', null);
+                  }}
+                />
+                {fieldError('phone', 'calc-phone-err')}
+              </div>
+              <div className="field">
+                <label htmlFor="calc-email">כתובת דוא״ל</label>
+                <input
+                  id="calc-email"
+                  type="email"
+                  dir="ltr"
+                  value={email}
+                  autoComplete="email"
+                  required
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? 'calc-email-err' : undefined}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError('email', null);
+                  }}
+                />
+                {fieldError('email', 'calc-email-err')}
+              </div>
+
+              <button
+                type="submit"
+                className={`btn ${kind === 'ok' ? 'btn--secondary' : 'btn--primary'}${
+                  contactState === 'sending' ? ' is-loading' : ''
+                }`}
+                disabled={contactState === 'sending'}
+                aria-busy={contactState === 'sending'}
+              >
+                {submitLabel}
+              </button>
+
+              {/* הכפתור נשאר על המסך כל עוד לא הצלחנו, כך שהלחיצה החוזרת אפשרית -
+                  ולצידה דרך אנושית להשלים את הפנייה גם אם השליחה ממשיכה להיכשל. */}
+              {contactState === 'failed' && (
+                <div role="alert" className="calc-callback-failed">
+                  <p className="error-text">
+                    השליחה נכשלה. אפשר ללחוץ שוב על הכפתור, או לפנות למשרדנו ישירות:
+                  </p>
+                  <p className="calc-callback-links">
+                    {phoneHref && (
+                      <a href={phoneHref} dir="ltr">
+                        {site.phone}
+                      </a>
+                    )}
+                    {whatsappHref && (
+                      <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                        וואטסאפ
+                      </a>
+                    )}
+                  </p>
+                </div>
+              )}
+            </form>
+          )}
+        </section>
 
         {/* §1.2 - המשוב יושב כאן בלבד: בחלונית האחרונה, אחרי הצגת התוצאה. */}
         <section className="card calc-card calc-feedback" aria-labelledby="calc-feedback-title">
@@ -740,7 +763,7 @@ export default function Calculator() {
     );
   }
 
-  const step = screen as 1 | 2 | 3 | 4 | 5;
+  const step = screen as 1 | 2 | 3 | 4;
 
   return (
     <div className="calc-root" ref={rootRef}>
@@ -750,7 +773,7 @@ export default function Calculator() {
         noValidate
         onSubmit={(e) => {
           e.preventDefault();
-          if (step === 5) {
+          if (step === LAST_STEP) {
             void showResult();
           } else if (validateStep(step)) {
             setScreen((step + 1) as Screen);
@@ -767,78 +790,6 @@ export default function Calculator() {
               {PILOT_NOTICE}
             </p>
 
-            {/*
-              מלכודת ספאם - מוסתרת ממשתמשים אמיתיים.
-
-              השם כאן חשוב: קודם לכן השדה נקרא "company", וזהו שם שהמילוי האוטומטי
-              של Chrome מזהה כשדה ארגון וממלא - גם כש-autocomplete="off" - במיוחד
-              בטופס שיש בו שם, טלפון ודוא"ל. פונה אמיתי שהשתמש במילוי אוטומטי סומן
-              כבוט, והליד שלו נזרק בשקט. שם חסר משמעות אינו תואם לאף היוריסטיקה.
-            */}
-            <input
-              type="text"
-              id="calc-ref-code"
-              name="calc_reference_code"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-              className="calc-hp"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-            />
-            <div className="field">
-              <label htmlFor="calc-name">שם מלא</label>
-              <input
-                id="calc-name"
-                type="text"
-                value={fullName}
-                autoComplete="name"
-                required
-                aria-invalid={Boolean(errors.fullName)}
-                aria-describedby={errors.fullName ? 'calc-name-err' : undefined}
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  setError('fullName', null);
-                }}
-              />
-              {fieldError('fullName', 'calc-name-err')}
-            </div>
-            <div className="field">
-              <label htmlFor="calc-phone">מספר טלפון</label>
-              <input
-                id="calc-phone"
-                type="tel"
-                dir="ltr"
-                value={phone}
-                autoComplete="tel"
-                required
-                aria-invalid={Boolean(errors.phone)}
-                aria-describedby={errors.phone ? 'calc-phone-err' : undefined}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setError('phone', null);
-                }}
-              />
-              {fieldError('phone', 'calc-phone-err')}
-            </div>
-            <div className="field">
-              <label htmlFor="calc-email">כתובת דוא״ל</label>
-              <input
-                id="calc-email"
-                type="email"
-                dir="ltr"
-                value={email}
-                autoComplete="email"
-                required
-                aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? 'calc-email-err' : undefined}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError('email', null);
-                }}
-              />
-              {fieldError('email', 'calc-email-err')}
-            </div>
             <fieldset
               className="field"
               aria-describedby={errors.boughtFromRmi ? 'calc-rmi-err' : undefined}
@@ -863,19 +814,7 @@ export default function Calculator() {
               </div>
               {fieldError('boughtFromRmi', 'calc-rmi-err')}
             </fieldset>
-            <div className="calc-nav">
-              <button type="button" className="btn btn--secondary" onClick={() => setScreen('intro')}>
-                חזרה
-              </button>
-              <button type="submit" className="btn btn--primary">
-                המשך
-              </button>
-            </div>
-          </>
-        )}
 
-        {step === 2 && (
-          <>
             <fieldset
               className="field"
               aria-describedby={errors.settlementId ? 'calc-settlement-err' : undefined}
@@ -957,16 +896,18 @@ export default function Calculator() {
               </div>
             )}
 
-            <NavButtons
-              onBack={() => setScreen(1)}
-              onNext={() => {
-                if (validateStep(2)) setScreen(3);
-              }}
-            />
+            <div className="calc-nav">
+              <button type="button" className="btn btn--secondary" onClick={() => setScreen('intro')}>
+                חזרה
+              </button>
+              <button type="submit" className="btn btn--primary">
+                המשך
+              </button>
+            </div>
           </>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <>
             <div className="field">
               <label htmlFor="calc-tax">כמה מס רכישה שילמת בפועל?</label>
@@ -1048,15 +989,15 @@ export default function Calculator() {
             )}
 
             <NavButtons
-              onBack={() => setScreen(2)}
+              onBack={() => setScreen(1)}
               onNext={() => {
-                if (validateStep(3)) setScreen(4);
+                if (validateStep(2)) setScreen(3);
               }}
             />
           </>
         )}
 
-        {step === 4 && (
+        {step === 3 && (
           <>
             {/* §11.5 - השאלה נשאלת על שימוש בפועל בהקלה, לא על זכאות */}
             <fieldset className="field" aria-describedby={errors.reliefs ? 'calc-reliefs-err' : undefined}>
@@ -1085,19 +1026,22 @@ export default function Calculator() {
             </fieldset>
 
             <NavButtons
-              onBack={() => setScreen(3)}
+              onBack={() => setScreen(2)}
               onNext={() => {
-                if (validateStep(4)) setScreen(5);
+                if (validateStep(3)) setScreen(4);
               }}
             />
           </>
         )}
 
-        {step === 5 && (
+        {step === 4 && (
           <>
-            {/* §11.6 - עלות רכיב הקרקע, כולל מע"מ */}
+            {/* §11.6 / §2 - עלות רכיב הקרקע, כולל מע"מ */}
             <div className="field">
-              <label htmlFor="calc-land">כמה עלה רכיב הקרקע ללא הוצאות הפיתוח, כולל מע״מ?</label>
+              <label htmlFor="calc-land">כמה שילמת עבור הקרקע?</label>
+              <p className="calc-emphasis" id="calc-land-note">
+                {LAND_EMPHASIS}
+              </p>
               <input
                 id="calc-land"
                 type="text"
@@ -1107,23 +1051,54 @@ export default function Calculator() {
                 value={landCostRaw}
                 required
                 aria-invalid={Boolean(errors.landCost)}
-                aria-describedby={'calc-land-help' + (errors.landCost ? ' calc-land-err' : '')}
+                aria-describedby={
+                  'calc-land-note calc-land-help' + (errors.landCost ? ' calc-land-err' : '')
+                }
                 onChange={(e) => {
                   setLandCostRaw(e.target.value);
                   setError('landCost', null);
                 }}
               />
               <span className="helper-text" id="calc-land-help">
-                אם מדובר במגרש דו־משפחתי, יש להזין את העלות של החלק שנרכש על ידך בלבד. אם הסכום
-                אינו ידוע, ניתן לרשום 0 - הפנייה תועבר לבדיקה פרטנית.
+                הסכום כולל מע״מ. אם מדובר במגרש דו־משפחתי, יש להזין את העלות של החלק שנרכש על
+                ידך בלבד. הזנת 0 - בין אם הקרקע ניתנה ללא תמורה ובין אם הסכום אינו ידוע - תעביר
+                את הפנייה לבדיקה פרטנית.
               </span>
               {fieldError('landCost', 'calc-land-err')}
             </div>
 
-            {/* §1.2 - המשוב הועבר לחלונית האחרונה (מסך התוצאה) ואינו נאסף כאן. */}
+            {/* §3 - שדה הפיתוח החדש, כולל ההצלבה מול חוברת המכרז */}
+            <div className="field">
+              <label htmlFor="calc-dev">כמה שילמת עבור הוצאות הפיתוח?</label>
+              <input
+                id="calc-dev"
+                type="text"
+                inputMode="numeric"
+                dir="ltr"
+                placeholder="למשל: 320,000"
+                value={devCostRaw}
+                required
+                aria-invalid={Boolean(errors.devCost)}
+                aria-describedby={'calc-dev-help' + (errors.devCost ? ' calc-dev-err' : '')}
+                onChange={(e) => {
+                  setDevCostRaw(e.target.value);
+                  setError('devCost', null);
+                }}
+              />
+              <span className="helper-text" id="calc-dev-help">
+                הסכום ששולם עבור הוצאות הפיתוח, כולל מע״מ. הנתון מופיע באישור הזכייה או בשוברי
+                התשלום.
+              </span>
+              {devCheck !== 'unknown' && (
+                <p className="calc-dev-check" data-check={devCheck} role="note" aria-live="polite">
+                  {DEV_CHECK_MESSAGES[devCheck]}
+                </p>
+              )}
+              {fieldError('devCost', 'calc-dev-err')}
+            </div>
 
             <NavButtons
-              onBack={() => setScreen(4)}
+              onBack={() => setScreen(3)}
               onNext={() => void showResult()}
               nextLabel="הצגת התוצאה"
             />

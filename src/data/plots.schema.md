@@ -8,9 +8,10 @@ This file is the calculator's single source of truth: the settlement, tender-num
 
 ```jsonc
 {
-  "purchaseTaxRate": 0.06,           // purchase-tax rate used in the internal calculation
-  "overpaymentThresholdILS": 1500,   // gap (in ILS) above which a result is "possible overpayment"
-  "settlements": [ ... ]             // one entry per tender
+  "purchaseTaxRate": 0.06,             // purchase-tax rate used in the internal calculation
+  "overpaymentThresholdILS": 1500,     // gap (in ILS) above which a result is "possible overpayment"
+  "developmentToleranceILS": 12000,    // how far the user's development payment may sit from the booklet figure
+  "settlements": [ ... ]               // one entry per tender
 }
 ```
 
@@ -55,7 +56,24 @@ gap                 = taxPaidByUser - estimatedTax
 
 A gap above `overpaymentThresholdILS` (1,500 ₪) surfaces the "possible overpayment" result. **None of these numbers is ever rendered in the UI** - they travel only in the lead email.
 
-The calculation is skipped entirely (→ manual review) when: a relief was used in the assessment, the land cost entered is `0`, the plot isn't in the list, or `needsManualFill` is set.
+## The development cross-check
+
+The user is asked what they actually paid for development, and that figure is crossed against **their own share** of the booklet's development cost:
+
+```
+developmentDeviation = | developmentPaidByUser - adjustedDevelopment |
+```
+
+Note the baseline is `adjustedDevelopment` (the buyer's unit share), **not** the rate-adjusted figure: `developmentCompletionRate` governs how much of the development counts toward the taxable value, not how much the buyer paid the ILA.
+
+| Deviation | Effect |
+|---|---|
+| ≤ `developmentToleranceILS` (12,000 ₪) | Treated as a reasonable gap - the booklet's development costs are index-linked (`devCostIndexBase`), so paying on a different date means paying a different amount. The calculation proceeds; the user sees a note. |
+| > `developmentToleranceILS` | The plot data doesn't describe this transaction, so an automatic result would be confidently wrong → manual review. |
+
+The user only ever sees a qualitative message. The deviation itself is internal (§14) - showing it would expose the booklet's development cost.
+
+The calculation is skipped entirely (→ manual review) when: a relief was used in the assessment, the land cost entered is `0`, the development deviation exceeds the tolerance, the plot isn't in the list, or `needsManualFill` is set.
 
 ## Adding a future tender
 

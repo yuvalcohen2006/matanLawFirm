@@ -17,7 +17,7 @@ const waHref = filled(site.whatsappNumber)
 >
   <section class="section">
     <div class="container about-inner">
-      <div class="about-photo">
+      <div class="about-photo portrait-frame">
         <img src={site.portraitPath} alt="עו״ד מתן אביר לב" width="560" height="700" />
       </div>
       <article class="about-copy">
@@ -158,26 +158,10 @@ const waHref = filled(site.whatsappNumber)
     align-items: start;
   }
 
+  /* the frame itself lives in global.css - see .portrait-frame */
   .about-photo {
-    position: relative;
     position: sticky;
     inset-block-start: var(--sp-8);
-  }
-
-  .about-photo::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translate(-14px, 14px);
-    border: 2px solid var(--c-teal);
-    border-radius: var(--radius-l);
-  }
-
-  .about-photo img {
-    position: relative;
-    inline-size: 100%;
-    border-radius: var(--radius-l);
-    box-shadow: var(--shadow-lift);
   }
 
   .about-copy {
@@ -214,8 +198,11 @@ const waHref = filled(site.whatsappNumber)
       gap: var(--sp-7);
     }
 
+    /* `relative`, not `static`: this only needs to cancel the sticky column, and
+       static would un-anchor the .portrait-frame outline into the nearest
+       positioned ancestor - the frame would drift off the photo entirely. */
     .about-photo {
-      position: static;
+      position: relative;
       max-width: 20rem;
     }
   }

@@ -47,6 +47,18 @@ export const settlements: SettlementRecord[] = (plotsData as any).settlements.ma
 export const PURCHASE_TAX_RATE: number = (plotsData as any).purchaseTaxRate ?? 0.06;
 export const OVERPAYMENT_THRESHOLD: number = (plotsData as any).overpaymentThresholdILS ?? 1500;
 
+/**
+ * §3 - כמה מותר לסכום הפיתוח שהמשתמש שילם לסטות מהנתון שבחוברת המכרז לפני
+ * שהתיק מסומן לבדיקה פרטנית.
+ *
+ * הסטייה צפויה ואינה מעידה על טעות: הוצאות הפיתוח בחוברת צמודות למדד
+ * (ראו devCostIndexBase), ולכן מי ששילם במועד אחר שילם סכום אחר. הסף מפריד בין
+ * פער סביר כזה לבין פער שמעיד שהנתון או המגרש אינם מה שחשבנו - ואז אין טעם
+ * להריץ חישוב אוטומטי על בסיס שגוי.
+ */
+export const DEVELOPMENT_TOLERANCE: number =
+  (plotsData as any).developmentToleranceILS ?? 12000;
+
 export type YesNoUnsure = 'כן' | 'לא' | 'לא בטוח';
 
 /** §11.5 - השאלה נשאלת כעת על שימוש בפועל בהקלה במסגרת השומה, לא על זכאות תיאורטית. */
@@ -82,6 +94,8 @@ export interface WizardInput {
   reliefs: ReliefOption[];
   /** §11.6 - עלות רכיב הקרקע ללא הוצאות פיתוח, כולל מע"מ. 0 = בדיקה ידנית. */
   userLandCost: number;
+  /** §3 - הסכום ששולם בפועל עבור הוצאות הפיתוח. מוצלב מול נתוני חוברת המכרז. */
+  userDevelopmentCost: number;
   /** §11.2 - משוב חופשי על הפיילוט */
   feedback: string;
 }
@@ -112,6 +126,12 @@ export interface CalcOutcome {
     landCostEntered: number | null;
     developmentCostFull: number | null;
     adjustedDevelopmentCost: number | null;
+    /** §3 - הסכום שהמשתמש דיווח ששילם עבור הפיתוח */
+    developmentCostEntered: number | null;
+    /** §3 - המרחק בין הסכום שהוזן לבין חלקו של המשתמש בפיתוח לפי החוברת */
+    developmentDeviation: number | null;
+    /** §3 - null כשאין די נתונים להצלבה */
+    developmentWithinTolerance: boolean | null;
     developmentPercentage: number | null;
     relevantDevelopmentComponent: number | null;
     estimatedTaxableValue: number | null;
@@ -126,8 +146,46 @@ export function findSettlement(id: string): SettlementRecord | undefined {
   return settlements.find((s) => s.id === id);
 }
 
-export function findPlot(settlementId: string, plotNumber: string): PlotRecord | undefined {
-  return findSettlement(settlementId)?.plots.find((p) => p.plotNumber === plotNumber);
+/**
+ * חלקו של רוכש יחיד בהוצאות הפיתוח לפי חוברת המכרז.
+ *
+ * החוברת מדפיסה את עלות הפיתוח למגרש *כולו*; במגרש דו־משפחתי הרוכש שילם על
+ * מחציתו. זהו הסכום שמולו מוצלב מה שהמשתמש דיווח ששילם - ולא הסכום שלאחר הכפלה
+ * באחוז הביצוע המשוקלל: אחוז הביצוע קובע כמה מהפיתוח נכנס לשווי לצורכי מס, לא
+ * כמה הרוכש שילם לרמ"י בפועל.
+ */
+function adjustedDevelopmentFor(plot: PlotRecord | null): number | null {
+  if (!plot) return null;
+  const { developmentCostFullPlot: full, unitCount } = plot;
+  if (full === null || unitCount === null || unitCount <= 0) return null;
+  return full / unitCount;
+}
+
+/** §3 - תוצאת ההצלבה בין סכום הפיתוח שהוזן לבין נתוני חוברת המכרז. */
+export type DevelopmentCheck = 'within' | 'over' | 'unknown';
+
+/**
+ * §3 - ההצלבה כפי שהממשק מציג אותה בזמן ההקלדה.
+ *
+ * מחזירה סיווג בלבד, לעולם לא מספר: הצגת הפער תחשוף את עלות הפיתוח שבחוברת,
+ * וכל הערכים המחושבים אמורים להישאר פנימיים (§14).
+ */
+export function checkDevelopmentPayment(
+  settlementId: string,
+  plotNumber: string,
+  entered: number | null,
+): DevelopmentCheck {
+  if (entered === null || !Number.isFinite(entered) || entered < 0) return 'unknown';
+  const settlement = findSettlement(settlementId) ?? null;
+  const plot =
+    settlement && plotNumber !== PLOT_NOT_FOUND
+      ? (settlement.plots.find((p) => p.plotNumber === plotNumber) ?? null)
+      : null;
+  if (plot?.needsManualFill) return 'unknown';
+
+  const adjusted = adjustedDevelopmentFor(plot);
+  if (adjusted === null) return 'unknown';
+  return Math.abs(entered - adjusted) <= DEVELOPMENT_TOLERANCE ? 'within' : 'over';
 }
 
 /**
@@ -189,24 +247,47 @@ export function evaluate(input: WizardInput): CalcOutcome {
     manualReasons.push('סכום מס הרכישה שהוזן אינו תקין');
   }
 
+  /**
+   * §3 - הצלבת סכום הפיתוח שהמשתמש שילם מול חלקו לפי חוברת המכרז.
+   *
+   * ההצלבה מחושבת כאן, לפני שער החישוב, כי פער גדול הוא עצמו עילה לבדיקה
+   * פרטנית: הוא אומר שהנתון שבידינו אינו מתאר את העסקה הזו, וחישוב אוטומטי
+   * שיירוץ מעליו ייתן תשובה בטוחה ושגויה.
+   */
+  const adjusted = adjustedDevelopmentFor(plot);
+  const devEntered =
+    Number.isFinite(input.userDevelopmentCost) && input.userDevelopmentCost >= 0
+      ? input.userDevelopmentCost
+      : null;
+  const devDeviation =
+    adjusted !== null && devEntered !== null ? Math.abs(devEntered - adjusted) : null;
+  const devWithinTolerance = devDeviation === null ? null : devDeviation <= DEVELOPMENT_TOLERANCE;
+
+  if (devEntered === null) {
+    manualReasons.push('לא הוזן סכום תקין עבור הוצאות הפיתוח');
+  }
+  if (devWithinTolerance === false) {
+    manualReasons.push(
+      'סכום הפיתוח שהמשתמש הזין חורג ביותר מ-' +
+        DEVELOPMENT_TOLERANCE.toLocaleString('he-IL') +
+        ' ש"ח מחלקו בהוצאות הפיתוח לפי חוברת המכרז - נדרשת בדיקה פרטנית',
+    );
+  }
+
   const canCompute =
     manualReasons.length === 0 &&
     plot !== null &&
-    devFull !== null &&
-    unitCount !== null &&
-    unitCount > 0 &&
+    adjusted !== null &&
     landEntered !== null &&
     rate !== null;
 
-  let adjusted: number | null = null;
   let relevantDev: number | null = null;
   let taxable: number | null = null;
   let estimatedTax: number | null = null;
   let difference: number | null = null;
 
   if (canCompute) {
-    adjusted = devFull! / unitCount!;
-    relevantDev = adjusted * rate!;
+    relevantDev = adjusted! * rate!;
     taxable = landEntered! + relevantDev;
     estimatedTax = taxable * PURCHASE_TAX_RATE;
     difference = input.actualTaxPaid - estimatedTax;
@@ -246,6 +327,9 @@ export function evaluate(input: WizardInput): CalcOutcome {
       landCostEntered: landEntered,
       developmentCostFull: devFull,
       adjustedDevelopmentCost: adjusted,
+      developmentCostEntered: devEntered,
+      developmentDeviation: devDeviation,
+      developmentWithinTolerance: devWithinTolerance,
       developmentPercentage: rate,
       relevantDevelopmentComponent: relevantDev,
       estimatedTaxableValue: taxable,

@@ -106,7 +106,7 @@ const approach = [
   <!-- ===== Introduction ===== -->
   <section class="section intro" aria-labelledby="intro-title">
     <div class="container intro-inner">
-      <div class="intro-photo" data-reveal>
+      <div class="intro-photo portrait-frame" data-reveal>
         <img
           src={site.portraitPath}
           alt="Adv. Matan Abir Lev"
@@ -458,27 +458,7 @@ const approach = [
     align-items: center;
   }
 
-  .intro-photo {
-    position: relative;
-  }
-
-  .intro-photo::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translate(14px, 14px);
-    border: 2px solid var(--c-teal);
-    border-radius: var(--radius-l);
-    z-index: 0;
-  }
-
-  .intro-photo img {
-    position: relative;
-    z-index: 1;
-    inline-size: 100%;
-    border-radius: var(--radius-l);
-    box-shadow: var(--shadow-lift);
-  }
+  /* the teal frame around the portrait lives in global.css - see .portrait-frame */
 
   .intro-copy {
     max-width: var(--text-max);
